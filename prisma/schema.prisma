@@ -1,0 +1,238 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Configuration pour le seed
+// Exécuter avec: npm run db:seed
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Artisan {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String
+  companyName   String?
+  phone         String?
+  address       String?
+  // Informations légales
+  siret         String?   // Numéro SIRET
+  siren         String?   // Numéro SIREN
+  kbis          String?   // Numéro KBIS
+  vatNumber     String?   // Numéro de TVA intracommunautaire
+  legalAddress  String?   // Adresse du siège social
+  capital       String?   // Capital social
+  rcs           String?   // RCS (Registre du Commerce et des Sociétés)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  clients       Client[]
+  interventions Intervention[]
+  invoices      Invoice[]
+  quotes        Quote[]
+  stockItems    StockItem[]
+  expenses      Expense[]
+  notifications Notification[]
+  invoiceReminders InvoiceReminder[]
+}
+
+model Client {
+  id            String    @id @default(cuid())
+  firstName     String
+  lastName      String
+  email         String?
+  phone         String
+  address       String?
+  city          String?
+  postalCode    String?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  artisanId     String
+  artisan       Artisan   @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  
+  interventions Intervention[]
+  invoices      Invoice[]
+  quotes        Quote[]
+  notifications Notification[]
+}
+
+model Intervention {
+  id            String    @id @default(cuid())
+  title         String
+  description   String?
+  date          DateTime
+  duration      Int?      // en minutes
+  status        String    @default("todo") // todo, completed, cancelled
+  price         Float?
+  address       String?
+  latitude      Float?    // Coordonnée GPS latitude
+  longitude     Float?    // Coordonnée GPS longitude
+  photosBefore  String?   // JSON array d'URLs photos avant
+  photosAfter   String?   // JSON array d'URLs photos après
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  artisanId     String
+  artisan       Artisan   @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  
+  clientId      String
+  client        Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  invoiceId     String?
+  invoice       Invoice?  @relation(fields: [invoiceId], references: [id])
+}
+
+model Invoice {
+  id            String    @id @default(cuid())
+  invoiceNumber String    @unique
+  date          DateTime  @default(now())
+  dueDate       DateTime?
+  status        String    @default("draft") // draft, sent, paid, overdue
+  subtotal      Float
+  taxRate       Float     @default(20) // Taux de TVA en pourcentage (5, 10, 20)
+  tax           Float     @default(0)
+  total         Float
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  artisanId     String
+  artisan       Artisan   @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  
+  clientId      String
+  client        Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  interventions Intervention[]
+  items         InvoiceItem[]
+  reminders     InvoiceReminder[]
+  expenses      Expense[]
+}
+
+model InvoiceItem {
+  id            String    @id @default(cuid())
+  description   String
+  quantity      Float
+  unitPrice     Float
+  total         Float
+  createdAt     DateTime  @default(now())
+  
+  invoiceId     String
+  invoice       Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model Quote {
+  id            String    @id @default(cuid())
+  quoteNumber   String    @unique
+  date          DateTime  @default(now())
+  validUntil    DateTime?
+  status        String    @default("draft") // draft, sent, accepted, rejected, expired
+  subtotal      Float
+  taxRate       Float     @default(20) // Taux de TVA en pourcentage (5, 10, 20)
+  tax           Float     @default(0)
+  total         Float
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  artisanId     String
+  artisan       Artisan   @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  
+  clientId      String
+  client        Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  items         QuoteItem[]
+}
+
+model QuoteItem {
+  id            String    @id @default(cuid())
+  description   String
+  quantity      Float
+  unitPrice     Float
+  total         Float
+  createdAt     DateTime  @default(now())
+  
+  quoteId       String
+  quote         Quote     @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+}
+
+model StockItem {
+  id            String    @id @default(cuid())
+  name          String
+  description   String?
+  category      String?
+  quantity      Float
+  unit          String    @default("unité")
+  unitPrice     Float?
+  minQuantity   Float?    @default(0)
+  supplier      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  artisanId     String
+  artisan       Artisan   @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+}
+
+model Expense {
+  id            String    @id @default(cuid())
+  description   String
+  category      String    // matériel, transport, autre
+  amount        Float
+  date          DateTime  @default(now())
+  receipt       String?   // URL ou chemin vers le justificatif
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  artisanId     String
+  artisan       Artisan   @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  
+  invoiceId     String?
+  invoice       Invoice?  @relation(fields: [invoiceId], references: [id])
+}
+
+model Notification {
+  id            String    @id @default(cuid())
+  type          String    // intervention_status, invoice_overdue, intervention_reminder
+  title         String
+  message       String
+  status        String    @default("unread") // unread, read, sent
+  sentAt        DateTime?
+  readAt        DateTime?
+  metadata      String?   // JSON pour stocker des données supplémentaires
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  artisanId     String
+  artisan       Artisan   @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  
+  clientId      String?
+  client        Client?   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  interventionId String?
+  invoiceId     String?
+}
+
+model InvoiceReminder {
+  id            String    @id @default(cuid())
+  reminderNumber Int      // 1, 2, 3 pour l'escalade
+  sentAt        DateTime  @default(now())
+  method        String    @default("notification") // notification, email, sms
+  status        String    @default("sent") // sent, failed, pending
+  message       String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  invoiceId     String
+  invoice       Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  
+  artisanId     String
+  artisan       Artisan   @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+}
+
