@@ -53,11 +53,11 @@ export async function POST(request: Request) {
     // Définir le cookie dans la réponse
     response.cookies.set('artisanId', artisan.id, {
       httpOnly: true,
-      secure: false, // Désactivé en développement pour permettre HTTP
+      secure: process.env.NODE_ENV === 'production', // HTTPS en production
       sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7, // 7 jours
       path: '/', // Important : définir le chemin
-      domain: undefined, // Ne pas définir de domaine pour permettre localhost
+      domain: undefined, // Pas de domaine pour permettre tous les sous-domaines
     })
     
     console.log('✅ Cookie défini pour artisan (register):', artisan.id)
