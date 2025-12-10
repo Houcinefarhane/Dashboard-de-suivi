@@ -21,6 +21,10 @@ model Artisan {
   companyName   String?
   phone         String?
   address       String?
+  // Vérification email
+  emailVerified Boolean   @default(false)
+  emailVerificationToken String?   @unique
+  emailVerificationTokenExpires DateTime?
   // Informations légales
   siret         String?   // Numéro SIRET
   siren         String?   // Numéro SIREN

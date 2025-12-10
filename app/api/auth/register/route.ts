@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { hash } from 'bcryptjs'
+import { randomBytes } from 'crypto'
+import { sendVerificationEmail } from '@/lib/email'
 
 export async function POST(request: Request) {
   try {
@@ -29,7 +31,13 @@ export async function POST(request: Request) {
     // Hasher le mot de passe
     const hashedPassword = await hash(password, 10)
 
-    // Créer l'artisan
+    // Générer un token de vérification
+    const verificationToken = randomBytes(32).toString('hex')
+    const tokenExpires = new Date()
+    tokenExpires.setHours(tokenExpires.getHours() + 24) // Expire dans 24h
+
+    // Créer l'artisan (non vérifié)
+    console.log('📝 Création de l\'artisan:', { email, name })
     const artisan = await prisma.artisan.create({
       data: {
         name,
@@ -37,36 +45,54 @@ export async function POST(request: Request) {
         password: hashedPassword,
         companyName: companyName || null,
         phone: phone || null,
+        emailVerified: false,
+        emailVerificationToken: verificationToken,
+        emailVerificationTokenExpires: tokenExpires,
       },
     })
+    console.log('✅ Artisan créé avec succès:', artisan.id)
 
-    // Créer un cookie de session
-    const response = NextResponse.json({
+    // Envoyer l'email de vérification (ne pas bloquer l'inscription si ça échoue)
+    let emailSent = false
+    try {
+      console.log('📧 Tentative d\'envoi d\'email de vérification...')
+      const emailResult = await sendVerificationEmail(email, name, verificationToken)
+      if (emailResult && emailResult.success) {
+        console.log('✅ Email de vérification envoyé à:', email)
+        emailSent = true
+      } else {
+        console.warn('⚠️ Email non envoyé mais compte créé:', email)
+        console.warn('⚠️ Raison:', emailResult?.error || 'Raison inconnue')
+      }
+    } catch (emailError: any) {
+      console.error('❌ Erreur envoi email (non bloquant):', emailError?.message || emailError)
+      console.error('❌ Stack:', emailError?.stack)
+      // On continue même si l'email échoue, l'utilisateur pourra demander un renvoi
+    }
+    
+    console.log('✅ Inscription terminée, compte créé:', artisan.id)
+
+    // Ne pas connecter directement, rediriger vers la page de confirmation
+    return NextResponse.json({
       success: true,
-      artisan: {
-        id: artisan.id,
-        name: artisan.name,
-        email: artisan.email,
-      },
+      message: 'Un email de vérification a été envoyé à votre adresse',
+      requiresVerification: true,
     })
-
-    // Définir le cookie dans la réponse
-    response.cookies.set('artisanId', artisan.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // HTTPS en production
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 jours
-      path: '/', // Important : définir le chemin
-      domain: undefined, // Pas de domaine pour permettre tous les sous-domaines
+  } catch (error: any) {
+    console.error('Registration error:', error)
+    console.error('Error details:', {
+      message: error?.message,
+      stack: error?.stack,
+      name: error?.name,
     })
     
-    console.log('✅ Cookie défini pour artisan (register):', artisan.id)
-
-    return response
-  } catch (error) {
-    console.error('Registration error:', error)
+    // Retourner un message d'erreur plus détaillé en développement
+    const errorMessage = process.env.NODE_ENV === 'development' 
+      ? `Erreur lors de l'inscription: ${error?.message || 'Erreur inconnue'}`
+      : 'Erreur lors de l\'inscription'
+    
     return NextResponse.json(
-      { error: 'Erreur lors de l\'inscription' },
+      { error: errorMessage },
       { status: 500 }
     )
   }

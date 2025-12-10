@@ -208,9 +208,9 @@ export default function DashboardPage() {
         })}
       </div>
 
-      {/* Main Content Grid - 3 columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Opérations en cours - Colonne principale */}
+      {/* Main Content Grid - 5 columns pour plus de flexibilité */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        {/* Opérations en cours - Colonne réduite */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -221,8 +221,8 @@ export default function DashboardPage() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg">Opérations en cours</CardTitle>
-                  <CardDescription className="text-xs">Vue d'ensemble des urgences</CardDescription>
+                  <CardTitle className="text-base">Opérations en cours</CardTitle>
+                  <CardDescription className="text-xs">Vue d'ensemble</CardDescription>
                 </div>
                 <Button variant="ghost" size="sm" asChild>
                   <Link href="/dashboard/planning">
@@ -231,7 +231,7 @@ export default function DashboardPage() {
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4 max-h-[500px] overflow-y-auto">
+            <CardContent className="space-y-3 max-h-[400px] overflow-y-auto">
               {loading ? (
                 <div className="space-y-3">
                   {[1, 2].map((i) => (
@@ -361,30 +361,29 @@ export default function DashboardPage() {
           </Card>
         </motion.div>
 
-        {/* Colonne droite - Graphique et Activité */}
-        <div className="space-y-4">
-          {/* Revenue Chart - Compact */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <Card className="border border-border">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-lg">Revenus</CardTitle>
-                    <CardDescription className="text-xs">6 derniers mois</CardDescription>
-                  </div>
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link href="/dashboard/finances">
-                      <ArrowUpRight className="w-4 h-4" />
-                    </Link>
-                  </Button>
+        {/* Colonne droite - Graphique Revenus (agrandi) */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="lg:col-span-3"
+        >
+          <Card className="border border-border h-full">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl">Revenus</CardTitle>
+                  <CardDescription className="text-sm">Évolution sur 6 derniers mois</CardDescription>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={200}>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/dashboard/finances">
+                    <ArrowUpRight className="w-4 h-4" />
+                  </Link>
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={350}>
                 <AreaChart data={revenueData.length > 0 ? revenueData : [
                   { month: 'Jan', revenue: 0 },
                   { month: 'Fév', revenue: 0 },
@@ -422,72 +421,70 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </motion.div>
-
-          {/* Recent Activity - Compact */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <Card className="border border-border">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-lg">Activité récente</CardTitle>
-                    <CardDescription className="text-xs">Dernières actions</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {loading ? (
-                  <div className="space-y-2">
-                    {[1, 2, 3].map((i) => (
-                      <div key={i} className="h-12 bg-muted animate-pulse rounded-lg"></div>
-                    ))}
-                  </div>
-                ) : recentActivity.length === 0 ? (
-                  <div className="text-center py-6 text-muted-foreground">
-                    <Clock className="w-6 h-6 mx-auto mb-2 opacity-50" />
-                    <p className="text-xs">Aucune activité</p>
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {recentActivity.slice(0, 4).map((activity, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.6 + index * 0.05 }}
-                        className="flex items-center gap-2 p-2 rounded-lg border border-border hover:bg-muted/50 transition-colors"
-                      >
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                          activity.type === 'invoice' ? 'bg-primary/20 text-primary' :
-                          activity.type === 'intervention' ? 'bg-accent/20 text-accent' :
-                          'bg-success/20 text-success'
-                        }`}>
-                          {activity.type === 'invoice' ? <FileText className="w-4 h-4" /> :
-                           activity.type === 'intervention' ? <Calendar className="w-4 h-4" /> :
-                           <Users className="w-4 h-4" />}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-medium truncate">{activity.title}</p>
-                          <p className="text-xs text-muted-foreground truncate">{activity.date}</p>
-                        </div>
-                        {activity.amount && (
-                          <div className="text-right flex-shrink-0">
-                            <p className="text-xs font-semibold">{formatCurrency(activity.amount)}</p>
-                          </div>
-                        )}
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
       </div>
 
+      {/* Activité récente - Pleine largeur */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+      >
+        <Card className="border border-border">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-lg">Activité récente</CardTitle>
+                <CardDescription className="text-xs">Dernières actions</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="h-12 bg-muted animate-pulse rounded-lg"></div>
+                ))}
+              </div>
+            ) : recentActivity.length === 0 ? (
+              <div className="text-center py-6 text-muted-foreground">
+                <Clock className="w-6 h-6 mx-auto mb-2 opacity-50" />
+                <p className="text-xs">Aucune activité</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                {recentActivity.slice(0, 4).map((activity, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.6 + index * 0.05 }}
+                    className="flex items-center gap-2 p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors"
+                  >
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                      activity.type === 'invoice' ? 'bg-primary/20 text-primary' :
+                      activity.type === 'intervention' ? 'bg-accent/20 text-accent' :
+                      'bg-success/20 text-success'
+                    }`}>
+                      {activity.type === 'invoice' ? <FileText className="w-4 h-4" /> :
+                       activity.type === 'intervention' ? <Calendar className="w-4 h-4" /> :
+                       <Users className="w-4 h-4" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium truncate">{activity.title}</p>
+                      <p className="text-xs text-muted-foreground truncate">{activity.date}</p>
+                    </div>
+                    {activity.amount && (
+                      <div className="text-right flex-shrink-0">
+                        <p className="text-xs font-semibold">{formatCurrency(activity.amount)}</p>
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   )
 }

@@ -36,6 +36,29 @@ export async function POST(request: Request) {
       )
     }
 
+    // Vérifier que l'email est vérifié (sauf en développement si SKIP_EMAIL_VERIFICATION est activé)
+    const skipVerification = process.env.SKIP_EMAIL_VERIFICATION === 'true' && process.env.NODE_ENV === 'development'
+    
+    if (!artisan.emailVerified && !skipVerification) {
+      return NextResponse.json(
+        { 
+          error: 'Veuillez vérifier votre adresse email avant de vous connecter. Vérifiez votre boîte de réception.',
+          requiresVerification: true,
+          email: artisan.email,
+        },
+        { status: 403 }
+      )
+    }
+    
+    // En développement, marquer automatiquement comme vérifié si skip activé
+    if (!artisan.emailVerified && skipVerification) {
+      await prisma.artisan.update({
+        where: { id: artisan.id },
+        data: { emailVerified: true },
+      })
+      console.log('⚠️ Mode développement: Email automatiquement vérifié pour:', artisan.email)
+    }
+
     // Créer un cookie de session (simplifié - dans un vrai projet, utiliser JWT)
     const response = NextResponse.json({
       success: true,

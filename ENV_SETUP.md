@@ -18,6 +18,10 @@ SUPABASE_SERVICE_ROLE_KEY="your-service-role-key-here"
 # NextAuth (pour la production)
 NEXTAUTH_SECRET="generate-with-openssl-rand-base64-32"
 NEXTAUTH_URL="http://localhost:3010"
+
+# Resend - Envoi d'emails (pour la vérification d'email)
+RESEND_API_KEY="your-resend-api-key"
+RESEND_FROM_EMAIL="noreply@votredomaine.com"
 ```
 
 ## Comment obtenir ces valeurs
@@ -59,6 +63,19 @@ openssl rand -base64 32
 
 - En développement : `http://localhost:3010`
 - En production : l'URL de votre application déployée
+
+### 7. RESEND_API_KEY
+
+1. Créer un compte sur [Resend](https://resend.com) (gratuit jusqu'à 100 emails/jour)
+2. Aller dans "API Keys"
+3. Créer une nouvelle clé API
+4. Copier la clé et l'ajouter dans `.env`
+
+### 8. RESEND_FROM_EMAIL
+
+- En développement : Vous pouvez utiliser `onboarding@resend.dev` (fourni par Resend)
+- En production : Utilisez votre propre domaine (ex: `noreply@votredomaine.com`)
+  - Pour utiliser votre domaine, configurez-le dans Resend → Domains
 
 ## Sécurité
 

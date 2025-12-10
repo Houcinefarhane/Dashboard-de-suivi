@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Wrench } from 'lucide-react'
+import { Wrench, Mail } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -16,6 +16,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [requiresVerification, setRequiresVerification] = useState(false)
+  const [resending, setResending] = useState(false)
+  const [resendMessage, setResendMessage] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,7 +44,12 @@ export default function LoginPage() {
         window.location.href = '/dashboard'
       } else {
         console.error('Erreur de connexion:', data)
-        setError(data.error || 'Erreur de connexion')
+        if (data.requiresVerification) {
+          setRequiresVerification(true)
+          setError(data.error || 'Email non vérifié')
+        } else {
+          setError(data.error || 'Erreur de connexion')
+        }
         setLoading(false)
       }
     } catch (err) {
@@ -120,9 +128,53 @@ export default function LoginPage() {
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
-                  className="rounded-lg bg-destructive/10 border border-destructive/20 p-3"
+                  className={`rounded-lg p-3 ${
+                    requiresVerification 
+                      ? 'bg-yellow-100 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800' 
+                      : 'bg-destructive/10 border border-destructive/20'
+                  }`}
                 >
-                  <p className="text-sm text-destructive">{error}</p>
+                  <p className={`text-sm ${requiresVerification ? 'text-yellow-800 dark:text-yellow-200' : 'text-destructive'}`}>
+                    {error}
+                  </p>
+                  {requiresVerification && (
+                    <div className="mt-3 space-y-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={async () => {
+                          setResending(true)
+                          setResendMessage('')
+                          try {
+                            const res = await fetch('/api/auth/resend-verification', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ email }),
+                            })
+                            const data = await res.json()
+                            if (res.ok) {
+                              setResendMessage('Un nouveau lien a été envoyé à votre adresse email.')
+                            } else {
+                              setResendMessage(data.error || 'Erreur lors de l\'envoi')
+                            }
+                          } catch (err) {
+                            setResendMessage('Une erreur est survenue')
+                          } finally {
+                            setResending(false)
+                          }
+                        }}
+                        disabled={resending}
+                        className="w-full"
+                      >
+                        <Mail className="w-4 h-4 mr-2" />
+                        {resending ? 'Envoi...' : 'Renvoyer l\'email de vérification'}
+                      </Button>
+                      {resendMessage && (
+                        <p className="text-xs text-green-700 dark:text-green-400">{resendMessage}</p>
+                      )}
+                    </div>
+                  )}
                 </motion.div>
               )}
               <Button
