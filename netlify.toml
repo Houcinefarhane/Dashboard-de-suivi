@@ -7,4 +7,8 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # Exclure les clés publiques du scan (elles sont censées être dans le bundle client)
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_APP_URL"
+  # Exclure les fichiers compilés du scan
+  SECRETS_SCAN_OMIT_PATHS = ".next/**,.netlify/**,node_modules/**,*.js.map"
 
