@@ -3,8 +3,12 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  const args = process.argv.slice(2)
-  const email = args[0] || 'admin.123@outlook.fr'
+  const email = process.argv[2] || process.env.CLEAR_NOTIFICATIONS_EMAIL
+  
+  if (!email) {
+    console.log('❌ Usage: npm run db:clear-notifications <email> ou définir CLEAR_NOTIFICATIONS_EMAIL dans .env')
+    return
+  }
 
   console.log(`🧹 Suppression des notifications pour: ${email}\n`)
 

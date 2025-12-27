@@ -81,3 +81,12 @@ dist/
 build/
 out/
 .next/
+
+# fichiers d'audit
+AUDIT_SECURITE.md
+
+# scripts de développement avec données sensibles
+# (garder les fichiers mais ne pas exposer d'emails/mots de passe)
+# prisma/check-account.ts
+# prisma/clear-notifications.ts
+# prisma/transfer-data.ts

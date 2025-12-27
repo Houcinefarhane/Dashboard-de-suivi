@@ -6,9 +6,17 @@ async function main() {
   console.log('🔄 Transfert des données de test...\n')
 
   // Récupérer l'artisan source (celui avec les données de test)
+  const sourceEmail = process.env.SOURCE_EMAIL || process.argv[2]
+  
+  if (!sourceEmail) {
+    console.log('❌ Usage: npm run db:transfer <email-source> <email-destination>')
+    console.log('   Ou définir SOURCE_EMAIL dans .env')
+    return
+  }
+
   const sourceArtisan = await prisma.artisan.findFirst({
     where: {
-      email: 'houcine.farhane@outlook.fr'
+      email: sourceEmail
     }
   })
 
@@ -20,12 +28,11 @@ async function main() {
   console.log(`✅ Artisan source trouvé: ${sourceArtisan.email}`)
 
   // Demander l'email de destination
-  const args = process.argv.slice(2)
-  const targetEmail = args[0]
+  const targetEmail = process.argv[3] || process.env.TARGET_EMAIL
 
   if (!targetEmail) {
-    console.log('\n❌ Usage: npm run db:transfer <email-destination>')
-    console.log('   Exemple: npm run db:transfer admin.123@outlook.fr')
+    console.log('\n❌ Usage: npm run db:transfer <email-source> <email-destination>')
+    console.log('   Ou définir SOURCE_EMAIL et TARGET_EMAIL dans .env')
     return
   }
 
