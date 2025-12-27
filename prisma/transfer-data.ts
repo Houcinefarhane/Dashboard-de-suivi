@@ -3,14 +3,14 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('🔄 Transfert des données de test...\n')
+  console.log('Transfert des données de test...\n')
 
   // Récupérer l'artisan source (celui avec les données de test)
   const sourceEmail = process.env.SOURCE_EMAIL || process.argv[2]
   
   if (!sourceEmail) {
-    console.log('❌ Usage: npm run db:transfer <email-source> <email-destination>')
-    console.log('   Ou définir SOURCE_EMAIL dans .env')
+    console.log('Usage: npm run db:transfer <email-source> <email-destination>')
+    console.log('  Ou définir SOURCE_EMAIL dans .env')
     return
   }
 
@@ -21,19 +21,19 @@ async function main() {
   })
 
   if (!sourceArtisan) {
-    console.log('❌ Artisan source non trouvé')
+    console.log('Artisan source non trouvé')
     return
   }
 
-  console.log(`✅ Artisan source trouvé: ${sourceArtisan.email}`)
+  console.log(` Artisan source trouvé: ${sourceArtisan.email}`)
 
   // Demander l'email de destination
   const targetEmail = process.argv[3] || process.env.TARGET_EMAIL
 
   if (!targetEmail) {
-    console.log('\n❌ Usage: npm run db:transfer <email-source> <email-destination>')
-    console.log('   Ou définir SOURCE_EMAIL et TARGET_EMAIL dans .env')
-    console.log('   Exemple: npm run db:transfer source@example.com destination@example.com')
+    console.log('\n Usage: npm run db:transfer <email-source> <email-destination>')
+    console.log('  Ou définir SOURCE_EMAIL et TARGET_EMAIL dans .env')
+    console.log('  Exemple: npm run db:transfer source@example.com destination@example.com')
     return
   }
 
@@ -42,11 +42,11 @@ async function main() {
   })
 
   if (!targetArtisan) {
-    console.log(`❌ Artisan destination non trouvé: ${targetEmail}`)
+    console.log(` Artisan destination non trouvé: ${targetEmail}`)
     return
   }
 
-  console.log(`✅ Artisan destination trouvé: ${targetArtisan.email}\n`)
+  console.log(` Artisan destination trouvé: ${targetArtisan.email}\n`)
 
   // Compter les données à transférer
   const counts = {
@@ -59,7 +59,7 @@ async function main() {
     notifications: await prisma.notification.count({ where: { artisanId: sourceArtisan.id } }),
   }
 
-  console.log('📊 Données à transférer:')
+  console.log('Données à transférer:')
   console.log(`   - Clients: ${counts.clients}`)
   console.log(`   - Interventions: ${counts.interventions}`)
   console.log(`   - Factures: ${counts.invoices}`)
@@ -78,54 +78,54 @@ async function main() {
   })
 
   // Transférer les interventions
-  console.log('📅 Transfert des interventions...')
+  console.log('Transfert des interventions...')
   await prisma.intervention.updateMany({
     where: { artisanId: sourceArtisan.id },
     data: { artisanId: targetArtisan.id }
   })
 
   // Transférer les factures
-  console.log('💰 Transfert des factures...')
+  console.log('Transfert des factures...')
   await prisma.invoice.updateMany({
     where: { artisanId: sourceArtisan.id },
     data: { artisanId: targetArtisan.id }
   })
 
   // Transférer les devis
-  console.log('📄 Transfert des devis...')
+  console.log('Transfert des devis...')
   await prisma.quote.updateMany({
     where: { artisanId: sourceArtisan.id },
     data: { artisanId: targetArtisan.id }
   })
 
   // Transférer les dépenses
-  console.log('💸 Transfert des dépenses...')
+  console.log('Transfert des dépenses...')
   await prisma.expense.updateMany({
     where: { artisanId: sourceArtisan.id },
     data: { artisanId: targetArtisan.id }
   })
 
   // Transférer le stock
-  console.log('📦 Transfert du stock...')
+  console.log('Transfert du stock...')
   await prisma.stockItem.updateMany({
     where: { artisanId: sourceArtisan.id },
     data: { artisanId: targetArtisan.id }
   })
 
   // Transférer les notifications
-  console.log('🔔 Transfert des notifications...')
+  console.log('Transfert des notifications...')
   await prisma.notification.updateMany({
     where: { artisanId: sourceArtisan.id },
     data: { artisanId: targetArtisan.id }
   })
 
-  console.log('\n✅ Transfert terminé avec succès!')
-  console.log(`\n🔑 Connectez-vous avec: ${targetEmail}`)
+  console.log('\n Transfert terminé avec succès!')
+  console.log(`\n Connectez-vous avec: ${targetEmail}`)
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Erreur:', e)
+    console.error('Erreur:', e)
     process.exit(1)
   })
   .finally(async () => {

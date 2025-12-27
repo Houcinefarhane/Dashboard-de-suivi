@@ -64,11 +64,11 @@ function randomFloat(min: number, max: number): number {
 }
 
 async function main() {
-  console.log('🌱 Début du seed...')
+  console.log('Début du seed...')
 
-  // Récupérer ou créer l'artisan avec les bons identifiants
+  // Récupérer ou créer l'artisan avec les identifiants de test
   const artisanEmail = process.env.SEED_EMAIL || 'test@artisan.com'
-  // Mot de passe par défaut pour les comptes de test (à changer en production)
+  // Mot de passe par défaut pour les comptes de test
   const artisanPassword = process.env.SEED_PASSWORD || 'password123'
   
   let artisan = await prisma.artisan.findUnique({
@@ -76,7 +76,7 @@ async function main() {
   })
   
   if (!artisan) {
-    console.log('👤 Création du compte artisan...')
+    console.log('Création du compte artisan...')
     const hashedPassword = await hash(artisanPassword, 10)
     artisan = await prisma.artisan.create({
       data: {
@@ -88,9 +88,9 @@ async function main() {
         companyName: 'Artisan Pro'
       }
     })
-    console.log(`✅ Compte artisan créé: ${artisanEmail}`)
+    console.log(`Compte artisan créé: ${artisanEmail}`)
   } else {
-    console.log(`✅ Artisan trouvé: ${artisanEmail}`)
+    console.log(`Artisan trouvé: ${artisanEmail}`)
     // Mettre à jour le mot de passe au cas où
     const hashedPassword = await hash(artisanPassword, 10)
     artisan = await prisma.artisan.update({
@@ -100,7 +100,7 @@ async function main() {
   }
 
   // Nettoyer les données existantes (sauf l'artisan)
-  console.log('🧹 Nettoyage des données existantes...')
+  console.log('Nettoyage des données existantes...')
   
   // Supprimer dans l'ordre pour respecter les contraintes de clés étrangères
   await prisma.notification.deleteMany({
@@ -138,10 +138,10 @@ async function main() {
     throw new Error(`Artisan avec l'email ${artisanEmail} non trouvé. Veuillez créer le compte d'abord.`)
   }
   
-  console.log(`✅ Artisan trouvé/créé: ${artisan.email}`)
+  console.log(` Artisan trouvé/créé: ${artisan.email}`)
 
   // Générer des clients (500)
-  console.log('👥 Création de 500 clients...')
+  console.log(' Création de 500 clients...')
   const clients = []
   for (let i = 0; i < 500; i++) {
     const firstName = randomElement(firstNames)
@@ -164,12 +164,12 @@ async function main() {
     clients.push(client)
     
     if ((i + 1) % 50 === 0) {
-      console.log(`  ✅ ${i + 1}/500 clients créés`)
+      console.log(`   ${i + 1}/500 clients créés`)
     }
   }
 
   // Générer des items de stock (200)
-  console.log('📦 Création de 200 items de stock...')
+  console.log('Création de 200 items de stock...')
   const stockItems = []
   for (let i = 0; i < 200; i++) {
     const material = randomElement(materials)
@@ -187,12 +187,12 @@ async function main() {
     stockItems.push(stockItem)
     
     if ((i + 1) % 50 === 0) {
-      console.log(`  ✅ ${i + 1}/200 items de stock créés`)
+      console.log(`   ${i + 1}/200 items de stock créés`)
     }
   }
 
   // Générer des interventions (maximum 4 par jour, bien espacées)
-  console.log('📅 Création des interventions (max 4 par jour, espacées d\'au moins 1h)...')
+  console.log('Création des interventions (max 4 par jour, espacées d\'au moins 1h)...')
   const interventions = []
   const startDate = new Date()
   startDate.setMonth(startDate.getMonth() - 12) // 12 mois en arrière
@@ -289,7 +289,7 @@ async function main() {
         hoursByDay.set(dayKey, currentHours)
         
         if (interventions.length % 100 === 0) {
-          console.log(`  ✅ ${interventions.length} interventions créées`)
+          console.log(`   ${interventions.length} interventions créées`)
         }
       } catch (error) {
         console.error(`Erreur lors de la création de l'intervention:`, error)
@@ -297,10 +297,10 @@ async function main() {
     }
   }
   
-  console.log(`  ✅ ${interventions.length} interventions créées au total`)
+  console.log(`   ${interventions.length} interventions créées au total`)
 
   // Générer des devis (400)
-  console.log('📄 Création de 400 devis...')
+  console.log('Création de 400 devis...')
   const quotes = []
   const quoteStatuses = ['draft', 'sent', 'accepted', 'rejected', 'converted'] as const
 
@@ -308,7 +308,7 @@ async function main() {
   const existingQuotes = await prisma.quote.findMany({
     select: { quoteNumber: true }
   })
-  console.log(`  📊 ${existingQuotes.length} devis existants trouvés`)
+  console.log(`   ${existingQuotes.length} devis existants trouvés`)
   const existingQuoteNumbers = new Set(existingQuotes.map((q: { quoteNumber: string }) => q.quoteNumber))
   
   // Trouver le numéro le plus élevé pour continuer la numérotation
@@ -363,7 +363,7 @@ async function main() {
           select: { id: true }
         })
         if (existingQuote) {
-          console.log(`  ⚠️  Le numéro ${quoteNumber} existe déjà, on passe au suivant`)
+          console.log(`    Le numéro ${quoteNumber} existe déjà, on passe au suivant`)
           existingQuoteNumbers.add(quoteNumber)
           continue
         }
@@ -405,12 +405,12 @@ async function main() {
     quotes.push(quote)
     
     if ((i + 1) % 50 === 0) {
-      console.log(`  ✅ ${i + 1}/400 devis créés`)
+      console.log(`   ${i + 1}/400 devis créés`)
     }
   }
 
   // Générer des factures (600)
-  console.log('💰 Création de 600 factures...')
+  console.log('Création de 600 factures...')
   const invoices = []
   const invoiceStatuses = ['draft', 'sent', 'paid', 'overdue'] as const
   
@@ -418,7 +418,7 @@ async function main() {
   const existingInvoices = await prisma.invoice.findMany({
     select: { invoiceNumber: true }
   })
-  console.log(`  📊 ${existingInvoices.length} factures existantes trouvées`)
+  console.log(`   ${existingInvoices.length} factures existantes trouvées`)
   const existingInvoiceNumbers = new Set(existingInvoices.map((inv: { invoiceNumber: string }) => inv.invoiceNumber))
   
   // Trouver le numéro le plus élevé pour continuer la numérotation
@@ -473,7 +473,7 @@ async function main() {
           select: { id: true }
         })
         if (existingInvoice) {
-          console.log(`  ⚠️  Le numéro ${invoiceNumber} existe déjà, on passe au suivant`)
+          console.log(`    Le numéro ${invoiceNumber} existe déjà, on passe au suivant`)
           existingInvoiceNumbers.add(invoiceNumber)
           continue
         }
@@ -515,12 +515,12 @@ async function main() {
     invoices.push(invoice)
     
     if ((i + 1) % 100 === 0) {
-      console.log(`  ✅ ${i + 1}/600 factures créées`)
+      console.log(`   ${i + 1}/600 factures créées`)
     }
   }
 
   // Générer des dépenses (300)
-  console.log('💸 Création de 300 dépenses...')
+  console.log('Création de 300 dépenses...')
   for (let i = 0; i < 300; i++) {
     const date = randomDate(startDate, endDate)
     const category = randomElement(expenseCategories)
@@ -536,12 +536,12 @@ async function main() {
     })
     
     if ((i + 1) % 50 === 0) {
-      console.log(`  ✅ ${i + 1}/300 dépenses créées`)
+      console.log(`   ${i + 1}/300 dépenses créées`)
     }
   }
 
   // Générer des notifications (200)
-  console.log('🔔 Création de 200 notifications...')
+  console.log('Création de 200 notifications...')
   const notificationTypes = ['intervention_reminder', 'invoice_overdue', 'low_stock', 'intervention_status'] as const
   const notificationStatuses = ['unread', 'read'] as const
 
@@ -584,14 +584,14 @@ async function main() {
     })
     
     if ((i + 1) % 50 === 0) {
-      console.log(`  ✅ ${i + 1}/200 notifications créées`)
+      console.log(`   ${i + 1}/200 notifications créées`)
     }
   }
 
   console.log('')
-  console.log('✅ Seed terminé avec succès!')
+  console.log('Seed terminé avec succès!')
   console.log('')
-  console.log('📊 Résumé des données créées:')
+  console.log('Résumé des données créées:')
   console.log(`   - ${clients.length} clients`)
   console.log(`   - ${stockItems.length} items de stock`)
   console.log(`   - ${interventions.length} interventions`)
@@ -600,14 +600,14 @@ async function main() {
   console.log(`   - 300 dépenses`)
   console.log(`   - 200 notifications`)
   console.log('')
-  console.log('🔑 Identifiants de connexion:')
+  console.log('Identifiants de connexion:')
   console.log(`   Email: ${artisan.email}`)
   console.log(`   Mot de passe: ${process.env.SEED_PASSWORD ? '***' : artisanPassword}`)
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Erreur lors du seed:', e)
+    console.error('Erreur lors du seed:', e)
     process.exit(1)
   })
   .finally(async () => {

@@ -10,7 +10,7 @@ async function main() {
   // Récupérer toutes les interventions
   const interventions = await prisma.intervention.findMany()
   
-  console.log(`📊 ${interventions.length} interventions trouvées`)
+  console.log(` ${interventions.length} interventions trouvées`)
   
   let updated = 0
   let deleted = 0
@@ -38,7 +38,7 @@ async function main() {
       if (intervention.status === 'todo') {
         updateData.status = Math.random() < 0.8 ? 'completed' : 'cancelled'
         needsUpdate = true
-        console.log(`  ⚠️  Intervention passée "${intervention.title}" (${interventionDate.toISOString()}) : ${intervention.status} → ${updateData.status}`)
+        console.log(`    Intervention passée "${intervention.title}" (${interventionDate.toISOString()}) : ${intervention.status} → ${updateData.status}`)
       }
     }
     
@@ -48,7 +48,7 @@ async function main() {
       if (intervention.status === 'completed') {
         updateData.status = Math.random() < 0.9 ? 'todo' : 'cancelled'
         needsUpdate = true
-        console.log(`  ⚠️  Intervention future "${intervention.title}" (${interventionDate.toISOString()}) : ${intervention.status} → ${updateData.status}`)
+        console.log(`    Intervention future "${intervention.title}" (${interventionDate.toISOString()}) : ${intervention.status} → ${updateData.status}`)
       }
     }
     
@@ -76,13 +76,13 @@ async function main() {
     }
   }
   
-  console.log(`\n✅ ${updated} interventions corrigées`)
+  console.log(`\n ${updated} interventions corrigées`)
   console.log(`🗑️  ${deleted} interventions supprimées`)
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Erreur:', e)
+    console.error(' Erreur:', e)
     process.exit(1)
   })
   .finally(async () => {

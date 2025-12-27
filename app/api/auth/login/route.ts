@@ -56,7 +56,7 @@ export async function POST(request: Request) {
         where: { id: artisan.id },
         data: { emailVerified: true },
       })
-      console.log('⚠️ Mode développement: Email automatiquement vérifié pour:', artisan.email)
+      console.log(' Mode développement: Email automatiquement vérifié pour:', artisan.email)
     }
 
     // Créer un cookie de session (simplifié - dans un vrai projet, utiliser JWT)
@@ -81,9 +81,8 @@ export async function POST(request: Request) {
     
     response.cookies.set('artisanId', artisan.id, cookieOptions)
     
-    console.log('✅ Cookie défini pour artisan:', artisan.id)
-    console.log('✅ Options du cookie:', cookieOptions)
-    console.log('✅ Headers de la réponse:', Object.fromEntries(response.headers.entries()))
+    console.log('Cookie défini pour artisan:', artisan.id)
+    console.log('Options du cookie:', cookieOptions)
 
     return response
   } catch (error) {

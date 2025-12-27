@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     tokenExpires.setHours(tokenExpires.getHours() + 24) // Expire dans 24h
 
     // Créer l'artisan (non vérifié)
-    console.log('📝 Création de l\'artisan:', { email, name })
+    console.log('Création de l\'artisan:', { email, name })
     const artisan = await prisma.artisan.create({
       data: {
         name,
@@ -50,27 +50,27 @@ export async function POST(request: Request) {
         emailVerificationTokenExpires: tokenExpires,
       },
     })
-    console.log('✅ Artisan créé avec succès:', artisan.id)
+    console.log('Artisan créé avec succès:', artisan.id)
 
     // Envoyer l'email de vérification (ne pas bloquer l'inscription si ça échoue)
     let emailSent = false
     try {
-      console.log('📧 Tentative d\'envoi d\'email de vérification...')
+      console.log('Tentative d\'envoi d\'email de vérification...')
       const emailResult = await sendVerificationEmail(email, name, verificationToken)
       if (emailResult && emailResult.success) {
-        console.log('✅ Email de vérification envoyé à:', email)
+        console.log('Email de vérification envoyé à:', email)
         emailSent = true
       } else {
-        console.warn('⚠️ Email non envoyé mais compte créé:', email)
-        console.warn('⚠️ Raison:', emailResult?.error || 'Raison inconnue')
+        console.warn('Email non envoyé mais compte créé:', email)
+        console.warn('Raison:', emailResult?.error || 'Raison inconnue')
       }
     } catch (emailError: any) {
-      console.error('❌ Erreur envoi email (non bloquant):', emailError?.message || emailError)
-      console.error('❌ Stack:', emailError?.stack)
+      console.error('Erreur envoi email (non bloquant):', emailError?.message || emailError)
+      console.error('Stack:', emailError?.stack)
       // On continue même si l'email échoue, l'utilisateur pourra demander un renvoi
     }
     
-    console.log('✅ Inscription terminée, compte créé:', artisan.id)
+    console.log(' Inscription terminée, compte créé:', artisan.id)
 
     // Ne pas connecter directement, rediriger vers la page de confirmation
     return NextResponse.json({

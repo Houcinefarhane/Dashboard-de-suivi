@@ -50,10 +50,10 @@ async function main() {
     },
   })
 
-  console.log(`📊 ${interventions.length} interventions trouvées sans coordonnées GPS`)
+  console.log(` ${interventions.length} interventions trouvées sans coordonnées GPS`)
 
   if (interventions.length === 0) {
-    console.log('✅ Toutes les interventions ont déjà des coordonnées GPS')
+    console.log(' Toutes les interventions ont déjà des coordonnées GPS')
     return
   }
 
@@ -80,24 +80,24 @@ async function main() {
       updated++
       
       if (updated % 100 === 0) {
-        console.log(`✅ ${updated} interventions mises à jour...`)
+        console.log(` ${updated} interventions mises à jour...`)
       }
     } catch (error) {
-      console.error(`❌ Erreur pour l'intervention ${intervention.id}:`, error)
+      console.error(` Erreur pour l'intervention ${intervention.id}:`, error)
       errors++
     }
   }
 
   console.log(`\n✨ Terminé !`)
-  console.log(`✅ ${updated} interventions mises à jour avec succès`)
+  console.log(` ${updated} interventions mises à jour avec succès`)
   if (errors > 0) {
-    console.log(`❌ ${errors} erreurs`)
+    console.log(` ${errors} erreurs`)
   }
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Erreur:', e)
+    console.error(' Erreur:', e)
     process.exit(1)
   })
   .finally(async () => {

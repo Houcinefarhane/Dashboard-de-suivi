@@ -215,7 +215,7 @@ export default function AbonnementPage() {
             {subscription.subscription.cancelAtPeriodEnd && (
               <div className="p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
                 <p className="text-sm text-yellow-500">
-                  ⚠️ Votre abonnement sera annulé à la fin de la période actuelle.
+                  Attention: Votre abonnement sera annulé à la fin de la période actuelle.
                 </p>
               </div>
             )}

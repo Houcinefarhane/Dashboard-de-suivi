@@ -21,10 +21,10 @@ async function main() {
     }
   })
 
-  console.log(`📊 Nombre d'artisans: ${artisans.length}\n`)
+  console.log(` Nombre d'artisans: ${artisans.length}\n`)
 
   artisans.forEach((artisan) => {
-    console.log(`👤 Artisan: ${artisan.email}`)
+    console.log(` Artisan: ${artisan.email}`)
     console.log(`   - Clients: ${artisan._count.clients}`)
     console.log(`   - Interventions: ${artisan._count.interventions}`)
     console.log(`   - Factures: ${artisan._count.invoices}`)
@@ -55,7 +55,7 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.error('❌ Erreur:', e)
+    console.error(' Erreur:', e)
     process.exit(1)
   })
   .finally(async () => {

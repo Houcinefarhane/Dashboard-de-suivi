@@ -1,17 +1,16 @@
 # Dashboard Artisan
 
-Une application web moderne et élégante pour gérer l'activité des plombiers, serruriers et autres artisans.
+Application web pour la gestion d'activité des plombiers, serruriers et autres artisans.
 
-## 🚀 Fonctionnalités
+## Fonctionnalités
 
-- ✅ **Gestion des clients** - CRUD complet avec recherche
-- 📅 **Planning intelligent** - Calendrier interactif pour les interventions
-- 📄 **Devis et factures** - Génération automatique en PDF
-- 💰 **Suivi financier** - Graphiques et analytics
-- 📦 **Gestion du stock** - Alertes automatiques
-- 🤖 **Insights intelligents** - Suggestions basées sur l'IA
+- **Gestion des clients** - CRUD complet avec recherche
+- **Planning** - Calendrier interactif pour les interventions
+- **Devis et factures** - Génération automatique en PDF
+- **Suivi financier** - Graphiques et analytics
+- **Gestion du stock** - Alertes automatiques
 
-## 🛠️ Technologies
+## Technologies
 
 - **Next.js 14** - Framework React
 - **TypeScript** - Typage statique
@@ -21,7 +20,7 @@ Une application web moderne et élégante pour gérer l'activité des plombiers,
 - **PostgreSQL** - Base de données (hébergée sur Supabase)
 - **Supabase** - Backend as a Service (base de données PostgreSQL)
 
-## 📦 Installation
+## Installation
 
 1. Installer les dépendances :
 ```bash
@@ -59,15 +58,11 @@ npm run dev
 
 4. Ouvrir [http://localhost:3010](http://localhost:3010)
 
-## 🎨 Design
+## Design
 
-L'application utilise un design moderne inspiré d'Apple et de sites premium comme celui de Lando Norris, avec :
-- Animations fluides avec Framer Motion
-- Design responsive (mobile, tablette, desktop)
-- Interface utilisateur intuitive
-- Thème clair/sombre
+Design moderne avec animations fluides, interface responsive et thème clair/sombre.
 
-## 📝 Structure du projet
+## Structure du projet
 
 ```
 ├── app/
@@ -81,47 +76,37 @@ L'application utilise un design moderne inspiré d'Apple et de sites premium com
 └── public/          # Assets statiques
 ```
 
-## 🔐 Authentification
+## Authentification
 
-L'authentification est simple : un artisan = un compte. Les sessions sont gérées via des cookies sécurisés.
+Un artisan = un compte. Les sessions sont gérées via des cookies sécurisés.
 
-## 🚧 Développement
+## Développement
 
 Pour accéder à Prisma Studio (interface graphique pour la base de données) :
 ```bash
 npm run db:studio
 ```
 
-## 🌱 Génération de données de test
+## Génération de données de test
 
-Pour tester l'application avec beaucoup de données (centaines d'entrées) :
+Pour tester l'application avec des données de test :
 ```bash
 npm run db:seed
 ```
 
-Ce script génère :
-- **500 clients**
-- **200 items de stock**
-- **800 interventions**
-- **400 devis**
-- **600 factures**
-- **300 dépenses**
-- **200 notifications**
+Le script génère des centaines d'entrées (clients, interventions, factures, etc.).
 
-**Identifiants de connexion après le seed :**
+Identifiants de connexion après le seed :
 - Email: `test@artisan.com`
 - Mot de passe: `password123`
 
-> ⚠️ **Attention** : Le script utilise l'artisan existant ou crée un nouveau compte de test. Les données sont ajoutées aux données existantes.
+Note : Le script utilise l'artisan existant ou crée un nouveau compte de test.
 
-## 🌓 Thème jour/nuit
+## Thème jour/nuit
 
-L'application dispose d'un bouton de basculement jour/nuit dans la barre de navigation :
-- Cliquez sur l'icône ☀️/🌙 pour changer de thème
-- Le choix est sauvegardé dans le navigateur (localStorage)
-- Le thème est appliqué automatiquement au prochain chargement
+Bouton de basculement jour/nuit dans la barre de navigation. Le choix est sauvegardé dans le navigateur.
 
-## 📄 Licence
+## Licence
 
 Ce projet est privé et destiné à la vente aux artisans.
 

@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     // Envoyer l'email
     try {
       await sendVerificationEmail(email, artisan.name, verificationToken)
-      console.log('✅ Email de vérification renvoyé à:', email)
+      console.log('Email de vérification renvoyé à:', email)
     } catch (emailError) {
       console.error('Erreur envoi email:', emailError)
       return NextResponse.json(

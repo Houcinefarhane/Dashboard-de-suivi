@@ -3,20 +3,20 @@ import { Resend } from 'resend'
 // Initialiser Resend avec vérification de la clé API
 const resendApiKey = process.env.RESEND_API_KEY
 if (!resendApiKey) {
-  console.warn('⚠️ RESEND_API_KEY n\'est pas définie dans les variables d\'environnement')
-  console.warn('⚠️ Les emails de vérification ne seront pas envoyés')
+  console.warn('RESEND_API_KEY n\'est pas définie dans les variables d\'environnement')
+  console.warn('Les emails de vérification ne seront pas envoyés')
 } else {
-  console.log('✅ RESEND_API_KEY chargée')
+  console.log('RESEND_API_KEY chargée')
 }
 
 let resend: Resend | null = null
 try {
   if (resendApiKey) {
     resend = new Resend(resendApiKey)
-    console.log('✅ Resend initialisé avec succès')
+    console.log('Resend initialisé avec succès')
   }
 } catch (error) {
-  console.error('❌ Erreur lors de l\'initialisation de Resend:', error)
+  console.error('Erreur lors de l\'initialisation de Resend:', error)
 }
 
 export async function sendVerificationEmail(
@@ -25,7 +25,7 @@ export async function sendVerificationEmail(
   token: string
 ) {
   if (!resend) {
-    console.error('❌ Resend n\'est pas initialisé. Vérifiez RESEND_API_KEY dans .env')
+    console.error('Resend n\'est pas initialisé. Vérifiez RESEND_API_KEY dans .env')
     return { success: false, error: 'Service d\'email non configuré' }
   }
 
@@ -35,8 +35,8 @@ export async function sendVerificationEmail(
   const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'
   
   try {
-    console.log('📧 Tentative d\'envoi d\'email à:', email)
-    console.log('📧 Depuis:', fromEmail)
+    console.log('Tentative d\'envoi d\'email à:', email)
+    console.log('Depuis:', fromEmail)
     
     const result = await resend.emails.send({
       from: fromEmail,
@@ -90,11 +90,11 @@ export async function sendVerificationEmail(
     })
 
     if (result.error) {
-      console.error('❌ Erreur Resend:', result.error)
+      console.error(' Erreur Resend:', result.error)
       
       // Si c'est une erreur de domaine non vérifié, donner un message plus clair
       if (result.error.statusCode === 403 && result.error.message?.includes('verify a domain')) {
-        console.error('❌ Domaine non vérifié dans Resend')
+        console.error(' Domaine non vérifié dans Resend')
         console.error('💡 Solution: Vérifiez un domaine dans Resend ou utilisez votre email de compte pour les tests')
         return { 
           success: false, 
