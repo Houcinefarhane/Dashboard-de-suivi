@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+
 // API de géocodage utilisant Nominatim (OpenStreetMap) - gratuit et sans clé API
 export async function GET(request: Request) {
   try {
