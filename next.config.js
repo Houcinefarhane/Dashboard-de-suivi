@@ -11,10 +11,8 @@ const nextConfig = {
     }
     return config
   },
-  // Configuration expérimentale désactivée pour compatibilité
-  // experimental: {
-  //   forceSwcTransforms: true,
-  // },
+  // Désactiver l'export statique pour les pages dynamiques
+  output: 'standalone',
 }
 
 module.exports = nextConfig

@@ -59,7 +59,6 @@ export async function GET(request: Request) {
       items: invoice.items.map(item => ({
         ...item,
         createdAt: item.createdAt ? item.createdAt.toISOString() : new Date().toISOString(),
-        updatedAt: item.updatedAt ? item.updatedAt.toISOString() : new Date().toISOString(),
       })),
     }))
 

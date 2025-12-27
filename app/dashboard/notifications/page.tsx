@@ -108,7 +108,7 @@ export default function NotificationsPage() {
           })
         })
         
-        previousNotificationsRef.current = currentIds
+        previousNotificationsRef.current = currentIds as Set<string>
         setNotifications(data)
       }
     } catch (error) {

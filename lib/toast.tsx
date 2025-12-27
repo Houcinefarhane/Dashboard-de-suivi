@@ -6,9 +6,11 @@ class ToastManager {
   private listeners: Set<(toasts: Toast[]) => void> = new Set()
   private toasts: Toast[] = []
 
-  subscribe(listener: (toasts: Toast[]) => void) {
+  subscribe(listener: (toasts: Toast[]) => void): () => void {
     this.listeners.add(listener)
-    return () => this.listeners.delete(listener)
+    return () => {
+      this.listeners.delete(listener)
+    }
   }
 
   private notify() {

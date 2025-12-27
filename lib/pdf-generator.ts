@@ -65,7 +65,7 @@ export function generateInvoicePDF(invoice: InvoiceData): void {
   const textColor = [38, 38, 38] // Gris foncé
 
   // En-tête avec logo
-  doc.setFillColor(...primaryColor)
+  doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2])
   doc.roundedRect(margin, yPos, 30, 30, 3, 3, 'F')
   
   // Icône Wrench (simplifiée - dessin manuel)
@@ -80,7 +80,7 @@ export function generateInvoicePDF(invoice: InvoiceData): void {
   const companyName = invoice.artisan?.companyName || invoice.artisan?.name || 'ArtisanPro'
   doc.setFontSize(18)
   doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...darkColor)
+  doc.setTextColor(darkColor[0], darkColor[1], darkColor[2])
   doc.text(companyName, margin + 40, yPos + 12)
   
   // Informations de l'entreprise
@@ -108,7 +108,7 @@ export function generateInvoicePDF(invoice: InvoiceData): void {
   // Titre FACTURE
   doc.setFontSize(24)
   doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...darkColor)
+  doc.setTextColor(darkColor[0], darkColor[1], darkColor[2])
   doc.text('FACTURE', pageWidth - margin, yPos + 15, { align: 'right' })
   doc.setFontSize(12)
   doc.setFont('helvetica', 'normal')
@@ -119,7 +119,7 @@ export function generateInvoicePDF(invoice: InvoiceData): void {
   // Informations client et facture
   doc.setFontSize(12)
   doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...darkColor)
+  doc.setTextColor(darkColor[0], darkColor[1], darkColor[2])
   doc.text('Facturé à :', margin, yPos)
   
   doc.setFont('helvetica', 'normal')
@@ -150,12 +150,12 @@ export function generateInvoicePDF(invoice: InvoiceData): void {
   yPos = 110
 
   // Tableau des articles
-  doc.setFillColor(...creamColor)
+  doc.setFillColor(creamColor[0], creamColor[1], creamColor[2])
   doc.roundedRect(margin, yPos - 5, pageWidth - 2 * margin, 8, 1, 1, 'F')
   
   doc.setFontSize(10)
   doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...darkColor)
+  doc.setTextColor(darkColor[0], darkColor[1], darkColor[2])
   doc.text('Description', margin + 5, yPos)
   doc.text('Qté', margin + 100, yPos, { align: 'right' })
   doc.text('Prix unit.', margin + 130, yPos, { align: 'right' })
@@ -210,7 +210,7 @@ export function generateInvoicePDF(invoice: InvoiceData): void {
   const rectWidth = totalTextWidth + 15
   const rectHeight = 10
   
-  doc.setFillColor(...primaryColor)
+  doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2])
   doc.roundedRect(rectX, yPos - 5, rectWidth, rectHeight, 2, 2, 'F')
   doc.setTextColor(0, 0, 0)
   doc.text(totalLabel, totalsX, yPos + 2, { align: 'right' })
@@ -222,7 +222,7 @@ export function generateInvoicePDF(invoice: InvoiceData): void {
   if (invoice.notes) {
     doc.setFontSize(10)
     doc.setFont('helvetica', 'bold')
-    doc.setTextColor(...darkColor)
+    doc.setTextColor(darkColor[0], darkColor[1], darkColor[2])
     doc.text('Notes :', margin, yPos)
     doc.setFont('helvetica', 'normal')
     doc.setTextColor(60, 60, 60)

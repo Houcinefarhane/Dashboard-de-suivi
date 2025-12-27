@@ -133,12 +133,11 @@ export default function FinancesPage() {
 
       // Capturer le DOM avec html2canvas
       const canvas = await html2canvas(financesRef.current, {
-        scale: 2,
         useCORS: true,
         logging: false,
-        backgroundColor: '#ffffff',
-        windowWidth: financesRef.current.scrollWidth,
-        windowHeight: financesRef.current.scrollHeight,
+        background: '#ffffff',
+        width: financesRef.current.scrollWidth,
+        height: financesRef.current.scrollHeight,
       })
 
       // Restaurer l'affichage des boutons

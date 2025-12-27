@@ -93,9 +93,9 @@ export async function POST() {
     return NextResponse.json({
       success: true,
       geocoded: results.length,
-      errors: errors.length,
+      errorsCount: errors.length,
       results,
-      errors: errors,
+      errors,
     })
   } catch (error) {
     console.error('Error geocoding interventions:', error)
