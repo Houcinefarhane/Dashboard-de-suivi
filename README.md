@@ -27,6 +27,13 @@ Application web pour la gestion d'activité des plombiers, serruriers et autres 
 npm install
 ```
 
+2. Installer les hooks Git de sécurité (recommandé) :
+```bash
+bash scripts/setup-git-hooks.sh
+```
+
+Les hooks empêchent automatiquement de commiter des données sensibles.
+
 2. Configurer la base de données :
 ```bash
 # Créer le fichier .env avec vos identifiants Supabase
