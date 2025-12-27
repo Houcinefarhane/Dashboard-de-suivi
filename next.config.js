@@ -11,6 +11,8 @@ const nextConfig = {
     }
     return config
   },
+  // Configuration pour Netlify
+  output: 'standalone',
 }
 
 module.exports = nextConfig

@@ -57,6 +57,7 @@
     "@babel/preset-env": "^7.28.5",
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
+    "@netlify/plugin-nextjs": "^5.15.3",
     "@types/bcryptjs": "^2.4.6",
     "@types/html2canvas": "^0.5.35",
     "@types/node": "^20.10.6",

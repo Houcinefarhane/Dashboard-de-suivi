@@ -68,13 +68,33 @@ SKIP_EMAIL_VERIFICATION=false
 
 ### Déploiement
 
-Pour déployer sur Vercel ou une autre plateforme :
+#### Sur Netlify (recommandé)
 
-1. Connecter votre dépôt GitHub à votre plateforme de déploiement
-2. Configurer toutes les variables d'environnement (voir `.env.production.example`)
-3. Générer `NEXTAUTH_SECRET` : `openssl rand -base64 32`
-4. Configurer `NEXTAUTH_URL` avec votre domaine de production
-5. Le build se fera automatiquement lors du déploiement
+1. Créer un compte sur [Netlify](https://netlify.com)
+2. Connecter votre dépôt GitHub
+3. Configurer les paramètres de build :
+   - Build command : `npm run build`
+   - Publish directory : `.next`
+4. Ajouter toutes les variables d'environnement dans Netlify (Settings → Environment variables) :
+   - `DATABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `NEXTAUTH_SECRET` (générer avec : `openssl rand -base64 32`)
+   - `NEXTAUTH_URL` (votre URL Netlify : `https://votre-projet.netlify.app`)
+   - `RESEND_API_KEY`
+   - `RESEND_FROM_EMAIL`
+   - `NEXT_PUBLIC_APP_URL` (votre URL Netlify)
+   - `SKIP_EMAIL_VERIFICATION=false`
+   - `NODE_ENV=production`
+5. Déployer
+
+#### Sur Vercel (alternative)
+
+1. Créer un compte sur [Vercel](https://vercel.com)
+2. Connecter votre dépôt GitHub
+3. Configurer les variables d'environnement
+4. Déployer automatiquement
 
 3. Lancer le serveur de développement :
 ```bash
