@@ -602,7 +602,7 @@ async function main() {
   console.log('')
   console.log('🔑 Identifiants de connexion:')
   console.log(`   Email: ${artisan.email}`)
-      console.log(`   Mot de passe: ${artisanPassword}`)
+  console.log(`   Mot de passe: ${process.env.SEED_PASSWORD ? '***' : artisanPassword}`)
 }
 
 main()
