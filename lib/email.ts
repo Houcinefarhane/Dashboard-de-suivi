@@ -95,7 +95,7 @@ export async function sendVerificationEmail(
       // Si c'est une erreur de domaine non vérifié, donner un message plus clair
       if (result.error.statusCode === 403 && result.error.message?.includes('verify a domain')) {
         console.error(' Domaine non vérifié dans Resend')
-        console.error('💡 Solution: Vérifiez un domaine dans Resend ou utilisez votre email de compte pour les tests')
+        console.error('Solution: Vérifiez un domaine dans Resend ou utilisez votre email de compte pour les tests')
         return { 
           success: false, 
           error: 'Domaine email non vérifié. En mode test, Resend ne permet d\'envoyer qu\'à votre adresse email de compte. Vérifiez un domaine dans Resend pour envoyer à d\'autres adresses.' 
