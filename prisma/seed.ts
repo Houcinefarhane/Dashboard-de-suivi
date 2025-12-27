@@ -67,7 +67,7 @@ async function main() {
   console.log('🌱 Début du seed...')
 
   // Récupérer ou créer l'artisan avec les bons identifiants
-  const artisanEmail = 'admin.123@outlook.fr'
+  const artisanEmail = process.env.SEED_EMAIL || 'test@artisan.com'
   // Mot de passe par défaut pour les comptes de test (à changer en production)
   const artisanPassword = process.env.SEED_PASSWORD || 'password123'
   
