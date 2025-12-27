@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { getCurrentArtisan } from '@/lib/auth'
 import { getAllReminders, checkAndCreateInvoiceReminders } from '@/lib/invoice-reminders'
 

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { getCurrentArtisan } from '@/lib/auth'
 import { sendInvoiceReminder, checkAndSendInvoiceReminders } from '@/lib/notifications'
 import { prisma } from '@/lib/prisma'
