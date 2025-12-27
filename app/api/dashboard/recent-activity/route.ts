@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { getCurrentArtisan } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 import { formatDistanceToNow } from 'date-fns'
 import { fr } from 'date-fns/locale/fr'
 

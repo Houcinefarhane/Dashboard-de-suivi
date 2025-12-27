@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { getCurrentArtisan } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request) {
   try {
     const artisan = await getCurrentArtisan()
