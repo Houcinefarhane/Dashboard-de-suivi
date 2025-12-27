@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "./node_modules/.bin/next dev -p 3010",
     "dev:tunnel": "next dev --hostname 0.0.0.0",
-    "build": "./node_modules/.bin/prisma generate && next build",
+    "build": "npm run db:generate && next build",
     "start": "next start",
-    "postinstall": "./node_modules/.bin/prisma generate",
+    "postinstall": "npm run db:generate",
     "lint": "next lint",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
