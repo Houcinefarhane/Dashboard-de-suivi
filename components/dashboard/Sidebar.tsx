@@ -17,7 +17,6 @@ import {
   X,
   MapPin,
   Bell,
-  CreditCard
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState, useEffect } from 'react'
@@ -36,7 +35,6 @@ const menuItems = [
   { href: '/dashboard/finances', label: 'Finances', icon: TrendingUp },
   { href: '/dashboard/stock', label: 'Stock', icon: Package },
   { href: '/dashboard/notifications', label: 'Notifications', icon: Bell },
-  { href: '/dashboard/abonnement', label: 'Abonnement', icon: CreditCard },
 ]
 
 export function Sidebar() {

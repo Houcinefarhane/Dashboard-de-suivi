@@ -25,12 +25,6 @@ model Artisan {
   emailVerified Boolean   @default(false)
   emailVerificationToken String?   @unique
   emailVerificationTokenExpires DateTime?
-  // Stripe
-  stripeCustomerId      String?   @unique
-  stripeSubscriptionId   String?   @unique
-  stripePriceId         String?
-  subscriptionStatus    String?   @default("inactive") // active, canceled, past_due, trialing, inactive
-  subscriptionCurrentPeriodEnd DateTime?
   // Informations légales
   siret         String?   // Numéro SIRET
   siren         String?   // Numéro SIREN

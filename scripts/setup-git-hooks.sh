@@ -25,22 +25,6 @@ if git diff --cached | grep -qi "postgresql://postgres:[^@]*@db\.[a-z0-9]*\.supa
     exit 1
 fi
 
-# Vérifier les clés API Stripe
-if git diff --cached | grep -E "sk_(test|live)_[a-zA-Z0-9]{20,}"; then
-    echo "${RED}ERREUR: Clé secrète Stripe détectée !${NC}"
-    exit 1
-fi
-
-if git diff --cached | grep -E "pk_(test|live)_[a-zA-Z0-9]{20,}"; then
-    echo "${RED}ERREUR: Clé publique Stripe détectée !${NC}"
-    exit 1
-fi
-
-if git diff --cached | grep -E "whsec_[a-zA-Z0-9]{20,}"; then
-    echo "${RED}ERREUR: Secret webhook Stripe détecté !${NC}"
-    exit 1
-fi
-
 # Vérifier les clés Resend
 if git diff --cached | grep -E "re_[a-zA-Z0-9]{20,}"; then
     echo "${RED}ERREUR: Clé API Resend détectée !${NC}"

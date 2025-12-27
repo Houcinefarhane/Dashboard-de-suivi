@@ -19,26 +19,6 @@ export default async function DashboardLayout({
   
   console.log('DashboardLayout - Artisan connecté:', artisan.email)
 
-  // Vérifier le statut de l'abonnement (optionnel - peut être désactivé pour les tests)
-  const requireSubscription = process.env.REQUIRE_SUBSCRIPTION === 'true'
-  
-  if (requireSubscription) {
-    const artisanWithSubscription = await prisma.artisan.findUnique({
-      where: { id: artisan.id },
-      select: { subscriptionStatus: true },
-    })
-
-    const isActive = artisanWithSubscription?.subscriptionStatus === 'active' || 
-                     artisanWithSubscription?.subscriptionStatus === 'trialing'
-
-    // Rediriger vers la page d'abonnement si pas d'abonnement actif
-    // (sauf si on est déjà sur la page d'abonnement)
-    if (!isActive) {
-      // Note: On ne peut pas vérifier le pathname dans un Server Component
-      // Donc on laisse passer pour l'instant, la vérification se fera côté client si nécessaire
-    }
-  }
-
   return (
     <div className="min-h-screen bg-background flex">
       <Sidebar />
