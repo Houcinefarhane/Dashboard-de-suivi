@@ -138,10 +138,10 @@ async function main() {
     throw new Error(`Artisan avec l'email ${artisanEmail} non trouvé. Veuillez créer le compte d'abord.`)
   }
   
-  console.log(` Artisan trouvé/créé: ${artisan.email}`)
+  console.log(`Artisan trouvé/créé: ${artisan.email}`)
 
   // Générer des clients (500)
-  console.log(' Création de 500 clients...')
+  console.log('Création de 500 clients...')
   const clients = []
   for (let i = 0; i < 500; i++) {
     const firstName = randomElement(firstNames)
@@ -164,7 +164,7 @@ async function main() {
     clients.push(client)
     
     if ((i + 1) % 50 === 0) {
-      console.log(`   ${i + 1}/500 clients créés`)
+      console.log(`  ${i + 1}/500 clients créés`)
     }
   }
 
@@ -187,7 +187,7 @@ async function main() {
     stockItems.push(stockItem)
     
     if ((i + 1) % 50 === 0) {
-      console.log(`   ${i + 1}/200 items de stock créés`)
+      console.log(`  ${i + 1}/200 items de stock créés`)
     }
   }
 
@@ -289,7 +289,7 @@ async function main() {
         hoursByDay.set(dayKey, currentHours)
         
         if (interventions.length % 100 === 0) {
-          console.log(`   ${interventions.length} interventions créées`)
+          console.log(`  ${interventions.length} interventions créées`)
         }
       } catch (error) {
         console.error(`Erreur lors de la création de l'intervention:`, error)
@@ -297,7 +297,7 @@ async function main() {
     }
   }
   
-  console.log(`   ${interventions.length} interventions créées au total`)
+  console.log(`  ${interventions.length} interventions créées au total`)
 
   // Générer des devis (400)
   console.log('Création de 400 devis...')
@@ -308,7 +308,7 @@ async function main() {
   const existingQuotes = await prisma.quote.findMany({
     select: { quoteNumber: true }
   })
-  console.log(`   ${existingQuotes.length} devis existants trouvés`)
+  console.log(`  ${existingQuotes.length} devis existants trouvés`)
   const existingQuoteNumbers = new Set(existingQuotes.map((q: { quoteNumber: string }) => q.quoteNumber))
   
   // Trouver le numéro le plus élevé pour continuer la numérotation
@@ -322,7 +322,7 @@ async function main() {
   }
   
   let quoteCounter = maxQuoteNumber + 1
-  console.log(`  🔢 Début de la numérotation à DEV-${quoteCounter.toString().padStart(4, '0')}`)
+  console.log(` 🔢 Début de la numérotation à DEV-${quoteCounter.toString().padStart(4, '0')}`)
 
   for (let i = 0; i < 400; i++) {
     const client = randomElement(clients)
@@ -363,7 +363,7 @@ async function main() {
           select: { id: true }
         })
         if (existingQuote) {
-          console.log(`    Le numéro ${quoteNumber} existe déjà, on passe au suivant`)
+          console.log(`   Le numéro ${quoteNumber} existe déjà, on passe au suivant`)
           existingQuoteNumbers.add(quoteNumber)
           continue
         }
@@ -405,7 +405,7 @@ async function main() {
     quotes.push(quote)
     
     if ((i + 1) % 50 === 0) {
-      console.log(`   ${i + 1}/400 devis créés`)
+      console.log(`  ${i + 1}/400 devis créés`)
     }
   }
 
@@ -418,7 +418,7 @@ async function main() {
   const existingInvoices = await prisma.invoice.findMany({
     select: { invoiceNumber: true }
   })
-  console.log(`   ${existingInvoices.length} factures existantes trouvées`)
+  console.log(`  ${existingInvoices.length} factures existantes trouvées`)
   const existingInvoiceNumbers = new Set(existingInvoices.map((inv: { invoiceNumber: string }) => inv.invoiceNumber))
   
   // Trouver le numéro le plus élevé pour continuer la numérotation
@@ -432,7 +432,7 @@ async function main() {
   }
   
   let invoiceCounter = maxInvoiceNumber + 1
-  console.log(`  🔢 Début de la numérotation à FAC-${invoiceCounter.toString().padStart(4, '0')}`)
+  console.log(` 🔢 Début de la numérotation à FAC-${invoiceCounter.toString().padStart(4, '0')}`)
 
   for (let i = 0; i < 600; i++) {
     const client = randomElement(clients)
@@ -473,7 +473,7 @@ async function main() {
           select: { id: true }
         })
         if (existingInvoice) {
-          console.log(`    Le numéro ${invoiceNumber} existe déjà, on passe au suivant`)
+          console.log(`   Le numéro ${invoiceNumber} existe déjà, on passe au suivant`)
           existingInvoiceNumbers.add(invoiceNumber)
           continue
         }
@@ -515,7 +515,7 @@ async function main() {
     invoices.push(invoice)
     
     if ((i + 1) % 100 === 0) {
-      console.log(`   ${i + 1}/600 factures créées`)
+      console.log(`  ${i + 1}/600 factures créées`)
     }
   }
 
@@ -536,7 +536,7 @@ async function main() {
     })
     
     if ((i + 1) % 50 === 0) {
-      console.log(`   ${i + 1}/300 dépenses créées`)
+      console.log(`  ${i + 1}/300 dépenses créées`)
     }
   }
 
@@ -584,7 +584,7 @@ async function main() {
     })
     
     if ((i + 1) % 50 === 0) {
-      console.log(`   ${i + 1}/200 notifications créées`)
+      console.log(`  ${i + 1}/200 notifications créées`)
     }
   }
 
@@ -592,17 +592,17 @@ async function main() {
   console.log('Seed terminé avec succès!')
   console.log('')
   console.log('Résumé des données créées:')
-  console.log(`   - ${clients.length} clients`)
-  console.log(`   - ${stockItems.length} items de stock`)
-  console.log(`   - ${interventions.length} interventions`)
-  console.log(`   - ${quotes.length} devis`)
-  console.log(`   - ${invoices.length} factures`)
-  console.log(`   - 300 dépenses`)
-  console.log(`   - 200 notifications`)
+  console.log(`  - ${clients.length} clients`)
+  console.log(`  - ${stockItems.length} items de stock`)
+  console.log(`  - ${interventions.length} interventions`)
+  console.log(`  - ${quotes.length} devis`)
+  console.log(`  - ${invoices.length} factures`)
+  console.log(`  - 300 dépenses`)
+  console.log(`  - 200 notifications`)
   console.log('')
   console.log('Identifiants de connexion:')
-  console.log(`   Email: ${artisan.email}`)
-  console.log(`   Mot de passe: ${process.env.SEED_PASSWORD ? '***' : artisanPassword}`)
+  console.log(`  Email: ${artisan.email}`)
+  console.log(`  Mot de passe: ${process.env.SEED_PASSWORD ? '***' : artisanPassword}`)
 }
 
 main()
