@@ -38,5 +38,46 @@ next-env.d.ts
 # prisma
 /prisma/*.db
 /prisma/*.db-journal
+/prisma/**/*.db
+/prisma/**/*.db-journal
 
-DEV_NOTES.md
+# fichiers confidentiels
+*.env
+*.env.local
+*.env.production
+*.env.development
+.env*
+!.env.example
+
+# fichiers de configuration sensibles
+**/config/secrets.*
+**/secrets.*
+
+# logs
+*.log
+logs/
+*.log.*
+
+# fichiers temporaires
+*.tmp
+*.temp
+.cache/
+.temp/
+
+# fichiers système
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# fichiers de build
+dist/
+build/
+out/
+.next/
