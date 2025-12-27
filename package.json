@@ -7,7 +7,6 @@
     "dev:tunnel": "next dev --hostname 0.0.0.0",
     "build": "npm run db:generate && next build",
     "start": "next start",
-    "postinstall": "npm run db:generate",
     "lint": "next lint",
     "db:push": "npx --yes prisma@5.7.1 db push",
     "db:studio": "npx --yes prisma@5.7.1 studio",
