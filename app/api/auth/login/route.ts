@@ -114,12 +114,23 @@ export async function POST(request: Request) {
       message: error?.message,
       stack: error?.stack,
       name: error?.name,
+      code: error?.code,
     })
     
-    // Retourner un message d'erreur plus détaillé en développement
-    const errorMessage = process.env.NODE_ENV === 'development' 
+    // Retourner un message d'erreur plus détaillé en développement, mais toujours logger en production
+    const isDevelopment = process.env.NODE_ENV === 'development'
+    const errorMessage = isDevelopment
       ? `Erreur lors de la connexion: ${error?.message || 'Erreur inconnue'}`
       : 'Erreur lors de la connexion'
+    
+    // Logger l'erreur complète pour le debugging en production
+    if (!isDevelopment) {
+      console.error('Erreur de connexion en production:', {
+        message: error?.message,
+        name: error?.name,
+        code: (error as any)?.code,
+      })
+    }
     
     return NextResponse.json(
       { error: errorMessage },
