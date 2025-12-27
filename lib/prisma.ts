@@ -39,48 +39,65 @@ function validateDatabaseUrl(url: string | undefined): string {
   return cleanUrl
 }
 
-// Valider DATABASE_URL au démarrage
-let databaseUrl: string
-try {
-  databaseUrl = validateDatabaseUrl(process.env.DATABASE_URL)
-  console.log('DATABASE_URL validé avec succès')
-} catch (error: any) {
-  console.error('ERREUR DE CONFIGURATION DATABASE_URL:')
-  console.error(error.message)
-  console.error('\nFormat attendu:')
-  console.error('DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT_REF].supabase.co:5432/postgres"')
-  console.error('\nPour obtenir votre DATABASE_URL:')
-  console.error('1. Allez sur https://supabase.com')
-  console.error('2. Sélectionnez votre projet')
-  console.error('3. Settings → Database')
-  console.error('4. Copiez la "Connection string" (URI)')
-  throw error
+// Créer Prisma Client avec lazy initialization pour éviter les erreurs pendant le build
+function getPrismaClient(): PrismaClient {
+  // Ne pas valider/créer pendant le build (Next.js build process)
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    // Pendant le build, retourner un client minimal qui ne se connecte pas
+    return globalForPrisma.prisma ?? new PrismaClient({
+      log: [],
+      datasources: {
+        db: {
+          url: process.env.DATABASE_URL || 'postgresql://placeholder',
+        },
+      },
+    })
+  }
+
+  // Valider DATABASE_URL seulement au runtime
+  let databaseUrl: string
+  try {
+    databaseUrl = validateDatabaseUrl(process.env.DATABASE_URL)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('DATABASE_URL validé avec succès')
+    }
+  } catch (error: any) {
+    console.error('ERREUR DE CONFIGURATION DATABASE_URL:')
+    console.error(error.message)
+    console.error('\nFormat attendu:')
+    console.error('DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT_REF].supabase.co:5432/postgres"')
+    console.error('\nPour obtenir votre DATABASE_URL:')
+    console.error('1. Allez sur https://supabase.com')
+    console.error('2. Sélectionnez votre projet')
+    console.error('3. Settings → Database')
+    console.error('4. Copiez la "Connection string" (URI)')
+    throw error
+  }
+
+  // Créer Prisma Client avec gestion d'erreur améliorée
+  if (!globalForPrisma.prisma) {
+    try {
+      globalForPrisma.prisma = new PrismaClient({
+        log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+      })
+    } catch (error: any) {
+      console.error('ERREUR lors de la création du client Prisma:')
+      console.error(error.message)
+      if (error.message?.includes('did not match the expected pattern')) {
+        console.error('\nLe DATABASE_URL ne correspond pas au format attendu par Prisma.')
+        console.error('Vérifiez que:')
+        console.error('- Le mot de passe est correctement encodé (utilisez encodeURIComponent si nécessaire)')
+        console.error('- Il n\'y a pas d\'espaces ou de caractères invalides')
+        console.error('- Le format est: postgresql://user:password@host:port/database')
+      }
+      throw error
+    }
+  }
+
+  return globalForPrisma.prisma
 }
 
-// Créer Prisma Client avec gestion d'erreur améliorée
-let prisma: PrismaClient
-
-try {
-  // Ne pas spécifier datasources - laisser Prisma lire directement depuis process.env.DATABASE_URL
-  prisma = globalForPrisma.prisma ?? new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
-  })
-
-  if (process.env.NODE_ENV !== 'production') {
-    globalForPrisma.prisma = prisma
-  }
-} catch (error: any) {
-  console.error('ERREUR lors de la création du client Prisma:')
-  console.error(error.message)
-  if (error.message?.includes('did not match the expected pattern')) {
-    console.error('\nLe DATABASE_URL ne correspond pas au format attendu par Prisma.')
-    console.error('Vérifiez que:')
-    console.error('- Le mot de passe est correctement encodé (utilisez encodeURIComponent si nécessaire)')
-    console.error('- Il n\'y a pas d\'espaces ou de caractères invalides')
-    console.error('- Le format est: postgresql://user:password@host:port/database')
-  }
-  throw error
-}
-
+// Export lazy Prisma client
+const prisma = getPrismaClient()
 export { prisma }
 
