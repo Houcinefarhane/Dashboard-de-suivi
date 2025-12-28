@@ -82,7 +82,7 @@ export async function POST(request: Request) {
       if (dbError?.code === 'P1001') {
         console.error('ERREUR: Impossible de se connecter au serveur de base de données')
         console.error('Vérifiez que DATABASE_URL est correct et que Supabase est accessible')
-        throw new Error('Impossible de se connecter à la base de données. Vérifiez votre configuration DATABASE_URL dans Netlify.')
+        throw new Error('Impossible de se connecter à la base de données. Vérifiez votre configuration DATABASE_URL dans Vercel.')
       }
       
       if (dbError?.code === 'P1000') {
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
           dbError?.message?.includes('Invalid connection string') ||
           dbError?.code === 'P1013') {
         console.error('ERREUR: Format DATABASE_URL invalide')
-        throw new Error('Format de connexion à la base de données invalide. Vérifiez votre DATABASE_URL dans Netlify.')
+        throw new Error('Format de connexion à la base de données invalide. Vérifiez votre DATABASE_URL dans Vercel.')
       }
       
       // Erreur générique
@@ -223,7 +223,7 @@ export async function POST(request: Request) {
     } else if (error?.message?.includes('DATABASE_URL manquant')) {
       errorMessage = 'Configuration de la base de données manquante'
       errorDetails = {
-        suggestion: 'Ajoutez DATABASE_URL dans les variables d\'environnement Netlify.',
+        suggestion: 'Ajoutez DATABASE_URL dans les variables d\'environnement Vercel (Settings → Environment Variables).',
       }
     } else {
       // Erreur générique - toujours retourner le message pour aider au debug

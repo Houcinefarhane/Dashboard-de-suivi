@@ -36,7 +36,7 @@ export async function GET() {
       diagnostic.recommendations.push('Le format de DATABASE_URL est invalide. Vérifiez qu\'il n\'y a pas de guillemets autour de la valeur.')
     }
   } else {
-    diagnostic.recommendations.push('DATABASE_URL n\'est pas défini. Ajoutez-le dans les variables d\'environnement Netlify.')
+    diagnostic.recommendations.push('DATABASE_URL n\'est pas défini. Ajoutez-le dans les variables d\'environnement Vercel (Settings → Environment Variables).')
   }
 
   // Tester différentes configurations de connexion
@@ -132,7 +132,7 @@ export async function GET() {
 
       // Messages d'aide selon le code d'erreur
       if (error.code === 'P1001') {
-        testResult.help = 'Impossible de se connecter au serveur. Cela peut signifier : 1) Le serveur Supabase est inaccessible depuis Netlify, 2) Le port est bloqué par un firewall, 3) L\'adresse IP de Netlify n\'est pas autorisée dans Supabase.'
+        testResult.help = 'Impossible de se connecter au serveur. Cela peut signifier : 1) Le serveur Supabase est inaccessible depuis Vercel, 2) Le port est bloqué par un firewall, 3) L\'adresse IP de Vercel n\'est pas autorisée dans Supabase, 4) DATABASE_URL n\'est pas configuré dans Vercel.'
         diagnostic.recommendations.push('Vérifiez dans Supabase : Settings → Database → Connection Pooling → Activez le pooler et autorisez toutes les IPs (0.0.0.0/0)')
         diagnostic.recommendations.push('Vérifiez que DATABASE_URL est bien configuré dans Vercel (Settings → Environment Variables)')
       } else if (error.code === 'P1000' || error.message?.includes('Authentication failed') || error.message?.includes('credentials')) {
@@ -152,7 +152,7 @@ export async function GET() {
   if (diagnostic.connectionTests.every((test: any) => !test.success)) {
     diagnostic.recommendations.push('Aucune configuration ne fonctionne. Vérifiez dans Supabase :')
     diagnostic.recommendations.push('1. Settings → Database → Connection string → Utilisez "Connection pooling" (port 6543)')
-    diagnostic.recommendations.push('2. Settings → Database → Network restrictions → Autorisez toutes les IPs ou ajoutez les IPs de Netlify')
+    diagnostic.recommendations.push('2. Settings → Database → Network restrictions → Autorisez toutes les IPs ou ajoutez les IPs de Vercel')
     diagnostic.recommendations.push('3. Vérifiez que le mot de passe dans Supabase correspond à celui dans DATABASE_URL')
   }
 
