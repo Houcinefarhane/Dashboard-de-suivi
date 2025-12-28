@@ -46,17 +46,34 @@ export async function POST(request: Request) {
       }
     } catch (dbError: any) {
       console.error('=== ERREUR BASE DE DONNÉES ===')
+      console.error('Type:', dbError?.constructor?.name)
       console.error('Message:', dbError?.message)
       console.error('Code:', dbError?.code)
       console.error('Stack:', dbError?.stack)
       
-      // Vérifier si c'est une erreur de format DATABASE_URL
-      if (dbError?.message?.includes('did not match the expected pattern') || 
-          dbError?.message?.includes('Invalid connection string')) {
-        throw new Error('Format de connexion à la base de données invalide. Vérifiez votre fichier .env (DATABASE_URL)')
+      // Vérifier le type d'erreur Prisma
+      if (dbError?.code === 'P1001') {
+        console.error('ERREUR: Impossible de se connecter au serveur de base de données')
+        console.error('Vérifiez que DATABASE_URL est correct et que Supabase est accessible')
+        throw new Error('Impossible de se connecter à la base de données. Vérifiez votre configuration DATABASE_URL dans Netlify.')
       }
       
-      throw new Error(`Erreur de connexion à la base de données: ${dbError?.message || 'Erreur inconnue'}`)
+      if (dbError?.code === 'P1000') {
+        console.error('ERREUR: Échec d\'authentification')
+        throw new Error('Échec d\'authentification à la base de données. Vérifiez le mot de passe dans DATABASE_URL.')
+      }
+      
+      // Vérifier si c'est une erreur de format DATABASE_URL
+      if (dbError?.message?.includes('did not match the expected pattern') || 
+          dbError?.message?.includes('Invalid connection string') ||
+          dbError?.code === 'P1013') {
+        console.error('ERREUR: Format DATABASE_URL invalide')
+        throw new Error('Format de connexion à la base de données invalide. Vérifiez votre DATABASE_URL dans Netlify.')
+      }
+      
+      // Erreur générique
+      console.error('Erreur complète:', JSON.stringify(dbError, Object.getOwnPropertyNames(dbError), 2))
+      throw new Error(`Erreur de connexion à la base de données: ${dbError?.message || 'Erreur inconnue'} (Code: ${dbError?.code || 'N/A'})`)
     }
 
     if (!artisan) {
