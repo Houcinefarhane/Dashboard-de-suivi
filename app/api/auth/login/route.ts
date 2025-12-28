@@ -24,16 +24,35 @@ export async function POST(request: Request) {
     }
 
     // Trouver l'artisan
-    console.log('Recherche artisan dans la base de données...')
+    console.log('=== RECHERCHE ARTISAN ===')
     console.log('DATABASE_URL présent:', !!process.env.DATABASE_URL)
-    console.log('DATABASE_URL commence par:', process.env.DATABASE_URL?.substring(0, 20) || 'N/A')
+    if (process.env.DATABASE_URL) {
+      try {
+        const urlObj = new URL(process.env.DATABASE_URL)
+        console.log('DATABASE_URL analysé:', {
+          host: urlObj.hostname,
+          port: urlObj.port || '5432 (défaut)',
+          user: urlObj.username,
+          database: urlObj.pathname,
+          hasPassword: !!urlObj.password,
+        })
+      } catch (e) {
+        console.error('Erreur parsing DATABASE_URL:', e)
+      }
+    } else {
+      console.error('ERREUR: DATABASE_URL n\'est pas défini!')
+      return NextResponse.json(
+        { error: 'Configuration de la base de données manquante. Contactez l\'administrateur.' },
+        { status: 500 }
+      )
+    }
     
     let artisan
     try {
       // Tester la connexion d'abord
       console.log('Test de connexion à la base de données...')
       await prisma.$connect()
-      console.log('Connexion réussie!')
+      console.log('✅ Connexion réussie!')
       
       const emailNormalized = email.toLowerCase().trim()
       console.log('Email normalisé:', emailNormalized)
