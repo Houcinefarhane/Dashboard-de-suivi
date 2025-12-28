@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { PrismaClient } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,8 +9,8 @@ export async function GET() {
     nodeEnv: process.env.NODE_ENV,
     hasDatabaseUrl: !!process.env.DATABASE_URL,
     databaseUrlInfo: null,
-    connectionTest: null,
-    error: null,
+    connectionTests: [],
+    recommendations: [],
   }
 
   // Analyser DATABASE_URL sans exposer le mot de passe
@@ -25,59 +25,121 @@ export async function GET() {
         username: urlObj.username,
         hasPassword: !!urlObj.password,
         passwordLength: urlObj.password?.length || 0,
+        hasQueryParams: !!urlObj.search,
+        queryParams: urlObj.search,
       }
     } catch (e: any) {
       diagnostic.databaseUrlInfo = {
         error: 'Format URL invalide',
         message: e.message,
       }
+      diagnostic.recommendations.push('Le format de DATABASE_URL est invalide. Vérifiez qu\'il n\'y a pas de guillemets autour de la valeur.')
+    }
+  } else {
+    diagnostic.recommendations.push('DATABASE_URL n\'est pas défini. Ajoutez-le dans les variables d\'environnement Netlify.')
+  }
+
+  // Tester différentes configurations de connexion
+  const testConfigs = [
+    {
+      name: 'Configuration actuelle',
+      url: process.env.DATABASE_URL,
+    },
+  ]
+
+  // Si le port est 5432, tester aussi avec 6543
+  if (process.env.DATABASE_URL) {
+    try {
+      const urlObj = new URL(process.env.DATABASE_URL)
+      if (urlObj.port === '5432' || !urlObj.port) {
+        // Tester avec le pooler
+        const poolerUrl = process.env.DATABASE_URL.replace(':5432', ':6543').replace('/postgres', '/postgres?pgbouncer=true')
+        testConfigs.push({
+          name: 'Pooler Supabase (port 6543)',
+          url: poolerUrl,
+        })
+      }
+    } catch (e) {
+      // Ignorer les erreurs de parsing
     }
   }
 
-  // Tester la connexion
-  try {
-    await prisma.$connect()
-    diagnostic.connectionTest = {
-      success: true,
-      message: 'Connexion réussie',
-    }
-    
-    // Tester une requête simple
-    try {
-      const count = await prisma.artisan.count()
-      diagnostic.connectionTest.queryTest = {
-        success: true,
-        artisanCount: count,
-      }
-    } catch (queryError: any) {
-      diagnostic.connectionTest.queryTest = {
-        success: false,
-        error: queryError.message,
-        code: queryError.code,
-      }
-    }
-    
-    await prisma.$disconnect()
-  } catch (error: any) {
-    diagnostic.connectionTest = {
+  // Tester chaque configuration
+  for (const config of testConfigs) {
+    if (!config.url) continue
+
+    const testResult: any = {
+      name: config.name,
+      url: config.url.substring(0, 50) + '...', // Afficher seulement le début
       success: false,
-      error: error.message,
-      code: error.code,
-      type: error.constructor?.name,
+      error: null,
     }
-    
-    // Messages d'aide selon le code d'erreur
-    if (error.code === 'P1001') {
-      diagnostic.connectionTest.help = 'Impossible de se connecter au serveur. Vérifiez que DATABASE_URL est correct et que Supabase est accessible. Essayez peut-être le pooler sur le port 6543.'
-    } else if (error.code === 'P1000') {
-      diagnostic.connectionTest.help = 'Échec d\'authentification. Vérifiez le mot de passe dans DATABASE_URL (doit être URL-encodé, ex: ! devient %21).'
-    } else if (error.code === 'P1013') {
-      diagnostic.connectionTest.help = 'Format de connexion invalide. Vérifiez le format de DATABASE_URL.'
+
+    try {
+      // Créer un client Prisma temporaire avec cette URL
+      const testPrisma = new PrismaClient({
+        datasources: {
+          db: {
+            url: config.url,
+          },
+        },
+      })
+
+      // Tester la connexion
+      await testPrisma.$connect()
+      testResult.success = true
+      testResult.message = 'Connexion réussie'
+
+      // Tester une requête simple
+      try {
+        const count = await testPrisma.artisan.count()
+        testResult.queryTest = {
+          success: true,
+          artisanCount: count,
+        }
+      } catch (queryError: any) {
+        testResult.queryTest = {
+          success: false,
+          error: queryError.message,
+          code: queryError.code,
+        }
+      }
+
+      await testPrisma.$disconnect()
+    } catch (error: any) {
+      testResult.success = false
+      testResult.error = error.message
+      testResult.code = error.code
+      testResult.type = error.constructor?.name
+
+      // Messages d'aide selon le code d'erreur
+      if (error.code === 'P1001') {
+        testResult.help = 'Impossible de se connecter au serveur. Cela peut signifier : 1) Le serveur Supabase est inaccessible depuis Netlify, 2) Le port est bloqué par un firewall, 3) L\'adresse IP de Netlify n\'est pas autorisée dans Supabase.'
+        diagnostic.recommendations.push('Vérifiez dans Supabase : Settings → Database → Connection Pooling → Activez le pooler et autorisez toutes les IPs (0.0.0.0/0)')
+      } else if (error.code === 'P1000') {
+        testResult.help = 'Échec d\'authentification. Vérifiez le mot de passe (doit être URL-encodé).'
+        diagnostic.recommendations.push('Vérifiez que le mot de passe dans DATABASE_URL est correctement encodé (ex: ! devient %21)')
+      } else if (error.code === 'P1013') {
+        testResult.help = 'Format de connexion invalide.'
+        diagnostic.recommendations.push('Vérifiez le format de DATABASE_URL. Il ne doit pas contenir de guillemets.')
+      }
     }
+
+    diagnostic.connectionTests.push(testResult)
   }
+
+  // Recommandations générales
+  if (diagnostic.connectionTests.every((test: any) => !test.success)) {
+    diagnostic.recommendations.push('Aucune configuration ne fonctionne. Vérifiez dans Supabase :')
+    diagnostic.recommendations.push('1. Settings → Database → Connection string → Utilisez "Connection pooling" (port 6543)')
+    diagnostic.recommendations.push('2. Settings → Database → Network restrictions → Autorisez toutes les IPs ou ajoutez les IPs de Netlify')
+    diagnostic.recommendations.push('3. Vérifiez que le mot de passe dans Supabase correspond à celui dans DATABASE_URL')
+  }
+
+  const hasSuccess = diagnostic.connectionTests.some((test: any) => test.success)
 
   return NextResponse.json(diagnostic, {
-    status: diagnostic.connectionTest?.success ? 200 : 500,
+    status: hasSuccess ? 200 : 500,
   })
 }
 
