@@ -203,7 +203,7 @@ export async function POST(request: Request) {
       errorMessage = 'Impossible de se connecter à la base de données'
       errorDetails = {
         code: 'P1001',
-        suggestion: 'Vérifiez que DATABASE_URL est correctement configuré dans Netlify. Le port 5432 peut être bloqué - essayez le pooler Supabase sur le port 6543.',
+        suggestion: 'Vérifiez que DATABASE_URL est correctement configuré dans Vercel. Utilisez le pooler Supabase (Transaction mode, port 6543) avec ?pgbouncer=true.',
       }
     } else if (error?.code === 'P1000') {
       console.error('ERREUR: Échec d\'authentification')

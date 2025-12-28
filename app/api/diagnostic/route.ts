@@ -134,6 +134,7 @@ export async function GET() {
       if (error.code === 'P1001') {
         testResult.help = 'Impossible de se connecter au serveur. Cela peut signifier : 1) Le serveur Supabase est inaccessible depuis Netlify, 2) Le port est bloqué par un firewall, 3) L\'adresse IP de Netlify n\'est pas autorisée dans Supabase.'
         diagnostic.recommendations.push('Vérifiez dans Supabase : Settings → Database → Connection Pooling → Activez le pooler et autorisez toutes les IPs (0.0.0.0/0)')
+        diagnostic.recommendations.push('Vérifiez que DATABASE_URL est bien configuré dans Vercel (Settings → Environment Variables)')
       } else if (error.code === 'P1000' || error.message?.includes('Authentication failed') || error.message?.includes('credentials')) {
         testResult.help = 'Échec d\'authentification. Vérifiez : 1) Le username est correct (doit être postgres.tqvdjfesnavnsqchufjg pour le pooler), 2) Le mot de passe est correct et URL-encodé, 3) Le mot de passe dans Supabase correspond.'
         diagnostic.recommendations.push('Vérifiez dans Supabase : Settings → Database → Reset database password si nécessaire')
