@@ -48,7 +48,15 @@ export default function LoginPage() {
           setRequiresVerification(true)
           setError(data.error || 'Email non vérifié')
         } else {
-          setError(data.error || 'Erreur de connexion')
+          // Afficher l'erreur avec les suggestions si disponibles
+          let errorMsg = data.error || 'Erreur de connexion'
+          if (data.suggestion) {
+            errorMsg += `\n\nSuggestion: ${data.suggestion}`
+          }
+          if (data.code) {
+            errorMsg += `\n\nCode d'erreur: ${data.code}`
+          }
+          setError(errorMsg)
         }
         setLoading(false)
       }
