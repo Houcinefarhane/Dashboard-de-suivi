@@ -71,37 +71,42 @@ SKIP_EMAIL_VERIFICATION=false
 
 ### Déploiement
 
-#### Sur Netlify (recommandé)
+#### Sur Vercel (recommandé)
 
-1. Créer un compte sur [Netlify](https://netlify.com)
+1. Créer un compte sur [Vercel](https://vercel.com)
 2. Connecter votre dépôt GitHub
-3. Configurer les paramètres de build :
-   - Build command : `npm run build`
-   - Publish directory : `.next`
-4. Ajouter toutes les variables d'environnement dans Netlify (Settings → Environment variables) :
-   - `DATABASE_URL`
+3. Vercel détectera automatiquement Next.js et configurera le projet
+4. Ajouter toutes les variables d'environnement dans Vercel (Settings → Environment Variables) :
+   - `DATABASE_URL` (format pooler Supabase : `postgresql://postgres.[PROJECT_REF]:[PASSWORD]@aws-1-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true`)
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`
    - `NEXTAUTH_SECRET` (générer avec : `openssl rand -base64 32`)
-   - `NEXTAUTH_URL` (votre URL Netlify : `https://votre-projet.netlify.app`)
+   - `NEXTAUTH_URL` (votre URL Vercel : `https://votre-projet.vercel.app`)
    - `RESEND_API_KEY`
    - `RESEND_FROM_EMAIL`
-   - `NEXT_PUBLIC_APP_URL` (votre URL Netlify)
+   - `NEXT_PUBLIC_APP_URL` (votre URL Vercel)
    - `SKIP_EMAIL_VERIFICATION=false`
    - `NODE_ENV=production`
-   - **IMPORTANT - Scan des secrets désactivé** : Le scan des secrets est désactivé dans `netlify.toml` car :
-     - Aucun secret n'est hardcodé dans le code source (tout utilise `process.env`)
-     - Tous les secrets sont dans les variables d'environnement Netlify (pas dans le repo)
-     - Next.js injecte normalement les variables d'environnement dans les fichiers compilés (comportement attendu)
+5. Déployer (automatique après configuration)
+
+**Avantages Vercel :**
+- Builds illimités (vs 300 minutes/mois sur Netlify gratuit)
+- Optimisé pour Next.js (créé par l'équipe Next.js)
+- Détection automatique de Next.js (pas besoin de configuration)
+- Déploiements plus rapides
+
+#### Sur Netlify (alternative)
+
+1. Créer un compte sur [Netlify](https://netlify.com)
+2. Connecter votre dépôt GitHub
+3. Configurer les paramètres de build :
+   - Build command : `npm ci && prisma generate && next build`
+   - Publish directory : `.next`
+4. Ajouter toutes les variables d'environnement dans Netlify (Settings → Environment variables)
 5. Déployer
 
-#### Sur Vercel (alternative)
-
-1. Créer un compte sur [Vercel](https://vercel.com)
-2. Connecter votre dépôt GitHub
-3. Configurer les variables d'environnement
-4. Déployer automatiquement
+**Note :** Le fichier `netlify.toml.backup` contient la configuration Netlify si vous souhaitez revenir.
 
 3. Lancer le serveur de développement :
 ```bash

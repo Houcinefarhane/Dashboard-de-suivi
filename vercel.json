@@ -1,8 +1,10 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "npm ci && prisma generate && next build",
   "devCommand": "npm run dev",
-  "installCommand": "npm install",
+  "installCommand": "npm ci",
   "framework": "nextjs",
-  "regions": ["cdg1"]
+  "regions": ["cdg1"],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
-
