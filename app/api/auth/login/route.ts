@@ -193,39 +193,55 @@ export async function POST(request: Request) {
     console.error('Name:', error?.name)
     console.error('Code:', error?.code)
     
+    // Messages d'erreur détaillés pour aider au diagnostic
+    let errorMessage = 'Erreur lors de la connexion'
+    let errorDetails: any = {}
+    
     // Vérifier si c'est une erreur Prisma
     if (error?.code === 'P1001' || error?.message?.includes('Can\'t reach database server')) {
-      console.error('ERREUR: Impossible de se connecter à la base de données')
-      return NextResponse.json(
-        { error: 'Erreur de connexion à la base de données. Vérifiez votre configuration.' },
-        { status: 500 }
-      )
-    }
-    
-    // Vérifier si c'est une erreur de format DATABASE_URL
-    if (error?.message?.includes('did not match the expected pattern') || 
-        error?.message?.includes('Invalid connection string')) {
+      console.error('ERREUR: Impossible de se connecter au serveur de base de données')
+      errorMessage = 'Impossible de se connecter à la base de données'
+      errorDetails = {
+        code: 'P1001',
+        suggestion: 'Vérifiez que DATABASE_URL est correctement configuré dans Netlify. Le port 5432 peut être bloqué - essayez le pooler Supabase sur le port 6543.',
+      }
+    } else if (error?.code === 'P1000') {
+      console.error('ERREUR: Échec d\'authentification')
+      errorMessage = 'Échec d\'authentification à la base de données'
+      errorDetails = {
+        code: 'P1000',
+        suggestion: 'Vérifiez le mot de passe dans DATABASE_URL. Les caractères spéciaux doivent être URL-encodés (ex: ! devient %21).',
+      }
+    } else if (error?.code === 'P1013' || error?.message?.includes('did not match the expected pattern') || 
+               error?.message?.includes('Invalid connection string')) {
       console.error('ERREUR: Format DATABASE_URL invalide')
-      return NextResponse.json(
-        { error: 'Configuration de la base de données invalide.' },
-        { status: 500 }
-      )
+      errorMessage = 'Format de connexion à la base de données invalide'
+      errorDetails = {
+        code: 'P1013',
+        suggestion: 'Vérifiez le format de DATABASE_URL. Format attendu: postgresql://postgres:[PASSWORD]@db.[PROJECT_REF].supabase.co:5432/postgres',
+      }
+    } else if (error?.message?.includes('DATABASE_URL manquant')) {
+      errorMessage = 'Configuration de la base de données manquante'
+      errorDetails = {
+        suggestion: 'Ajoutez DATABASE_URL dans les variables d\'environnement Netlify.',
+      }
+    } else {
+      // Erreur générique - toujours retourner le message pour aider au debug
+      errorMessage = error?.message || 'Erreur lors de la connexion'
+      errorDetails = {
+        type: error?.constructor?.name,
+        code: error?.code,
+      }
     }
-    
-    // Retourner un message d'erreur plus détaillé en développement
-    const isDevelopment = process.env.NODE_ENV === 'development'
-    const errorMessage = isDevelopment
-      ? `Erreur lors de la connexion: ${error?.message || 'Erreur inconnue'}`
-      : 'Erreur lors de la connexion. Veuillez réessayer.'
     
     // Logger l'erreur complète pour le debugging
     console.error('Erreur complète:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2))
     
+    // Retourner un message utile avec suggestions
     return NextResponse.json(
       { 
         error: errorMessage,
-        // En développement, inclure plus de détails
-        ...(isDevelopment && { details: error?.message, stack: error?.stack })
+        ...errorDetails,
       },
       { status: 500 }
     )
