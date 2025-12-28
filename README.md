@@ -53,6 +53,9 @@ npm run db:push
 3. Créer un fichier `.env` à la racine du projet et ajouter vos identifiants Supabase :
 ```env
 DATABASE_URL=postgresql://postgres:[VOTRE_MOT_DE_PASSE]@db.[PROJECT_REF].supabase.co:5432/postgres
+
+**IMPORTANT pour Netlify** : Si vous utilisez le port 5432 et que ça ne fonctionne pas, essayez le pooler Supabase sur le port 6543 :
+DATABASE_URL=postgresql://postgres.[PROJECT_REF]:[VOTRE_MOT_DE_PASSE]@aws-0-[REGION].pooler.supabase.com:6543/postgres
 NEXT_PUBLIC_SUPABASE_URL=https://[PROJECT_REF].supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=votre-anon-key
 SUPABASE_SERVICE_ROLE_KEY=votre-service-role-key
