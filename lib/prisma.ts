@@ -31,10 +31,45 @@ function validateDatabaseUrl(url: string | undefined): string {
     if (!urlObj.hostname || !urlObj.pathname) {
       throw new Error('Structure URL invalide')
     }
-  } catch (error) {
+    
+    // Vérifications spécifiques pour Supabase
+    if (cleanUrl.includes('pooler.supabase.com')) {
+      // Pour le pooler, vérifier le format
+      if (!cleanUrl.includes('postgres.')) {
+        console.warn('ATTENTION: URL pooler devrait utiliser postgres.[PROJECT_REF] comme username')
+      }
+      if (!cleanUrl.includes('?pgbouncer=true') && cleanUrl.includes(':6543')) {
+        console.warn('ATTENTION: Pour le port 6543 (Transaction mode), ajoutez ?pgbouncer=true à la fin de l\'URL')
+      }
+    }
+  } catch (error: any) {
     console.error('ERREUR: DATABASE_URL n\'est pas une URL valide')
-    console.error('URL fournie:', cleanUrl.substring(0, 50) + '...')
-    throw new Error('DATABASE_URL n\'est pas une URL valide. Format attendu: postgresql://user:password@host:port/database')
+    console.error('URL fournie (premiers 80 caractères):', cleanUrl.substring(0, 80))
+    console.error('Erreur de parsing:', error.message)
+    
+    // Détecter les problèmes courants
+    let errorMessage = 'DATABASE_URL n\'est pas une URL valide.\n'
+    
+    if (cleanUrl.includes(' ')) {
+      errorMessage += '❌ PROBLÈME: L\'URL contient des espaces. Supprimez-les.\n'
+    }
+    if (cleanUrl.includes('"') || cleanUrl.includes("'")) {
+      errorMessage += '❌ PROBLÈME: L\'URL contient des guillemets. Supprimez-les dans Netlify.\n'
+    }
+    if (!cleanUrl.includes('@')) {
+      errorMessage += '❌ PROBLÈME: L\'URL ne contient pas de @ (séparateur user:password@host).\n'
+    }
+    if (!cleanUrl.includes('://')) {
+      errorMessage += '❌ PROBLÈME: L\'URL ne contient pas de :// (protocole manquant).\n'
+    }
+    
+    errorMessage += '\nFormat attendu pour Supabase pooler:\n'
+    errorMessage += 'postgres://postgres.[PROJECT_REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true\n'
+    errorMessage += '\nFormat attendu pour connexion directe:\n'
+    errorMessage += 'postgresql://postgres:[PASSWORD]@db.[PROJECT_REF].supabase.co:5432/postgres\n'
+    errorMessage += '\n⚠️ IMPORTANT: Le mot de passe doit être URL-encodé (ex: ! devient %21)'
+    
+    throw new Error(errorMessage)
   }
 
   return cleanUrl
