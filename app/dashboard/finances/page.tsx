@@ -68,6 +68,17 @@ export default function FinancesPage() {
   const [showObjectiveForm, setShowObjectiveForm] = useState(false)
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
   
+  // Filtres du graphique
+  const [chartFilters, setChartFilters] = useState({
+    revenue: true,
+    expenses: true,
+    profit: true,
+  })
+  
+  const toggleChartFilter = (filter: 'revenue' | 'expenses' | 'profit') => {
+    setChartFilters(prev => ({ ...prev, [filter]: !prev[filter] }))
+  }
+  
   const [expenseForm, setExpenseForm] = useState({
     description: '',
     category: 'matériel',
@@ -176,7 +187,14 @@ export default function FinancesPage() {
         fetchObjectives()
         resetObjectiveForm()
       } else {
-        alert(`Erreur: ${data.error || 'Impossible de créer l\'objectif'}`)
+        // Message d'erreur détaillé avec instructions
+        const errorMessage = data.error || 'Impossible de créer l\'objectif'
+        
+        if (errorMessage.includes('table') || errorMessage.includes('relation') || errorMessage.includes('does not exist')) {
+          alert(`❌ Les tables OKR n'existent pas encore dans votre base de données !\n\n📋 ÉTAPES À SUIVRE :\n\n1. Ouvrez Supabase : https://supabase.com/dashboard\n2. Allez dans "SQL Editor"\n3. Cliquez sur "New query"\n4. Copiez le contenu du fichier "prisma/migrations/add_okr_tables.sql"\n5. Collez-le dans l'éditeur et cliquez sur "Run"\n\n📄 Consultez le fichier MIGRATION_OKR.md pour plus de détails.\n\nErreur technique : ${errorMessage}`)
+        } else {
+          alert(`Erreur lors de la création de l'objectif :\n\n${errorMessage}`)
+        }
         console.error('Error response:', data)
       }
     } catch (error) {
@@ -535,10 +553,43 @@ export default function FinancesPage() {
       >
         <Card>
           <CardHeader>
-            <CardTitle>Évolution financière</CardTitle>
-            <CardDescription>
-              Revenus, dépenses et bénéfices par {granularity === 'week' ? 'semaine' : granularity === 'month' ? 'mois' : 'année'}
-            </CardDescription>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle>Évolution financière</CardTitle>
+                <CardDescription>
+                  Revenus, dépenses et bénéfices par {granularity === 'week' ? 'semaine' : granularity === 'month' ? 'mois' : 'année'}
+                </CardDescription>
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                <Button
+                  variant={chartFilters.revenue ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => toggleChartFilter('revenue')}
+                  className={chartFilters.revenue ? "bg-green-600 hover:bg-green-700" : ""}
+                >
+                  <div className="w-3 h-3 rounded-full bg-green-600 mr-2"></div>
+                  Revenus
+                </Button>
+                <Button
+                  variant={chartFilters.expenses ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => toggleChartFilter('expenses')}
+                  className={chartFilters.expenses ? "bg-red-600 hover:bg-red-700" : ""}
+                >
+                  <div className="w-3 h-3 rounded-full bg-red-600 mr-2"></div>
+                  Dépenses
+                </Button>
+                <Button
+                  variant={chartFilters.profit ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => toggleChartFilter('profit')}
+                  className={chartFilters.profit ? "bg-blue-600 hover:bg-blue-700" : ""}
+                >
+                  <div className="w-3 h-3 rounded-full bg-blue-600 mr-2"></div>
+                  Bénéfice
+                </Button>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={400}>
@@ -548,9 +599,9 @@ export default function FinancesPage() {
                 <YAxis />
                 <Tooltip formatter={(value: any) => formatCurrency(value)} />
                 <Legend />
-                <Bar dataKey="revenue" name="Revenus" fill="#10b981" />
-                <Bar dataKey="expenses" name="Dépenses" fill="#ef4444" />
-                <Bar dataKey="profit" name="Bénéfice" fill="#3b82f6" />
+                {chartFilters.revenue && <Bar dataKey="revenue" name="Revenus" fill="#10b981" />}
+                {chartFilters.expenses && <Bar dataKey="expenses" name="Dépenses" fill="#ef4444" />}
+                {chartFilters.profit && <Bar dataKey="profit" name="Bénéfice" fill="#3b82f6" />}
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
