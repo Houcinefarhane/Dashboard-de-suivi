@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Users, Calendar, TrendingUp, Package, AlertCircle, ArrowUpRight, ArrowDownRight, FileText, Clock, CheckCircle2, MapPin, AlertTriangle, Loader } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, Area, AreaChart } from 'recharts'
+import ActivityHeatMap from '@/components/dashboard/ActivityHeatMap'
 
 interface RecentActivity {
   type: 'invoice' | 'intervention' | 'client'
@@ -207,6 +208,15 @@ export default function DashboardPage() {
           )
         })}
       </div>
+
+      {/* Carte d'activité hebdomadaire */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <ActivityHeatMap />
+      </motion.div>
 
       {/* Main Content Grid - 5 columns pour plus de flexibilité */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-2 lg:gap-4">
