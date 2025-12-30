@@ -44,6 +44,7 @@ model Artisan {
   expenses      Expense[]
   notifications Notification[]
   invoiceReminders InvoiceReminder[]
+  financialObjectives FinancialObjective[]
 }
 
 model Client {
@@ -238,5 +239,36 @@ model InvoiceReminder {
   
   artisanId     String
   artisan       Artisan   @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+}
+
+model FinancialObjective {
+  id            String    @id @default(cuid())
+  title         String    // L'objectif (ex: "Augmenter la rentabilité")
+  description   String?   // Description détaillée
+  period        String    // monthly, annual
+  year          Int       // Année cible
+  month         Int?      // Mois cible (1-12) si period = monthly
+  status        String    @default("active") // active, completed, archived
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  artisanId     String
+  artisan       Artisan   @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  
+  keyResults    KeyResult[]
+}
+
+model KeyResult {
+  id            String    @id @default(cuid())
+  title         String    // Le résultat clé (ex: "Atteindre 50 000€ de CA")
+  metric        String    // revenue, profit, expenses, client_count
+  targetValue   Float     // Valeur cible
+  currentValue  Float     @default(0) // Valeur actuelle
+  unit          String    @default("€") // €, %, unité, etc.
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  objectiveId   String
+  objective     FinancialObjective @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
 }
 

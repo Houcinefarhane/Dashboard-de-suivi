@@ -3,10 +3,14 @@ import { getCurrentArtisan } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
-import { startOfMonth, subMonths, format } from 'date-fns'
+import { 
+  startOfMonth, subMonths, format, startOfWeek, endOfWeek, 
+  startOfYear, endOfYear, eachWeekOfInterval, eachMonthOfInterval,
+  subWeeks, subYears
+} from 'date-fns'
 import { fr } from 'date-fns/locale/fr'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const artisan = await getCurrentArtisan()
 
@@ -17,7 +21,36 @@ export async function GET() {
       )
     }
 
-    // Revenus totaux (factures payées)
+    const { searchParams } = new URL(request.url)
+    const granularity = searchParams.get('granularity') || 'month' // week, month, year
+    const year = searchParams.get('year') ? parseInt(searchParams.get('year')!) : new Date().getFullYear()
+    const month = searchParams.get('month') ? parseInt(searchParams.get('month')!) : new Date().getMonth() + 1
+
+    // Déterminer la période selon la granularité
+    let startDate: Date
+    let endDate: Date
+    let periods: Date[] = []
+
+    if (granularity === 'week') {
+      // Semaines du mois sélectionné
+      startDate = startOfMonth(new Date(year, month - 1))
+      endDate = endOfYear(new Date(year, month - 1))
+      periods = eachWeekOfInterval({ start: startDate, end: endDate }, { weekStartsOn: 1 })
+    } else if (granularity === 'month') {
+      // Mois de l'année sélectionnée
+      startDate = startOfYear(new Date(year, 0))
+      endDate = endOfYear(new Date(year, 0))
+      periods = eachMonthOfInterval({ start: startDate, end: endDate })
+    } else if (granularity === 'year') {
+      // 5 dernières années
+      startDate = startOfYear(subYears(new Date(), 4))
+      endDate = endOfYear(new Date())
+      for (let i = 4; i >= 0; i--) {
+        periods.push(startOfYear(subYears(new Date(), i)))
+      }
+    }
+
+    // Récupérer toutes les factures payées
     const paidInvoices = await prisma.invoice.findMany({
       where: {
         artisanId: artisan.id,
@@ -29,9 +62,7 @@ export async function GET() {
       },
     })
 
-    const totalRevenue = paidInvoices.reduce((sum, invoice) => sum + invoice.total, 0)
-
-    // Dépenses totales
+    // Récupérer toutes les dépenses
     const expenses = await prisma.expense.findMany({
       where: {
         artisanId: artisan.id,
@@ -42,43 +73,72 @@ export async function GET() {
       },
     })
 
-    const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0)
-    // Bénéfice brut = revenus - dépenses
+    // Calculer les totaux pour la période complète
+    const periodInvoices = paidInvoices.filter((inv) => {
+      const invDate = new Date(inv.date)
+      return invDate >= startDate && invDate <= endDate
+    })
+
+    const periodExpenses = expenses.filter((exp) => {
+      const expDate = new Date(exp.date)
+      return expDate >= startDate && expDate <= endDate
+    })
+
+    const totalRevenue = periodInvoices.reduce((sum, invoice) => sum + invoice.total, 0)
+    const totalExpenses = periodExpenses.reduce((sum, expense) => sum + expense.amount, 0)
     const profit = totalRevenue - totalExpenses
 
-    // Données mensuelles (12 derniers mois pour permettre la navigation)
-    const monthlyData = []
-    for (let i = 11; i >= 0; i--) {
-      const monthStart = startOfMonth(subMonths(new Date(), i))
-      const monthEnd = startOfMonth(subMonths(new Date(), i - 1))
+    // Générer les données par période
+    const chartData = periods.map((periodStart) => {
+      let periodEnd: Date
 
-      const monthRevenue = paidInvoices
+      if (granularity === 'week') {
+        periodEnd = endOfWeek(periodStart, { weekStartsOn: 1 })
+      } else if (granularity === 'month') {
+        periodEnd = new Date(periodStart.getFullYear(), periodStart.getMonth() + 1, 0)
+      } else {
+        periodEnd = endOfYear(periodStart)
+      }
+
+      const periodRevenue = paidInvoices
         .filter((inv) => {
           const invDate = new Date(inv.date)
-          return invDate >= monthStart && invDate < monthEnd
+          return invDate >= periodStart && invDate <= periodEnd
         })
         .reduce((sum, inv) => sum + inv.total, 0)
 
-      const monthExpenses = expenses
+      const periodExpensesAmount = expenses
         .filter((exp) => {
           const expDate = new Date(exp.date)
-          return expDate >= monthStart && expDate < monthEnd
+          return expDate >= periodStart && expDate <= periodEnd
         })
         .reduce((sum, exp) => sum + exp.amount, 0)
 
-      monthlyData.push({
-        month: format(monthStart, 'MMM yyyy', { locale: fr }),
-        revenue: monthRevenue,
-        expenses: monthExpenses,
-        profit: monthRevenue - monthExpenses, // Bénéfice brut = revenus - dépenses
-      })
-    }
+      let label: string
+      if (granularity === 'week') {
+        label = `S${format(periodStart, 'w', { locale: fr })}`
+      } else if (granularity === 'month') {
+        label = format(periodStart, 'MMM', { locale: fr })
+      } else {
+        label = format(periodStart, 'yyyy')
+      }
+
+      return {
+        period: label,
+        revenue: periodRevenue,
+        expenses: periodExpensesAmount,
+        profit: periodRevenue - periodExpensesAmount,
+      }
+    })
 
     return NextResponse.json({
       totalRevenue,
       totalExpenses,
       profit,
-      monthlyData,
+      chartData,
+      granularity,
+      year,
+      month,
     })
   } catch (error) {
     console.error('Error fetching financial data:', error)
