@@ -84,10 +84,10 @@ export async function POST(request: Request) {
       )
     }
 
-    // Validation de la durée (max 2h = 120 minutes)
-    if (duration && (duration < 1 || duration > 120)) {
+    // Validation de la durée (minimum 1 minute)
+    if (duration && duration < 1) {
       return NextResponse.json(
-        { error: 'La durée doit être entre 1 et 120 minutes (2h maximum)' },
+        { error: 'La durée doit être au minimum de 1 minute' },
         { status: 400 }
       )
     }

@@ -127,13 +127,6 @@ export default function PlanningPage() {
     }
 
     try {
-          // Validation de la durée (max 2h)
-          const duration = formData.duration ? parseInt(formData.duration) : null
-          if (duration && duration > 120) {
-            alert('La durée maximum est de 2h (120 minutes)')
-            return
-          }
-
           const res = await fetch('/api/interventions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1104,21 +1097,14 @@ export default function PlanningPage() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="duration">Durée (minutes, max 2h)</Label>
+                        <Label htmlFor="duration">Durée (minutes)</Label>
                         <Input
                           id="duration"
                           type="number"
                           min="1"
-                          max="120"
                           value={formData.duration}
                           onChange={(e) => {
-                            const value = e.target.value
-                            if (value === '' || (parseInt(value) >= 1 && parseInt(value) <= 120)) {
-                              setFormData({ ...formData, duration: value })
-                            } else if (parseInt(value) > 120) {
-                              alert('La durée maximum est de 2h (120 minutes)')
-                              setFormData({ ...formData, duration: '120' })
-                            }
+                            setFormData({ ...formData, duration: e.target.value })
                           }}
                           placeholder="60"
                         />

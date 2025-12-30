@@ -64,11 +64,11 @@ export async function PUT(
       }
     }
 
-    // Validation de la durée (max 2h = 120 minutes)
+    // Validation de la durée (minimum 1 minute)
     if (otherFields.duration !== undefined && otherFields.duration !== null) {
-      if (otherFields.duration < 1 || otherFields.duration > 120) {
+      if (otherFields.duration < 1) {
         return NextResponse.json(
-          { error: 'La durée doit être entre 1 et 120 minutes (2h maximum)' },
+          { error: 'La durée doit être au minimum de 1 minute' },
           { status: 400 }
         )
       }
