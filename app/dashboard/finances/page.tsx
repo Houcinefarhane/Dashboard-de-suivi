@@ -393,7 +393,10 @@ export default function FinancesPage() {
   
   const calculateMainProgress = () => {
     // Utiliser les valeurs actuelles de revenus ou bénéfices
-    const currentValue = selectedMetric === 'revenue' ? stats.totalRevenue : stats.profit
+    let currentValue = selectedMetric === 'revenue' ? stats.totalRevenue : stats.profit
+    
+    // Si la valeur est négative (bénéfice négatif), on considère que c'est 0 pour le compteur
+    currentValue = Math.max(currentValue, 0)
     
     // Trouver l'objectif correspondant à la métrique sélectionnée
     let targetValue = 0
@@ -407,13 +410,14 @@ export default function FinancesPage() {
       }
     }
     
-    // Si pas d'objectif défini, utiliser une valeur par défaut pour l'affichage
+    // Si pas d'objectif défini, retourner 0
     if (targetValue === 0) {
       return 0
     }
     
     // Calculer le pourcentage : (valeur actuelle / objectif) * 100
-    const progress = Math.min(Math.round((currentValue / targetValue) * 100), 100)
+    // Limité entre 0 et 100
+    const progress = Math.min(Math.max(Math.round((currentValue / targetValue) * 100), 0), 100)
     
     console.log(`Progression ${selectedMetric}:`, currentValue, '/', targetValue, '=', progress, '%')
     
@@ -425,6 +429,7 @@ export default function FinancesPage() {
     obj.keyResults.some(kr => kr.metric === selectedMetric)
   )
   const targetValue = targetObjective?.keyResults.find(kr => kr.metric === selectedMetric)?.targetValue || 0
+  const currentActualValue = selectedMetric === 'revenue' ? stats.totalRevenue : stats.profit
 
   const statCards = [
     {
@@ -625,7 +630,7 @@ export default function FinancesPage() {
               <Gauge 
                 value={mainProgress}
                 title={selectedMetric === 'revenue' ? 'Revenus actuels' : 'Bénéfice actuel'}
-                subtitle={`${formatCurrency(selectedMetric === 'revenue' ? stats.totalRevenue : stats.profit)} / ${formatCurrency(targetValue)}`}
+                subtitle={`${formatCurrency(currentActualValue)} / ${formatCurrency(targetValue)}`}
                 size={280}
               />
               
