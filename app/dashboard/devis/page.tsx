@@ -208,7 +208,6 @@ export default function DevisPage() {
       if (res.ok) {
         fetchQuotes(currentPage)
         resetForm()
-        setClientSearch('')
       } else {
         const errorData = await res.json()
         console.error('Error response:', errorData)
