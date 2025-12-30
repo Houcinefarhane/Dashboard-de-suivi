@@ -79,10 +79,10 @@ export default function PlanningPage() {
 
   const fetchClients = async () => {
     try {
-      const res = await fetch('/api/clients')
+      const res = await fetch('/api/clients?page=1&limit=1000')
       const data = await res.json()
       if (res.ok) {
-        setClients(data)
+        setClients(data.clients || [])
       }
     } catch (error) {
       console.error('Error fetching clients:', error)
