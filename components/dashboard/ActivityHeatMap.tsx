@@ -160,25 +160,25 @@ export default function ActivityHeatMap() {
 
   return (
     <Card className="border-2">
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-2 pt-3 px-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-primary" />
+          <div className="flex items-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5 text-primary" />
             <div>
-              <CardTitle className="text-base">Carte d'activité mensuelle</CardTitle>
-              <CardDescription className="text-[10px] mt-0.5">
+              <CardTitle className="text-sm">Carte d'activité mensuelle</CardTitle>
+              <CardDescription className="text-[9px] mt-0">
                 {monthName}
               </CardDescription>
             </div>
           </div>
           
           {/* Navigation mois */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5">
             <Button
               variant="outline"
               size="sm"
               onClick={handlePreviousMonth}
-              className="h-7 w-7 p-0"
+              className="h-6 w-6 p-0"
             >
               <ChevronLeft className="w-3 h-3" />
             </Button>
@@ -188,7 +188,7 @@ export default function ActivityHeatMap() {
                 variant="outline"
                 size="sm"
                 onClick={handleToday}
-                className="h-7 px-2 text-[10px]"
+                className="h-6 px-1.5 text-[9px]"
               >
                 Aujourd'hui
               </Button>
@@ -198,29 +198,29 @@ export default function ActivityHeatMap() {
               variant="outline"
               size="sm"
               onClick={handleNextMonth}
-              className="h-7 w-7 p-0"
+              className="h-6 w-6 p-0"
             >
               <ChevronRight className="w-3 h-3" />
             </Button>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-0 pb-4">
+      <CardContent className="pt-0 pb-2 px-4">
         {loading ? (
-          <div className="flex items-center justify-center h-32">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+          <div className="flex items-center justify-center h-24">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {/* Calendrier mensuel */}
             <div className="overflow-x-auto">
               <div className="min-w-full">
                 {/* En-tête des jours de la semaine */}
-                <div className="grid grid-cols-7 gap-0.5 mb-1">
+                <div className="grid grid-cols-7 gap-0.5 mb-0.5">
                   {daysOfWeek.map((day) => (
                     <div
                       key={day}
-                      className="text-center text-[10px] font-bold text-muted-foreground py-1"
+                      className="text-center text-[8px] font-semibold text-muted-foreground py-0.5"
                     >
                       {day}
                     </div>
@@ -250,8 +250,8 @@ export default function ActivityHeatMap() {
                       >
                         <div
                           className={`
-                            aspect-square rounded-sm flex flex-col items-center justify-center
-                            transition-all duration-200 hover:scale-110 hover:shadow-md cursor-pointer
+                            w-full h-8 rounded-sm flex flex-col items-center justify-center
+                            transition-all duration-200 hover:scale-105 hover:shadow-md cursor-pointer
                             relative group border
                             ${getColor(dayData.count, dayData.isCurrentMonth)}
                             ${isToday ? 'ring-2 ring-blue-500 ring-offset-0' : ''}
@@ -260,7 +260,7 @@ export default function ActivityHeatMap() {
                           {/* Numéro du jour - petit en haut à gauche */}
                           <span
                             className={`
-                              text-[8px] font-semibold absolute top-0.5 left-0.5
+                              text-[7px] font-semibold absolute top-0.5 left-0.5
                               ${dayData.isCurrentMonth ? getTextColor(dayData.count) : 'text-gray-400 dark:text-gray-700'}
                             `}
                           >
@@ -269,14 +269,14 @@ export default function ActivityHeatMap() {
                           
                           {/* Nombre d'interventions - au centre */}
                           {dayData.isCurrentMonth && dayData.count > 0 && (
-                            <span className={`text-sm font-bold ${getTextColor(dayData.count)}`}>
+                            <span className={`text-xs font-bold ${getTextColor(dayData.count)}`}>
                               {dayData.count}
                             </span>
                           )}
                           
                           {/* Tooltip au survol - compact */}
                           {dayData.isCurrentMonth && (
-                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 bg-gray-900 dark:bg-gray-800 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap z-20 pointer-events-none shadow-lg">
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-0.5 px-1.5 py-0.5 bg-gray-900 dark:bg-gray-800 text-white text-[9px] rounded opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap z-20 pointer-events-none shadow-lg">
                               <div className="font-semibold">
                                 {dayData.date} {monthName.split(' ')[0]} : {dayData.count} intervention{dayData.count > 1 ? 's' : ''}
                               </div>
@@ -291,19 +291,19 @@ export default function ActivityHeatMap() {
             </div>
 
             {/* Légende - dégradé compact */}
-            <div className="flex items-center justify-center gap-3 pt-3 border-t">
-              <span className="text-[10px] text-muted-foreground font-medium">Moins</span>
+            <div className="flex items-center justify-center gap-2 pt-1.5 border-t">
+              <span className="text-[8px] text-muted-foreground font-medium">Moins</span>
               <div className="flex gap-0.5">
-                <div className="w-4 h-4 rounded-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800"></div>
-                <div className="w-4 h-4 rounded-sm bg-emerald-100 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-900"></div>
-                <div className="w-4 h-4 rounded-sm bg-emerald-200 dark:bg-emerald-900 border border-emerald-300 dark:border-emerald-800"></div>
-                <div className="w-4 h-4 rounded-sm bg-emerald-300 dark:bg-emerald-800 border border-emerald-400 dark:border-emerald-700"></div>
-                <div className="w-4 h-4 rounded-sm bg-emerald-400 dark:bg-emerald-700 border border-emerald-500 dark:border-emerald-600"></div>
-                <div className="w-4 h-4 rounded-sm bg-emerald-500 dark:bg-emerald-600 border border-emerald-600 dark:border-emerald-500"></div>
-                <div className="w-4 h-4 rounded-sm bg-emerald-600 dark:bg-emerald-500 border border-emerald-700 dark:border-emerald-400"></div>
-                <div className="w-4 h-4 rounded-sm bg-emerald-700 dark:bg-emerald-400 border border-emerald-800 dark:border-emerald-300"></div>
+                <div className="w-3 h-3 rounded-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800"></div>
+                <div className="w-3 h-3 rounded-sm bg-emerald-100 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-900"></div>
+                <div className="w-3 h-3 rounded-sm bg-emerald-200 dark:bg-emerald-900 border border-emerald-300 dark:border-emerald-800"></div>
+                <div className="w-3 h-3 rounded-sm bg-emerald-300 dark:bg-emerald-800 border border-emerald-400 dark:border-emerald-700"></div>
+                <div className="w-3 h-3 rounded-sm bg-emerald-400 dark:bg-emerald-700 border border-emerald-500 dark:border-emerald-600"></div>
+                <div className="w-3 h-3 rounded-sm bg-emerald-500 dark:bg-emerald-600 border border-emerald-600 dark:border-emerald-500"></div>
+                <div className="w-3 h-3 rounded-sm bg-emerald-600 dark:bg-emerald-500 border border-emerald-700 dark:border-emerald-400"></div>
+                <div className="w-3 h-3 rounded-sm bg-emerald-700 dark:bg-emerald-400 border border-emerald-800 dark:border-emerald-300"></div>
               </div>
-              <span className="text-[10px] text-muted-foreground font-medium">Plus</span>
+              <span className="text-[8px] text-muted-foreground font-medium">Plus</span>
             </div>
           </div>
         )}
