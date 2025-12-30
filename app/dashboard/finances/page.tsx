@@ -169,12 +169,19 @@ export default function FinancesPage() {
         body: JSON.stringify(objectiveForm),
       })
       
+      const data = await res.json()
+      
       if (res.ok) {
+        alert('Objectif créé avec succès !')
         fetchObjectives()
         resetObjectiveForm()
+      } else {
+        alert(`Erreur: ${data.error || 'Impossible de créer l\'objectif'}`)
+        console.error('Error response:', data)
       }
     } catch (error) {
       console.error('Error creating objective:', error)
+      alert('Erreur réseau. Vérifiez votre connexion.')
     }
   }
 
