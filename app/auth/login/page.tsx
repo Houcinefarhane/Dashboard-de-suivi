@@ -1,17 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Wrench, Mail } from 'lucide-react'
+import { Wrench, Mail, CheckCircle } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -19,6 +20,14 @@ export default function LoginPage() {
   const [requiresVerification, setRequiresVerification] = useState(false)
   const [resending, setResending] = useState(false)
   const [resendMessage, setResendMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+
+  // Vérifier si l'utilisateur vient de s'inscrire
+  useEffect(() => {
+    if (searchParams.get('registered') === 'true') {
+      setSuccessMessage('Compte créé avec succès ! Vous pouvez maintenant vous connecter.')
+    }
+  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -104,6 +113,16 @@ export default function LoginPage() {
             </div>
           </CardHeader>
           <CardContent className="space-y-5">
+            {successMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-lg bg-green-500/10 border border-green-500/20 p-3 flex items-center gap-2"
+              >
+                <CheckCircle className="w-5 h-5 text-green-500" />
+                <p className="text-sm text-green-700 dark:text-green-400">{successMessage}</p>
+              </motion.div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium">

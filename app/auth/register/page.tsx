@@ -59,8 +59,8 @@ export default function RegisterPage() {
       const data = await res.json()
 
       if (res.ok) {
-        // Rediriger vers la page de confirmation d'envoi d'email
-        router.push(`/auth/email-sent?email=${encodeURIComponent(formData.email)}`)
+        // Compte créé avec succès, rediriger vers la connexion
+        router.push('/auth/login?registered=true')
       } else {
         setError(data.error || 'Erreur lors de l\'inscription')
       }
