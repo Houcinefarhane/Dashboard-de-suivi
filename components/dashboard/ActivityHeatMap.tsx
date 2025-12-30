@@ -78,8 +78,11 @@ export default function ActivityHeatMap() {
         const prevMonth = new Date(year, month, 0) // Dernier jour du mois précédent
         const prevMonthLastDay = prevMonth.getDate()
         
-        for (let i = firstDayOfWeek - 1; i >= 0; i--) {
-          const dayNumber = prevMonthLastDay - i
+        // Si le mois commence un Lundi (0), pas besoin d'ajouter de jours
+        // Si le mois commence un Mardi (1), ajouter 1 jour (le Lundi précédent)
+        // Si le mois commence un Dimanche (6), ajouter 6 jours (Lun-Sam précédents)
+        for (let i = 0; i < firstDayOfWeek; i++) {
+          const dayNumber = prevMonthLastDay - firstDayOfWeek + i + 1
           calendarData.push({
             date: dayNumber,
             count: 0,
