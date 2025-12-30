@@ -3,163 +3,152 @@
 import { motion } from 'framer-motion'
 
 interface GaugeProps {
-  value: number // 0-100 (peut être négatif pour les bénéfices négatifs)
+  value: number // 0-100
   title?: string
   subtitle?: string
   size?: number
 }
 
-export function Gauge({ value, title, subtitle, size = 200 }: GaugeProps) {
-  // Limiter la valeur entre 0 et 100 (0 si négatif)
+export function Gauge({ value, title, subtitle, size = 250 }: GaugeProps) {
+  // Limiter la valeur entre 0 et 100
   const clampedValue = Math.min(Math.max(value, 0), 100)
   
-  // Déterminer la couleur en fonction du pourcentage
-  const getColor = (val: number) => {
-    if (val < 33) return '#ef4444' // Rouge
-    if (val < 66) return '#f97316' // Orange
-    return '#10b981' // Vert
+  const centerX = size / 2
+  const centerY = size * 0.65
+  const radius = size * 0.38
+  const strokeWidth = size * 0.12
+  
+  // Configuration des segments colorés
+  const segments = [
+    { start: 0, end: 20, color: '#dc2626' },      // Rouge foncé
+    { start: 20, end: 35, color: '#ea580c' },     // Orange-rouge
+    { start: 35, end: 50, color: '#f59e0b' },     // Orange
+    { start: 50, end: 65, color: '#eab308' },     // Jaune
+    { start: 65, end: 80, color: '#84cc16' },     // Vert clair
+    { start: 80, end: 100, color: '#22c55e' },    // Vert
+  ]
+  
+  // Fonction pour créer un segment d'arc
+  const createSegmentPath = (startPercent: number, endPercent: number) => {
+    const startAngle = -180 + (startPercent / 100) * 180
+    const endAngle = -180 + (endPercent / 100) * 180
+    
+    const start = polarToCartesian(centerX, centerY, radius, startAngle)
+    const end = polarToCartesian(centerX, centerY, radius, endAngle)
+    
+    const largeArcFlag = endAngle - startAngle > 180 ? 1 : 0
+    
+    return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${end.x} ${end.y}`
   }
   
-  const color = getColor(clampedValue)
+  // Calculer l'angle de l'aiguille
+  const needleAngle = -180 + (clampedValue / 100) * 180
+  const needleLength = radius - strokeWidth * 0.3
+  const needleEnd = polarToCartesian(centerX, centerY, needleLength, needleAngle)
   
-  // Paramètres de l'arc
-  const centerX = size / 2
-  const centerY = size * 0.55
-  const radius = size * 0.35
-  const strokeWidth = size * 0.08
-  
-  // Arc complet de 180° (de -90° à 90°, soit de gauche à droite)
-  const startAngle = -90 // Début à gauche
-  const endAngle = 90 // Fin à droite
-  const totalAngle = 180
-  
-  // Calcul de l'arc de fond (gris)
-  const backgroundArc = describeArc(centerX, centerY, radius, startAngle, endAngle)
-  
-  // Calcul de l'arc de progression (coloré)
-  const progressAngle = startAngle + (clampedValue / 100) * totalAngle
-  const progressArc = describeArc(centerX, centerY, radius, startAngle, progressAngle)
-  
-  // Calcul de la position de l'aiguille
-  const needleLength = radius - strokeWidth
-  const needleAngleRad = (startAngle + (clampedValue / 100) * totalAngle) * (Math.PI / 180)
-  const needleX = centerX + needleLength * Math.cos(needleAngleRad)
-  const needleY = centerY + needleLength * Math.sin(needleAngleRad)
+  // Créer le chemin de l'aiguille (forme de flèche)
+  const needleWidth = size * 0.03
+  const needleBase1 = polarToCartesian(centerX, centerY, needleWidth, needleAngle - 90)
+  const needleBase2 = polarToCartesian(centerX, centerY, needleWidth, needleAngle + 90)
   
   return (
     <div className="flex flex-col items-center">
-      <svg width={size} height={size * 0.7} viewBox={`0 0 ${size} ${size * 0.7}`}>
-        <defs>
-          {/* Gradient pour l'arc de progression */}
-          <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#ef4444" />
-            <stop offset="33%" stopColor="#ef4444" />
-            <stop offset="33%" stopColor="#f97316" />
-            <stop offset="66%" stopColor="#f97316" />
-            <stop offset="66%" stopColor="#10b981" />
-            <stop offset="100%" stopColor="#10b981" />
-          </linearGradient>
-        </defs>
+      <svg width={size} height={size * 0.75} viewBox={`0 0 ${size} ${size * 0.75}`}>
+        {/* Segments colorés */}
+        {segments.map((segment, index) => (
+          <motion.path
+            key={index}
+            d={createSegmentPath(segment.start, segment.end)}
+            fill="none"
+            stroke={segment.color}
+            strokeWidth={strokeWidth}
+            strokeLinecap="butt"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: index * 0.05 }}
+          />
+        ))}
         
-        {/* Arc de fond (gris) */}
-        <path
-          d={backgroundArc}
-          fill="none"
-          stroke="#e5e7eb"
-          strokeWidth={strokeWidth}
-          strokeLinecap="round"
-        />
-        
-        {/* Arc de progression (avec gradient) */}
-        <motion.path
-          d={progressArc}
-          fill="none"
-          stroke="url(#gaugeGradient)"
-          strokeWidth={strokeWidth}
-          strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-        />
-        
-        {/* Marqueurs et labels */}
-        {[0, 25, 50, 75, 100].map((mark) => {
-          const markAngleRad = (startAngle + (mark / 100) * totalAngle) * (Math.PI / 180)
-          const markRadius = radius + strokeWidth * 0.5
-          const labelRadius = radius + strokeWidth * 1.2
-          
-          const x1 = centerX + radius * Math.cos(markAngleRad)
-          const y1 = centerY + radius * Math.sin(markAngleRad)
-          const x2 = centerX + markRadius * Math.cos(markAngleRad)
-          const y2 = centerY + markRadius * Math.sin(markAngleRad)
-          const labelX = centerX + labelRadius * Math.cos(markAngleRad)
-          const labelY = centerY + labelRadius * Math.sin(markAngleRad)
+        {/* Petits traits de marquage */}
+        {[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map((mark) => {
+          const angle = -180 + (mark / 100) * 180
+          const innerRadius = radius - strokeWidth / 2 - size * 0.02
+          const outerRadius = radius - strokeWidth / 2 + size * 0.02
+          const inner = polarToCartesian(centerX, centerY, innerRadius, angle)
+          const outer = polarToCartesian(centerX, centerY, outerRadius, angle)
           
           return (
-            <g key={mark}>
-              <line
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
-                stroke="#9ca3af"
-                strokeWidth={size * 0.008}
-                strokeLinecap="round"
-              />
-              <text
-                x={labelX}
-                y={labelY + size * 0.015}
-                textAnchor="middle"
-                fontSize={size * 0.06}
-                fill="#6b7280"
-                fontWeight="600"
-              >
-                {mark}
-              </text>
-            </g>
+            <line
+              key={mark}
+              x1={inner.x}
+              y1={inner.y}
+              x2={outer.x}
+              y2={outer.y}
+              stroke="#ffffff"
+              strokeWidth={size * 0.006}
+              strokeLinecap="round"
+            />
           )
         })}
         
+        {/* Labels 0 et 100 */}
+        <text
+          x={size * 0.12}
+          y={centerY + size * 0.02}
+          fontSize={size * 0.08}
+          fontWeight="bold"
+          fill="#374151"
+          textAnchor="middle"
+        >
+          0
+        </text>
+        <text
+          x={size * 0.88}
+          y={centerY + size * 0.02}
+          fontSize={size * 0.08}
+          fontWeight="bold"
+          fill="#374151"
+          textAnchor="middle"
+        >
+          100
+        </text>
+        
         {/* Aiguille */}
-        <motion.line
-          x1={centerX}
-          y1={centerY}
-          x2={needleX}
-          y2={needleY}
-          stroke={color}
-          strokeWidth={size * 0.012}
-          strokeLinecap="round"
+        <motion.path
+          d={`M ${needleBase1.x} ${needleBase1.y} L ${needleEnd.x} ${needleEnd.y} L ${needleBase2.x} ${needleBase2.y} Z`}
+          fill="#1f2937"
           initial={{ 
-            x2: centerX + needleLength * Math.cos(startAngle * Math.PI / 180),
-            y2: centerY + needleLength * Math.sin(startAngle * Math.PI / 180)
+            d: `M ${polarToCartesian(centerX, centerY, needleWidth, -180 - 90).x} ${polarToCartesian(centerX, centerY, needleWidth, -180 - 90).y} L ${polarToCartesian(centerX, centerY, needleLength, -180).x} ${polarToCartesian(centerX, centerY, needleLength, -180).y} L ${polarToCartesian(centerX, centerY, needleWidth, -180 + 90).x} ${polarToCartesian(centerX, centerY, needleWidth, -180 + 90).y} Z`
           }}
-          animate={{ x2: needleX, y2: needleY }}
-          transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
+          animate={{ 
+            d: `M ${needleBase1.x} ${needleBase1.y} L ${needleEnd.x} ${needleEnd.y} L ${needleBase2.x} ${needleBase2.y} Z`
+          }}
+          transition={{ duration: 1.5, ease: "easeInOut", delay: 0.3 }}
         />
         
-        {/* Point central de l'aiguille */}
+        {/* Centre de l'aiguille */}
         <circle
           cx={centerX}
           cy={centerY}
-          r={size * 0.035}
-          fill={color}
+          r={size * 0.04}
+          fill="#1f2937"
         />
         <circle
           cx={centerX}
           cy={centerY}
-          r={size * 0.02}
+          r={size * 0.025}
           fill="#ffffff"
         />
       </svg>
       
-      {/* Valeur centrale */}
+      {/* Valeur et texte */}
       <motion.div
-        className="text-center -mt-6"
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1 }}
+        className="text-center -mt-4"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.8 }}
       >
-        <div className="text-5xl font-bold" style={{ color }}>
+        <div className="text-5xl font-bold text-gray-800">
           {Math.round(clampedValue)}%
         </div>
         {title && (
@@ -177,23 +166,11 @@ export function Gauge({ value, title, subtitle, size = 200 }: GaugeProps) {
   )
 }
 
-// Fonction helper pour créer un arc SVG
-function describeArc(x: number, y: number, radius: number, startAngle: number, endAngle: number): string {
-  const start = polarToCartesian(x, y, radius, endAngle)
-  const end = polarToCartesian(x, y, radius, startAngle)
-  const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1"
-  
-  return [
-    "M", start.x, start.y,
-    "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y
-  ].join(" ")
-}
-
 function polarToCartesian(centerX: number, centerY: number, radius: number, angleInDegrees: number) {
-  const angleInRadians = (angleInDegrees) * Math.PI / 180.0
+  const angleInRadians = (angleInDegrees * Math.PI) / 180.0
   return {
-    x: centerX + (radius * Math.cos(angleInRadians)),
-    y: centerY + (radius * Math.sin(angleInRadians))
+    x: centerX + radius * Math.cos(angleInRadians),
+    y: centerY + radius * Math.sin(angleInRadians),
   }
 }
 
