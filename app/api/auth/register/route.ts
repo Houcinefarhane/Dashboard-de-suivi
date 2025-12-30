@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { hash } from 'bcryptjs'
-import { randomBytes } from 'crypto'
-import { sendVerificationEmail } from '@/lib/email'
 
 export async function POST(request: Request) {
   try {
@@ -31,13 +29,7 @@ export async function POST(request: Request) {
     // Hasher le mot de passe
     const hashedPassword = await hash(password, 10)
 
-    // Générer un token de vérification
-    const verificationToken = randomBytes(32).toString('hex')
-    const tokenExpires = new Date()
-    tokenExpires.setHours(tokenExpires.getHours() + 24) // Expire dans 24h
-
-    // Créer l'artisan (non vérifié)
-    console.log('Création de l\'artisan:', { email, name })
+    // Créer l'artisan (directement vérifié)
     const artisan = await prisma.artisan.create({
       data: {
         name,
@@ -45,54 +37,23 @@ export async function POST(request: Request) {
         password: hashedPassword,
         companyName: companyName || null,
         phone: phone || null,
-        emailVerified: false,
-        emailVerificationToken: verificationToken,
-        emailVerificationTokenExpires: tokenExpires,
+        emailVerified: true, // Compte vérifié automatiquement
+        emailVerificationToken: null,
+        emailVerificationTokenExpires: null,
       },
     })
-    console.log('Artisan créé avec succès:', artisan.id)
 
-    // Envoyer l'email de vérification (ne pas bloquer l'inscription si ça échoue)
-    let emailSent = false
-    try {
-      console.log('Tentative d\'envoi d\'email de vérification...')
-      const emailResult = await sendVerificationEmail(email, name, verificationToken)
-      if (emailResult && emailResult.success) {
-        console.log('Email de vérification envoyé à:', email)
-        emailSent = true
-      } else {
-        console.warn('Email non envoyé mais compte créé:', email)
-        console.warn('Raison:', emailResult?.error || 'Raison inconnue')
-      }
-    } catch (emailError: any) {
-      console.error('Erreur envoi email (non bloquant):', emailError?.message || emailError)
-      console.error('Stack:', emailError?.stack)
-      // On continue même si l'email échoue, l'utilisateur pourra demander un renvoi
-    }
-    
-    console.log(' Inscription terminée, compte créé:', artisan.id)
-
-    // Ne pas connecter directement, rediriger vers la page de confirmation
+    // Compte créé avec succès - pas besoin de vérification
     return NextResponse.json({
       success: true,
-      message: 'Un email de vérification a été envoyé à votre adresse',
-      requiresVerification: true,
+      message: 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.',
+      artisanId: artisan.id,
     })
   } catch (error: any) {
     console.error('Registration error:', error)
-    console.error('Error details:', {
-      message: error?.message,
-      stack: error?.stack,
-      name: error?.name,
-    })
-    
-    // Retourner un message d'erreur plus détaillé en développement
-    const errorMessage = process.env.NODE_ENV === 'development' 
-      ? `Erreur lors de l'inscription: ${error?.message || 'Erreur inconnue'}`
-      : 'Erreur lors de l\'inscription'
     
     return NextResponse.json(
-      { error: errorMessage },
+      { error: 'Erreur lors de l\'inscription. Veuillez réessayer.' },
       { status: 500 }
     )
   }

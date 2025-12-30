@@ -128,32 +128,8 @@ export async function POST(request: Request) {
       )
     }
 
-    // Vérifier que l'email est vérifié (sauf si SKIP_EMAIL_VERIFICATION est activé)
-    const skipVerification = process.env.SKIP_EMAIL_VERIFICATION === 'true'
-    console.log('Skip verification:', skipVerification)
-    console.log('Email vérifié:', artisan.emailVerified)
-    
-    if (!artisan.emailVerified && !skipVerification) {
-      console.log('Email non vérifié et skip désactivé - refus de connexion')
-      return NextResponse.json(
-        { 
-          error: 'Veuillez vérifier votre adresse email avant de vous connecter. Vérifiez votre boîte de réception.',
-          requiresVerification: true,
-          email: artisan.email,
-        },
-        { status: 403 }
-      )
-    }
-    
-    // Marquer automatiquement comme vérifié si skip activé
-    if (!artisan.emailVerified && skipVerification) {
-      console.log('Email non vérifié mais skip activé - marquage automatique comme vérifié')
-      await prisma.artisan.update({
-        where: { id: artisan.id },
-        data: { emailVerified: true },
-      })
-      console.log('Email automatiquement vérifié pour:', artisan.email)
-    }
+    // Plus besoin de vérifier l'email - tous les comptes sont automatiquement vérifiés
+    console.log('Connexion autorisée pour:', artisan.email)
 
     // Créer un cookie de session (simplifié - dans un vrai projet, utiliser JWT)
     const response = NextResponse.json({
