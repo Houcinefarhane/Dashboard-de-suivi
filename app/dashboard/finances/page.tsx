@@ -16,6 +16,7 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { exportExpenses, exportInvoices } from '@/lib/export'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
+import { Gauge } from '@/components/ui/gauge'
 
 interface Expense {
   id: string
@@ -389,6 +390,30 @@ export default function FinancesPage() {
     }
   }
 
+  // Calculer la progression globale des objectifs
+  const calculateOverallProgress = () => {
+    if (objectives.length === 0) return 0
+    
+    let totalProgress = 0
+    let totalKeyResults = 0
+    
+    objectives.forEach(objective => {
+      objective.keyResults.forEach(kr => {
+        totalKeyResults++
+        const progress = kr.targetValue > 0 ? Math.min((kr.currentValue / kr.targetValue) * 100, 100) : 0
+        totalProgress += progress
+      })
+    })
+    
+    return totalKeyResults > 0 ? Math.round(totalProgress / totalKeyResults) : 0
+  }
+
+  const overallProgress = calculateOverallProgress()
+  const achievedObjectives = objectives.reduce((count, obj) => {
+    const allAchieved = obj.keyResults.every(kr => kr.currentValue >= kr.targetValue)
+    return allAchieved ? count + 1 : count
+  }, 0)
+
   const statCards = [
     {
       title: 'Revenus',
@@ -545,11 +570,54 @@ export default function FinancesPage() {
         })}
       </div>
 
+      {/* Indicateur de progression des objectifs */}
+      {objectives.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <Card className="border-2 border-primary/20">
+            <CardHeader className="text-center pb-2">
+              <CardTitle className="flex items-center justify-center gap-2">
+                <Target className="w-5 h-5 text-primary" />
+                Progression de vos objectifs
+              </CardTitle>
+              <CardDescription>
+                État d'avancement global de tous vos objectifs financiers
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center py-6">
+              <Gauge 
+                value={overallProgress}
+                title="Objectifs atteints"
+                subtitle={`${achievedObjectives} sur ${objectives.length} objectif${objectives.length > 1 ? 's' : ''}`}
+                size={280}
+              />
+              <div className="mt-6 grid grid-cols-3 gap-4 w-full max-w-md">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-red-500">0-33%</div>
+                  <div className="text-xs text-muted-foreground">À améliorer</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-orange-500">34-66%</div>
+                  <div className="text-xs text-muted-foreground">En cours</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-500">67-100%</div>
+                  <div className="text-xs text-muted-foreground">Excellent</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
       {/* Graphique */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
+        transition={{ delay: objectives.length > 0 ? 0.4 : 0.3 }}
       >
         <Card>
           <CardHeader>
