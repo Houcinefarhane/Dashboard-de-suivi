@@ -152,12 +152,18 @@ export function Gauge({ value, title, subtitle, size = 250 }: GaugeProps) {
           {Math.round(clampedValue)}%
         </div>
         {title && (
-          <div className="text-sm font-semibold text-muted-foreground mt-2">
-            {title}
+          <div className="flex items-center justify-center gap-2 mt-3">
+            <span
+              className={`px-3 py-1 rounded-full text-xs font-bold text-white ${
+                title === 'Revenus' ? 'bg-green-600' : title === 'Bénéfice' ? 'bg-blue-600' : 'bg-gray-600'
+              }`}
+            >
+              {title}
+            </span>
           </div>
         )}
         {subtitle && (
-          <div className="text-xs text-muted-foreground mt-1 font-medium">
+          <div className="text-xs text-muted-foreground mt-2 font-medium">
             {subtitle}
           </div>
         )}
