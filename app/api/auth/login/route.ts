@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { compare } from 'bcryptjs'
 import { rateLimit } from '@/lib/rate-limit'
 import { headers } from 'next/headers'
+import { serialize } from 'cookie'
 
 export const dynamic = 'force-dynamic'
 
@@ -153,21 +154,30 @@ export async function POST(request: Request) {
 
     // Définir le cookie dans la réponse
     const isProduction = process.env.NODE_ENV === 'production'
-    const cookieOptions = {
+    
+    // Méthode 1: Utiliser response.cookies.set() (méthode Next.js recommandée)
+    response.cookies.set('artisanId', artisan.id, {
       httpOnly: true,
       secure: isProduction, // HTTPS en production
-      sameSite: 'lax' as const,
+      sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7, // 7 jours
-      path: '/', // Important : définir le chemin
-      // Ne pas définir de domaine pour permettre tous les sous-domaines Vercel
-    }
+      path: '/',
+    })
     
-    // Définir le cookie avec les options
-    response.cookies.set('artisanId', artisan.id, cookieOptions)
+    // Méthode 2: Définir aussi manuellement dans les headers pour compatibilité
+    const cookieString = serialize('artisanId', artisan.id, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7,
+      path: '/',
+    })
+    response.headers.set('Set-Cookie', cookieString)
     
     // Vérifier que le cookie est bien défini (logs en développement seulement)
     if (process.env.NODE_ENV === 'development') {
       console.log('✅ Cookie artisanId défini:', artisan.id)
+      console.log('✅ Cookie string:', cookieString)
     }
     
     // Ajouter headers rate limit dans la réponse
