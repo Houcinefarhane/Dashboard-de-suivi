@@ -102,7 +102,8 @@ export function Gauge({ value, title, subtitle, size = 250 }: GaugeProps) {
               y1={inner.y}
               x2={outer.x}
               y2={outer.y}
-              stroke="#ffffff"
+              stroke="currentColor"
+              className="stroke-background"
               strokeWidth={size * 0.006}
               strokeLinecap="round"
             />
@@ -115,7 +116,8 @@ export function Gauge({ value, title, subtitle, size = 250 }: GaugeProps) {
           y={centerY + size * 0.02}
           fontSize={size * 0.08}
           fontWeight="bold"
-          fill="#374151"
+          fill="currentColor"
+          className="fill-foreground"
           textAnchor="middle"
         >
           0
@@ -125,7 +127,8 @@ export function Gauge({ value, title, subtitle, size = 250 }: GaugeProps) {
           y={centerY + size * 0.02}
           fontSize={size * 0.08}
           fontWeight="bold"
-          fill="#374151"
+          fill="currentColor"
+          className="fill-foreground"
           textAnchor="middle"
         >
           100
@@ -134,7 +137,8 @@ export function Gauge({ value, title, subtitle, size = 250 }: GaugeProps) {
         {/* Aiguille */}
         <motion.path
           d={`M ${needleBase1.x} ${needleBase1.y} L ${needleEnd.x} ${needleEnd.y} L ${needleBase2.x} ${needleBase2.y} Z`}
-          fill="#1f2937"
+          fill="currentColor"
+          className="fill-foreground"
           initial={{ 
             d: `M ${polarToCartesian(centerX, centerY, needleWidth, -180 - 90).x} ${polarToCartesian(centerX, centerY, needleWidth, -180 - 90).y} L ${polarToCartesian(centerX, centerY, needleLength, -180).x} ${polarToCartesian(centerX, centerY, needleLength, -180).y} L ${polarToCartesian(centerX, centerY, needleWidth, -180 + 90).x} ${polarToCartesian(centerX, centerY, needleWidth, -180 + 90).y} Z`
           }}
@@ -149,13 +153,15 @@ export function Gauge({ value, title, subtitle, size = 250 }: GaugeProps) {
           cx={centerX}
           cy={centerY}
           r={size * 0.04}
-          fill="#1f2937"
+          fill="currentColor"
+          className="fill-foreground"
         />
         <circle
           cx={centerX}
           cy={centerY}
           r={size * 0.025}
-          fill="#ffffff"
+          fill="currentColor"
+          className="fill-background"
         />
       </svg>
       
@@ -166,7 +172,7 @@ export function Gauge({ value, title, subtitle, size = 250 }: GaugeProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.8 }}
       >
-        <div className="text-5xl font-bold text-gray-800">
+        <div className="text-5xl font-bold text-foreground">
           {Math.round(clampedValue)}%
         </div>
         {subtitle && (
