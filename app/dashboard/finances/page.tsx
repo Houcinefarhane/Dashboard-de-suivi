@@ -16,6 +16,7 @@ import { exportExpenses, exportInvoices } from '@/lib/export'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import { Gauge } from '@/components/ui/gauge'
+import { ObjectivesModal } from '@/components/dashboard/ObjectivesModal'
 
 interface Expense {
   id: string
@@ -66,6 +67,7 @@ export default function FinancesPage() {
   const [loading, setLoading] = useState(true)
   const [showExpenseForm, setShowExpenseForm] = useState(false)
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
+  const [showObjectivesModal, setShowObjectivesModal] = useState(false)
   
   // Filtres du graphique
   const [chartFilters, setChartFilters] = useState({
@@ -307,6 +309,10 @@ export default function FinancesPage() {
           <Button variant="outline" onClick={handleExportPDF}>
             <Download className="w-4 h-4 mr-2" />
             PDF
+          </Button>
+          <Button variant="outline" onClick={() => setShowObjectivesModal(true)}>
+            <Target className="w-4 h-4 mr-2" />
+            Objectifs
           </Button>
           <Button onClick={() => setShowExpenseForm(true)}>
             <Plus className="w-4 h-4 mr-2" />
@@ -722,6 +728,16 @@ export default function FinancesPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Modale des objectifs */}
+      <ObjectivesModal
+        isOpen={showObjectivesModal}
+        onClose={() => {
+          setShowObjectivesModal(false)
+          // Rafraîchir les objectifs après la fermeture de la modale
+          fetchObjectives()
+        }}
+      />
     </div>
   )
 }

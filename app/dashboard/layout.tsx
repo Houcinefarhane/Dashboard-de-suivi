@@ -1,5 +1,4 @@
 import { Sidebar } from '@/components/dashboard/Sidebar'
-import { TopNav } from '@/components/dashboard/TopNav'
 // import { ToastProvider } from '@/components/ToastProvider'
 // import { NotificationWatcher } from '@/components/NotificationWatcher'
 import { getCurrentArtisan } from '@/lib/auth'
@@ -24,11 +23,10 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-background flex">
-      <TopNav />
       <Sidebar />
       {/* <ToastProvider /> */}
       {/* <NotificationWatcher /> */}
-      <main className="flex-1 w-full lg:ml-64 pb-4 px-3 lg:px-8 pt-20 lg:pt-20">
+      <main className="flex-1 w-full lg:ml-64 pb-4 px-3 lg:px-8 pt-16 lg:pt-6">
         <div className="max-w-7xl mx-auto w-full">
           {children}
         </div>
