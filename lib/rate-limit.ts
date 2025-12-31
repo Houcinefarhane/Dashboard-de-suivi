@@ -12,7 +12,7 @@ const rateLimitMap = new Map<string, RateLimitEntry>()
 // Nettoyer les entrées expirées toutes les 5 minutes
 setInterval(() => {
   const now = Date.now()
-  for (const [key, entry] of rateLimitMap.entries()) {
+  for (const [key, entry] of Array.from(rateLimitMap.entries())) {
     if (entry.resetTime < now) {
       rateLimitMap.delete(key)
     }
