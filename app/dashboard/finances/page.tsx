@@ -335,7 +335,7 @@ export default function FinancesPage() {
                 onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
                 className="px-3 py-2 rounded-md border border-input bg-background text-sm"
               >
-                {months.map((month, index) => (
+                {['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'].map((month, index) => (
                   <option key={index} value={index + 1}>
                     {month}
                   </option>
