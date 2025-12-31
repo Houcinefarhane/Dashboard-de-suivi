@@ -68,14 +68,17 @@ export default function GeolocalisationPage() {
   const fetchInterventions = async () => {
     try {
       setLoading(true)
-      const res = await fetch('/api/interventions')
+      // Ajouter limit=1000 pour charger toutes les interventions pour la carte
+      const res = await fetch('/api/interventions?limit=1000')
       const data = await res.json()
       if (res.ok) {
-        setInterventions(data)
-        setFilteredInterventions(data)
+        // Gérer la nouvelle structure avec pagination
+        const interventionsList = data.interventions || data
+        setInterventions(interventionsList)
+        setFilteredInterventions(interventionsList)
         
         // Centrer la carte sur les interventions
-        const withCoords = data.filter((i: Intervention) => i.latitude && i.longitude)
+        const withCoords = interventionsList.filter((i: Intervention) => i.latitude && i.longitude)
         if (withCoords.length > 0) {
           const avgLat = withCoords.reduce((sum: number, i: Intervention) => sum + (i.latitude || 0), 0) / withCoords.length
           const avgLng = withCoords.reduce((sum: number, i: Intervention) => sum + (i.longitude || 0), 0) / withCoords.length
