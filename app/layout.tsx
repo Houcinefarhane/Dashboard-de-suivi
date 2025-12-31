@@ -12,14 +12,14 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Dashboard Artisan - Gestion Professionnelle',
-    template: '%s | Dashboard Artisan',
+    default: 'Dashboard - Gestion Professionnelle',
+    template: '%s | Dashboard',
   },
-  description: 'Dashboard moderne pour plombiers, serruriers et artisans. Gérez vos clients, interventions, factures, devis et stock en toute simplicité.',
-  keywords: ['dashboard', 'artisan', 'plombier', 'serrurier', 'gestion', 'factures', 'devis', 'planning', 'interventions'],
-  authors: [{ name: 'Dashboard Artisan' }],
-  creator: 'Dashboard Artisan',
-  publisher: 'Dashboard Artisan',
+  description: 'Solution moderne de gestion pour organiser vos clients, planifier vos rendez-vous, gérer vos finances et suivre votre activité en temps réel.',
+  keywords: ['dashboard', 'gestion', 'factures', 'devis', 'planning', 'clients', 'finances', 'stock', 'analytics'],
+  authors: [{ name: 'Dashboard' }],
+  creator: 'Dashboard',
+  publisher: 'Dashboard',
   formatDetection: {
     email: false,
     address: false,
@@ -34,14 +34,14 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'fr_FR',
     url: '/',
-    title: 'Dashboard Artisan - Gestion Professionnelle',
-    description: 'Dashboard moderne pour plombiers, serruriers et artisans. Gérez vos clients, interventions, factures, devis et stock en toute simplicité.',
-    siteName: 'Dashboard Artisan',
+    title: 'Dashboard - Gestion Professionnelle',
+    description: 'Solution moderne de gestion pour organiser vos clients, planifier vos rendez-vous, gérer vos finances et suivre votre activité en temps réel.',
+    siteName: 'Dashboard',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Dashboard Artisan - Gestion Professionnelle',
-    description: 'Dashboard moderne pour plombiers, serruriers et artisans',
+    title: 'Dashboard - Gestion Professionnelle',
+    description: 'Solution moderne de gestion pour organiser votre activité',
   },
   robots: {
     index: true,
