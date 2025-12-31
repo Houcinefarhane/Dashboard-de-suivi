@@ -17,33 +17,31 @@ export async function GET() {
       )
     }
 
-    // Données mensuelles (6 derniers mois)
-    const monthlyData = []
+    // Données mensuelles (6 derniers mois) - Requêtes en parallèle
+    const monthPromises = []
     for (let i = 5; i >= 0; i--) {
       const monthStart = startOfMonth(subMonths(new Date(), i))
       const monthEnd = startOfMonth(subMonths(new Date(), i - 1))
 
-      const monthInvoices = await prisma.invoice.findMany({
-        where: {
-          artisanId: artisan.id,
-          date: {
-            gte: monthStart,
-            lt: monthEnd,
+      monthPromises.push(
+        prisma.invoice.aggregate({
+          where: {
+            artisanId: artisan.id,
+            date: {
+              gte: monthStart,
+              lt: monthEnd,
+            },
+            status: 'paid',
           },
-          status: 'paid',
-        },
-        select: {
-          total: true,
-        },
-      })
-
-      const revenue = monthInvoices.reduce((sum, inv) => sum + inv.total, 0)
-
-      monthlyData.push({
-        month: format(monthStart, 'MMM', { locale: fr }),
-        revenue: Math.round(revenue),
-      })
+          _sum: { total: true },
+        }).then(agg => ({
+          month: format(monthStart, 'MMM', { locale: fr }),
+          revenue: Math.round(agg._sum.total || 0),
+        }))
+      )
     }
+
+    const monthlyData = await Promise.all(monthPromises)
 
     return NextResponse.json(monthlyData)
   } catch (error) {

@@ -1,8 +1,7 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import { toast } from '@/lib/toast'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -26,7 +25,45 @@ interface RecentActivity {
 }
 
 export default function DashboardPage() {
-  const [stats, setStats] = useState({
+  // React Query pour cache et chargement optimisé
+  const { data: stats, isLoading: statsLoading } = useQuery({
+    queryKey: ['dashboard-stats'],
+    queryFn: async () => {
+      const res = await fetch('/api/dashboard/stats')
+      if (!res.ok) throw new Error('Failed to fetch stats')
+      return res.json()
+    },
+  })
+
+  const { data: recentActivity, isLoading: activityLoading } = useQuery({
+    queryKey: ['dashboard-activity'],
+    queryFn: async () => {
+      const res = await fetch('/api/dashboard/recent-activity')
+      if (!res.ok) throw new Error('Failed to fetch activity')
+      return res.json()
+    },
+  })
+
+  const { data: revenueData, isLoading: revenueLoading } = useQuery({
+    queryKey: ['dashboard-revenue'],
+    queryFn: async () => {
+      const res = await fetch('/api/dashboard/revenue-chart')
+      if (!res.ok) throw new Error('Failed to fetch revenue')
+      return res.json()
+    },
+  })
+
+  const { data: operations, isLoading: operationsLoading } = useQuery({
+    queryKey: ['dashboard-operations'],
+    queryFn: async () => {
+      const res = await fetch('/api/dashboard/operations')
+      if (!res.ok) throw new Error('Failed to fetch operations')
+      return res.json()
+    },
+  })
+
+  // Valeurs par défaut pour éviter les erreurs
+  const statsData = stats || {
     totalClients: 0,
     upcomingInterventions: 0,
     monthlyRevenue: 0,
@@ -34,110 +71,52 @@ export default function DashboardPage() {
     pendingInvoices: 0,
     totalRevenue: 0,
     monthlyGrowth: 0,
-  })
-  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([])
-  const [revenueData, setRevenueData] = useState<any[]>([])
-  const [operations, setOperations] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    fetchDashboardData()
-    // Désactivé pour éviter trop de notifications
-    // checkOverdueInvoices()
-    // checkInterventionReminders()
-  }, [])
-
-  const checkOverdueInvoices = async () => {
-    try {
-      await fetch('/api/notifications/check-overdue', { method: 'POST' })
-    } catch (error) {
-      console.error('Error checking overdue invoices:', error)
-    }
-  }
-
-  const checkInterventionReminders = async () => {
-    try {
-      await fetch('/api/notifications/check-reminders', { method: 'POST' })
-    } catch (error) {
-      console.error('Error checking intervention reminders:', error)
-    }
-  }
-
-  const fetchDashboardData = async () => {
-    try {
-      const [statsRes, activityRes, revenueRes, operationsRes] = await Promise.all([
-        fetch('/api/dashboard/stats'),
-        fetch('/api/dashboard/recent-activity'),
-        fetch('/api/dashboard/revenue-chart'),
-        fetch('/api/dashboard/operations'),
-      ])
-
-      if (statsRes.ok) {
-        const statsData = await statsRes.json()
-        setStats(statsData)
-      }
-
-      if (activityRes.ok) {
-        const activityData = await activityRes.json()
-        setRecentActivity(activityData)
-      }
-
-      if (revenueRes.ok) {
-        const revenueData = await revenueRes.json()
-        setRevenueData(revenueData)
-      }
-
-      if (operationsRes.ok) {
-        const operationsData = await operationsRes.json()
-        setOperations(operationsData)
-      }
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error)
-    } finally {
-      setLoading(false)
-    }
   }
 
   const statCards = [
     {
       title: 'Clients',
-      value: stats.totalClients,
+      value: statsData.totalClients,
       icon: Users,
       color: 'bg-primary',
       description: 'Clients actifs',
       change: '+12%',
       trend: 'up' as const,
       link: '/dashboard/clients',
+      loading: statsLoading,
     },
     {
       title: 'Interventions',
-      value: stats.upcomingInterventions,
+      value: statsData.upcomingInterventions,
       icon: Calendar,
       color: 'bg-accent',
       description: 'À venir cette semaine',
       change: '+5',
       trend: 'up' as const,
       link: '/dashboard/planning',
+      loading: statsLoading,
     },
     {
       title: 'Revenus mensuels',
-      value: formatCurrency(stats.monthlyRevenue),
+      value: formatCurrency(statsData.monthlyRevenue),
       icon: TrendingUp,
       color: 'bg-success',
       description: 'Ce mois-ci',
-      change: `${stats.monthlyGrowth > 0 ? '+' : ''}${stats.monthlyGrowth}%`,
-      trend: stats.monthlyGrowth > 0 ? 'up' as const : 'down' as const,
+      change: `${statsData.monthlyGrowth > 0 ? '+' : ''}${statsData.monthlyGrowth}%`,
+      trend: statsData.monthlyGrowth > 0 ? 'up' as const : 'down' as const,
       link: '/dashboard/finances',
+      loading: statsLoading,
     },
     {
       title: 'Factures en attente',
-      value: stats.pendingInvoices,
+      value: statsData.pendingInvoices,
       icon: FileText,
       color: 'bg-secondary',
       description: 'En attente de paiement',
-      change: stats.pendingInvoices > 0 ? `${stats.pendingInvoices} en attente` : 'À jour',
-      trend: stats.pendingInvoices > 0 ? 'down' as const : 'up' as const,
+      change: statsData.pendingInvoices > 0 ? `${statsData.pendingInvoices} en attente` : 'À jour',
+      trend: statsData.pendingInvoices > 0 ? 'down' as const : 'up' as const,
       link: '/dashboard/factures',
+      loading: statsLoading,
     },
   ]
 
@@ -201,7 +180,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   <CardTitle className="text-sm lg:text-xl mb-0.5 lg:mb-1 leading-tight">
-                    {loading ? (
+                    {stat.loading ? (
                       <div className="h-4 lg:h-6 w-14 lg:w-20 bg-muted animate-pulse rounded"></div>
                     ) : (
                       stat.value
@@ -248,7 +227,7 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent className="space-y-2 lg:space-y-3 max-h-[250px] lg:max-h-[400px] overflow-y-auto p-3 lg:p-6">
-              {loading ? (
+              {operationsLoading ? (
                 <div className="space-y-3">
                   {[1, 2].map((i) => (
                     <div key={i} className="h-16 bg-muted animate-pulse rounded-lg"></div>
@@ -401,7 +380,7 @@ export default function DashboardPage() {
             <CardContent className="p-2 lg:p-6">
               <div className="w-full h-[200px] lg:h-[350px]">
                 <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={revenueData.length > 0 ? revenueData : [
+                <AreaChart data={revenueData && revenueData.length > 0 ? revenueData : [
                   { month: 'Jan', revenue: 0 },
                   { month: 'Fév', revenue: 0 },
                   { month: 'Mar', revenue: 0 },
@@ -457,13 +436,13 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent className="p-3 lg:p-6">
-            {loading ? (
+            {activityLoading ? (
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 lg:gap-3">
                 {[1, 2, 3, 4].map((i) => (
                   <div key={i} className="h-12 bg-muted animate-pulse rounded-lg"></div>
                 ))}
               </div>
-            ) : recentActivity.length === 0 ? (
+            ) : !recentActivity || recentActivity.length === 0 ? (
               <div className="text-center py-6 text-muted-foreground">
                 <Clock className="w-6 h-6 mx-auto mb-2 opacity-50" />
                 <p className="text-xs">Aucune activité</p>

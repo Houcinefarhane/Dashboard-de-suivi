@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Space_Grotesk } from 'next/font/google'
 import { viewport } from './viewport'
 import './globals.css'
+import { Providers } from './providers'
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ['latin'],
@@ -83,7 +84,9 @@ export default function RootLayout({
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
-      <body className={`${spaceGrotesk.variable} ${spaceGrotesk.className} font-sans`}>{children}</body>
+      <body className={`${spaceGrotesk.variable} ${spaceGrotesk.className} font-sans`}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   )
 }

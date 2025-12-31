@@ -16,109 +16,110 @@ export async function GET() {
       )
     }
 
-    // Compter les clients
-    const totalClients = await prisma.client.count({
-      where: { artisanId: artisan.id },
-    })
-
-    // Compter les interventions à venir (7 prochains jours)
-    const nextWeek = new Date()
+    // Dates pour les calculs
+    const now = new Date()
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+    startOfMonth.setHours(0, 0, 0, 0)
+    
+    const nextWeek = new Date(now)
     nextWeek.setDate(nextWeek.getDate() + 7)
     
-    const upcomingInterventions = await prisma.intervention.count({
-      where: {
-        artisanId: artisan.id,
-        date: {
-          gte: new Date(),
-          lte: nextWeek,
-        },
-        status: {
-          not: 'cancelled',
-        },
-      },
-    })
-
-    // Calculer les revenus du mois en cours
-    const startOfMonth = new Date()
-    startOfMonth.setDate(1)
-    startOfMonth.setHours(0, 0, 0, 0)
-
-    const invoices = await prisma.invoice.findMany({
-      where: {
-        artisanId: artisan.id,
-        date: {
-          gte: startOfMonth,
-        },
-        status: 'paid',
-      },
-      select: {
-        total: true,
-      },
-    })
-
-    const monthlyRevenue = invoices.reduce((sum, invoice) => sum + invoice.total, 0)
-
-    // Revenus du mois précédent pour calculer la croissance
     const startOfLastMonth = subMonths(startOfMonth, 1)
     const endOfLastMonth = new Date(startOfMonth)
     endOfLastMonth.setMilliseconds(-1)
 
-    const lastMonthInvoices = await prisma.invoice.findMany({
-      where: {
-        artisanId: artisan.id,
-        date: {
-          gte: startOfLastMonth,
-          lte: endOfLastMonth,
+    // Toutes les requêtes en parallèle avec aggregations SQL
+    const [
+      totalClients,
+      upcomingInterventions,
+      monthlyRevenueAgg,
+      lastMonthRevenueAgg,
+      totalRevenueAgg,
+      pendingInvoices,
+      stockItems,
+    ] = await Promise.all([
+      // 1. Compter les clients
+      prisma.client.count({
+        where: { artisanId: artisan.id },
+      }),
+      
+      // 2. Compter les interventions à venir
+      prisma.intervention.count({
+        where: {
+          artisanId: artisan.id,
+          date: {
+            gte: now,
+            lte: nextWeek,
+          },
+          status: {
+            not: 'cancelled',
+          },
         },
-        status: 'paid',
-      },
-      select: {
-        total: true,
-      },
-    })
+      }),
+      
+      // 3. Revenus du mois en cours (aggregation SQL)
+      prisma.invoice.aggregate({
+        where: {
+          artisanId: artisan.id,
+          date: { gte: startOfMonth },
+          status: 'paid',
+        },
+        _sum: { total: true },
+      }),
+      
+      // 4. Revenus du mois précédent (aggregation SQL)
+      prisma.invoice.aggregate({
+        where: {
+          artisanId: artisan.id,
+          date: {
+            gte: startOfLastMonth,
+            lte: endOfLastMonth,
+          },
+          status: 'paid',
+        },
+        _sum: { total: true },
+      }),
+      
+      // 5. Revenus totaux (aggregation SQL)
+      prisma.invoice.aggregate({
+        where: {
+          artisanId: artisan.id,
+          status: 'paid',
+        },
+        _sum: { total: true },
+      }),
+      
+      // 6. Factures en attente
+      prisma.invoice.count({
+        where: {
+          artisanId: artisan.id,
+          status: {
+            in: ['sent', 'draft'],
+          },
+        },
+      }),
+      
+      // 7. Articles de stock (pour calculer lowStockItems)
+      prisma.stockItem.findMany({
+        where: { artisanId: artisan.id },
+        select: {
+          quantity: true,
+          minQuantity: true,
+        },
+      }),
+    ])
 
-    const lastMonthRevenue = lastMonthInvoices.reduce((sum, invoice) => sum + invoice.total, 0)
+    // Calculs finaux
+    const monthlyRevenue = monthlyRevenueAgg._sum.total || 0
+    const lastMonthRevenue = lastMonthRevenueAgg._sum.total || 0
+    const totalRevenue = totalRevenueAgg._sum.total || 0
     const monthlyGrowth = lastMonthRevenue > 0
       ? Math.round(((monthlyRevenue - lastMonthRevenue) / lastMonthRevenue) * 100)
       : 0
-
-    // Compter les articles en stock faible
-    const stockItems = await prisma.stockItem.findMany({
-      where: {
-        artisanId: artisan.id,
-      },
-      select: {
-        quantity: true,
-        minQuantity: true,
-      },
-    })
-
+    
     const lowStockItems = stockItems.filter(
       (item) => item.quantity <= (item.minQuantity || 0)
     ).length
-
-    // Compter les factures en attente
-    const pendingInvoices = await prisma.invoice.count({
-      where: {
-        artisanId: artisan.id,
-        status: {
-          in: ['sent', 'draft'],
-        },
-      },
-    })
-
-    // Revenus totaux
-    const allPaidInvoices = await prisma.invoice.findMany({
-      where: {
-        artisanId: artisan.id,
-        status: 'paid',
-      },
-      select: {
-        total: true,
-      },
-    })
-
-    const totalRevenue = allPaidInvoices.reduce((sum, invoice) => sum + invoice.total, 0)
 
     return NextResponse.json({
       totalClients,
