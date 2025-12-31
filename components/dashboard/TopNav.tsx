@@ -16,13 +16,15 @@ import {
   Menu,
   X,
   Bell,
-  MapPin
+  MapPin,
+  Target
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { Logo } from '@/components/Logo'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { ObjectivesModal } from './ObjectivesModal'
 
 const menuItems = [
   { href: '/dashboard', label: 'Tableau de bord', icon: LayoutDashboard },
@@ -41,6 +43,7 @@ export function TopNav() {
   const pathname = usePathname()
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const [unreadNotifications, setUnreadNotifications] = useState(0)
+  const [showObjectives, setShowObjectives] = useState(false)
 
   // Charger le nombre de notifications non lues
   useEffect(() => {
@@ -141,8 +144,17 @@ export function TopNav() {
             })}
           </div>
 
-          {/* Right side - Theme Toggle & Logout */}
+          {/* Right side - Objectives, Theme Toggle & Logout */}
           <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowObjectives(true)}
+              className="text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              <Target className="w-4 h-4 mr-2" strokeWidth={2} />
+              <span className="text-sm font-medium">Objectifs</span>
+            </Button>
             <ThemeToggle />
             <Button
               variant="ghost"
@@ -213,6 +225,17 @@ export function TopNav() {
             )
           })}
           <div className="pt-4 border-t border-border mt-4 space-y-1">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setShowObjectives(true)
+                setIsMobileOpen(false)
+              }}
+              className="w-full justify-start text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              <Target className="w-4 h-4 mr-3" strokeWidth={2} />
+              <span className="text-sm font-medium">Objectifs</span>
+            </Button>
             <div className="flex items-center justify-between px-3 py-2">
               <span className="text-sm text-muted-foreground">Thème</span>
               <ThemeToggle />
@@ -228,6 +251,9 @@ export function TopNav() {
           </div>
         </div>
       </motion.div>
+
+      {/* Modale des objectifs */}
+      <ObjectivesModal isOpen={showObjectives} onClose={() => setShowObjectives(false)} />
     </>
   )
 }

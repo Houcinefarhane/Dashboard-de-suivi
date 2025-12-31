@@ -8,15 +8,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { 
   TrendingUp, TrendingDown, DollarSign, ArrowUpRight, ArrowDownRight, 
-  Plus, X, Edit, Trash2, Download, Calendar, Target, CheckCircle2,
-  AlertCircle, Filter, RefreshCw
+  Plus, X, Edit, Trash2, Download, Calendar, Filter
 } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, Cell } from 'recharts'
 import { exportExpenses, exportInvoices } from '@/lib/export'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
-import { Gauge } from '@/components/ui/gauge'
 
 interface Expense {
   id: string
@@ -25,26 +23,6 @@ interface Expense {
   amount: number
   date: string
   receipt: string | null
-}
-
-interface KeyResult {
-  id: string
-  title: string
-  metric: string
-  targetValue: number
-  currentValue: number
-  unit: string
-}
-
-interface FinancialObjective {
-  id: string
-  title: string
-  description: string | null
-  period: string
-  year: number
-  month: number | null
-  status: string
-  keyResults: KeyResult[]
 }
 
 type Granularity = 'week' | 'month' | 'year'
@@ -62,11 +40,9 @@ export default function FinancesPage() {
     chartData: [] as any[],
   })
   
-  const [objectives, setObjectives] = useState<FinancialObjective[]>([])
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [loading, setLoading] = useState(true)
   const [showExpenseForm, setShowExpenseForm] = useState(false)
-  const [showObjectiveForm, setShowObjectiveForm] = useState(false)
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
   
   // Filtres du graphique
@@ -88,21 +64,9 @@ export default function FinancesPage() {
     receipt: '',
   })
 
-  const [objectiveForm, setObjectiveForm] = useState({
-    title: '',
-    description: '',
-    period: 'monthly' as 'monthly' | 'annual',
-    year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
-    keyResults: [
-      { title: '', metric: 'revenue', targetValue: 0, unit: '€' }
-    ]
-  })
-
   useEffect(() => {
     fetchFinancialData()
     fetchExpenses()
-    fetchObjectives()
   }, [granularity, selectedYear, selectedMonth])
 
   const fetchFinancialData = async () => {
@@ -134,87 +98,6 @@ export default function FinancesPage() {
       }
     } catch (error) {
       console.error('Error fetching expenses:', error)
-    }
-  }
-
-  const fetchObjectives = async () => {
-    try {
-      // Récupérer TOUS les objectifs pour l'affichage global
-      const res = await fetch('/api/financial-objectives')
-      const data = await res.json()
-      if (res.ok) {
-        setObjectives(data)
-        console.log('Objectifs récupérés:', data)
-      } else {
-        console.error('Erreur API:', data)
-      }
-    } catch (error) {
-      console.error('Error fetching objectives:', error)
-    }
-  }
-
-  const handleSyncObjective = async (objectiveId: string) => {
-    try {
-      const res = await fetch('/api/financial-objectives/sync', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ objectiveId }),
-      })
-      
-      if (res.ok) {
-        fetchObjectives()
-      }
-    } catch (error) {
-      console.error('Error syncing objective:', error)
-    }
-  }
-
-  const handleCreateObjective = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    try {
-      const res = await fetch('/api/financial-objectives', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(objectiveForm),
-      })
-      
-      const data = await res.json()
-      
-      if (res.ok) {
-        alert('Objectif créé avec succès !')
-        fetchObjectives()
-        resetObjectiveForm()
-      } else {
-        // Message d'erreur détaillé avec instructions
-        const errorMessage = data.error || 'Impossible de créer l\'objectif'
-        
-        if (errorMessage.includes('table') || errorMessage.includes('relation') || errorMessage.includes('does not exist')) {
-          alert(`❌ Les tables OKR n'existent pas encore dans votre base de données !\n\n📋 ÉTAPES À SUIVRE :\n\n1. Ouvrez Supabase : https://supabase.com/dashboard\n2. Allez dans "SQL Editor"\n3. Cliquez sur "New query"\n4. Copiez le contenu du fichier "prisma/migrations/add_okr_tables.sql"\n5. Collez-le dans l'éditeur et cliquez sur "Run"\n\n📄 Consultez le fichier MIGRATION_OKR.md pour plus de détails.\n\nErreur technique : ${errorMessage}`)
-        } else {
-          alert(`Erreur lors de la création de l'objectif :\n\n${errorMessage}`)
-        }
-        console.error('Error response:', data)
-      }
-    } catch (error) {
-      console.error('Error creating objective:', error)
-      alert('Erreur réseau. Vérifiez votre connexion.')
-    }
-  }
-
-  const handleDeleteObjective = async (id: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cet objectif ?')) return
-    
-    try {
-      const res = await fetch(`/api/financial-objectives?id=${id}`, {
-        method: 'DELETE',
-      })
-      
-      if (res.ok) {
-        fetchObjectives()
-      }
-    } catch (error) {
-      console.error('Error deleting objective:', error)
     }
   }
 
@@ -284,48 +167,6 @@ export default function FinancesPage() {
     })
     setEditingExpense(null)
     setShowExpenseForm(false)
-  }
-
-  const resetObjectiveForm = () => {
-    setObjectiveForm({
-      title: '',
-      description: '',
-      period: 'monthly',
-      year: new Date().getFullYear(),
-      month: new Date().getMonth() + 1,
-      keyResults: [
-        { title: '', metric: 'revenue', targetValue: 0, unit: '€' }
-      ]
-    })
-    setShowObjectiveForm(false)
-  }
-
-  const addKeyResult = () => {
-    setObjectiveForm({
-      ...objectiveForm,
-      keyResults: [
-        ...objectiveForm.keyResults,
-        { title: '', metric: 'revenue', targetValue: 0, unit: '€' }
-      ]
-    })
-  }
-
-  const removeKeyResult = (index: number) => {
-    setObjectiveForm({
-      ...objectiveForm,
-      keyResults: objectiveForm.keyResults.filter((_, i) => i !== index)
-    })
-  }
-
-  const updateKeyResult = (index: number, field: string, value: any) => {
-    const newKeyResults = [...objectiveForm.keyResults]
-    newKeyResults[index] = { ...newKeyResults[index], [field]: value }
-    setObjectiveForm({ ...objectiveForm, keyResults: newKeyResults })
-  }
-
-  const getProgress = (current: number, target: number) => {
-    if (target === 0) return 0
-    return Math.min(Math.round((current / target) * 100), 100)
   }
 
   const handleExport = () => {
@@ -410,12 +251,6 @@ export default function FinancesPage() {
     },
   ]
 
-  const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i)
-  const months = [
-    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
-  ]
-
   return (
     <div ref={financesRef} className="space-y-8">
       <motion.div
@@ -426,7 +261,7 @@ export default function FinancesPage() {
         <div>
           <h1 className="text-4xl font-bold mb-2">Finances</h1>
           <p className="text-muted-foreground">
-            Suivez vos revenus, dépenses et objectifs OKR
+            Suivez vos revenus et dépenses
           </p>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -545,87 +380,11 @@ export default function FinancesPage() {
         })}
       </div>
 
-      {/* Indicateurs de progression - Revenus et Bénéfice */}
-      {objectives.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Card className="border-2 border-primary/20">
-            <CardHeader className="text-center pb-2">
-              <CardTitle className="flex items-center justify-center gap-2">
-                <Target className="w-5 h-5 text-primary" />
-                Progression de vos objectifs
-              </CardTitle>
-              <CardDescription>
-                Suivi en temps réel de vos objectifs financiers
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="py-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Indicateur Revenus */}
-                {(() => {
-                  const revenueObjective = objectives.find(obj => 
-                    obj.keyResults.some(kr => kr.metric === 'revenue')
-                  )
-                  const revenueTarget = revenueObjective?.keyResults.find(kr => kr.metric === 'revenue')?.targetValue || 0
-                  const revenueProgress = revenueTarget > 0 
-                    ? Math.min(Math.max(Math.round((stats.totalRevenue / revenueTarget) * 100), 0), 100)
-                    : 0
-
-                  return revenueTarget > 0 ? (
-                    <div className="flex flex-col items-center">
-                      <Gauge 
-                        value={revenueProgress}
-                        title="Revenus"
-                        subtitle={`${formatCurrency(stats.totalRevenue)} / ${formatCurrency(revenueTarget)}`}
-                        size={250}
-                      />
-                    </div>
-                  ) : null
-                })()}
-
-                {/* Indicateur Bénéfice */}
-                {(() => {
-                  const profitObjective = objectives.find(obj => 
-                    obj.keyResults.some(kr => kr.metric === 'profit')
-                  )
-                  const profitTarget = profitObjective?.keyResults.find(kr => kr.metric === 'profit')?.targetValue || 0
-                  const currentProfit = Math.max(stats.profit, 0)
-                  const profitProgress = profitTarget > 0 
-                    ? Math.min(Math.max(Math.round((currentProfit / profitTarget) * 100), 0), 100)
-                    : 0
-
-                  return profitTarget > 0 ? (
-                    <div className="flex flex-col items-center">
-                      <Gauge 
-                        value={profitProgress}
-                        title="Bénéfice"
-                        subtitle={`${formatCurrency(stats.profit)} / ${formatCurrency(profitTarget)}`}
-                        size={250}
-                      />
-                    </div>
-                  ) : null
-                })()}
-              </div>
-              
-              {/* Message si aucun objectif */}
-              {!objectives.some(obj => obj.keyResults.some(kr => kr.metric === 'revenue' || kr.metric === 'profit')) && (
-                <p className="text-center text-muted-foreground py-8">
-                  Créez un objectif avec des résultats clés "Revenus" ou "Bénéfice" pour voir les indicateurs.
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
-
       {/* Graphique */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: objectives.length > 0 ? 0.4 : 0.3 }}
+        transition={{ delay: 0.3 }}
       >
         <Card>
           <CardHeader>
@@ -683,109 +442,6 @@ export default function FinancesPage() {
           </CardContent>
         </Card>
       </motion.div>
-
-      {/* Objectifs OKR */}
-      {objectives.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <Target className="w-5 h-5" />
-                    Objectifs OKR
-                  </CardTitle>
-                  <CardDescription>
-                    Suivez vos objectifs et résultats clés
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                {objectives.map((objective) => (
-                  <div key={objective.id} className="border rounded-lg p-4 space-y-4">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h3 className="font-semibold text-lg">{objective.title}</h3>
-                        {objective.description && (
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {objective.description}
-                          </p>
-                        )}
-                        <p className="text-xs text-muted-foreground mt-2">
-                          {objective.period === 'monthly' 
-                            ? `${months[objective.month! - 1]} ${objective.year}`
-                            : `Année ${objective.year}`
-                          }
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleSyncObjective(objective.id)}
-                        >
-                          <RefreshCw className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDeleteObjective(objective.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Key Results */}
-                    <div className="space-y-3">
-                      {objective.keyResults.map((kr) => {
-                        const progress = getProgress(kr.currentValue, kr.targetValue)
-                        const isCompleted = progress >= 100
-                        
-                        return (
-                          <div key={kr.id} className="space-y-2">
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="font-medium">{kr.title}</span>
-                              <span className="text-muted-foreground">
-                                {kr.currentValue.toFixed(0)} / {kr.targetValue.toFixed(0)} {kr.unit}
-                              </span>
-                            </div>
-                            <div className="relative h-2 bg-muted rounded-full overflow-hidden">
-                              <div
-                                className={`absolute inset-y-0 left-0 rounded-full transition-all duration-500 ${
-                                  isCompleted ? 'bg-green-500' : 'bg-primary'
-                                }`}
-                                style={{ width: `${progress}%` }}
-                              />
-                            </div>
-                            <div className="flex items-center justify-between text-xs">
-                              <span className={isCompleted ? 'text-green-600 font-medium' : 'text-muted-foreground'}>
-                                {progress}%
-                              </span>
-                              {isCompleted && (
-                                <span className="flex items-center gap-1 text-green-600 font-medium">
-                                  <CheckCircle2 className="w-3 h-3" />
-                                  Atteint
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
 
       {/* Graphiques détaillés */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -952,188 +608,6 @@ export default function FinancesPage() {
                   </Button>
                   <Button type="submit" className="flex-1">
                     {editingExpense ? 'Modifier' : 'Ajouter'}
-                  </Button>
-                </div>
-              </form>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Modal Objectif OKR */}
-      <AnimatePresence>
-        {showObjectiveForm && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto"
-            onClick={resetObjectiveForm}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-background rounded-lg p-6 w-full max-w-2xl my-8"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold">Nouvel objectif OKR</h2>
-                <Button variant="ghost" size="sm" onClick={resetObjectiveForm}>
-                  <X className="w-5 h-5" />
-                </Button>
-              </div>
-
-              <form onSubmit={handleCreateObjective} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Titre de l'objectif *</Label>
-                  <Input
-                    id="title"
-                    value={objectiveForm.title}
-                    onChange={(e) =>
-                      setObjectiveForm({ ...objectiveForm, title: e.target.value })
-                    }
-                    placeholder="Ex: Augmenter la rentabilité"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Input
-                    id="description"
-                    value={objectiveForm.description}
-                    onChange={(e) =>
-                      setObjectiveForm({ ...objectiveForm, description: e.target.value })
-                    }
-                    placeholder="Détails de l'objectif..."
-                  />
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="period">Période *</Label>
-                    <select
-                      id="period"
-                      value={objectiveForm.period}
-                      onChange={(e) =>
-                        setObjectiveForm({ ...objectiveForm, period: e.target.value as 'monthly' | 'annual' })
-                      }
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    >
-                      <option value="monthly">Mensuel</option>
-                      <option value="annual">Annuel</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="year">Année *</Label>
-                    <select
-                      id="year"
-                      value={objectiveForm.year}
-                      onChange={(e) =>
-                        setObjectiveForm({ ...objectiveForm, year: parseInt(e.target.value) })
-                      }
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    >
-                      {years.map((year) => (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {objectiveForm.period === 'monthly' && (
-                    <div className="space-y-2">
-                      <Label htmlFor="month">Mois *</Label>
-                      <select
-                        id="month"
-                        value={objectiveForm.month}
-                        onChange={(e) =>
-                          setObjectiveForm({ ...objectiveForm, month: parseInt(e.target.value) })
-                        }
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                      >
-                        {months.map((month, index) => (
-                          <option key={index} value={index + 1}>
-                            {month}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label>Résultats clés (Key Results)</Label>
-                    <Button type="button" variant="outline" size="sm" onClick={addKeyResult}>
-                      <Plus className="w-4 h-4 mr-2" />
-                      Ajouter
-                    </Button>
-                  </div>
-
-                  {objectiveForm.keyResults.map((kr, index) => (
-                    <div key={index} className="border rounded-lg p-4 space-y-3">
-                      <div className="flex items-start justify-between">
-                        <span className="text-sm font-medium">KR {index + 1}</span>
-                        {objectiveForm.keyResults.length > 1 && (
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeKeyResult(index)}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        )}
-                      </div>
-
-                      <Input
-                        value={kr.title}
-                        onChange={(e) => updateKeyResult(index, 'title', e.target.value)}
-                        placeholder="Ex: Atteindre 50 000€ de CA"
-                        required
-                      />
-
-                      <div className="grid grid-cols-3 gap-3">
-                        <select
-                          value={kr.metric}
-                          onChange={(e) => updateKeyResult(index, 'metric', e.target.value)}
-                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                        >
-                          <option value="revenue">Revenus</option>
-                          <option value="profit">Bénéfice</option>
-                          <option value="expenses">Dépenses</option>
-                          <option value="client_count">Nouveaux clients</option>
-                          <option value="intervention_count">Interventions</option>
-                        </select>
-
-                        <Input
-                          type="number"
-                          value={kr.targetValue}
-                          onChange={(e) => updateKeyResult(index, 'targetValue', parseFloat(e.target.value))}
-                          placeholder="Cible"
-                          required
-                        />
-
-                        <Input
-                          value={kr.unit}
-                          onChange={(e) => updateKeyResult(index, 'unit', e.target.value)}
-                          placeholder="Unité"
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex gap-2 pt-4">
-                  <Button type="button" variant="outline" onClick={resetObjectiveForm} className="flex-1">
-                    Annuler
-                  </Button>
-                  <Button type="submit" className="flex-1">
-                    Créer l'objectif
                   </Button>
                 </div>
               </form>
