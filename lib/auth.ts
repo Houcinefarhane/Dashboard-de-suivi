@@ -6,7 +6,14 @@ import { authOptions } from './auth-nextauth'
 export async function getCurrentArtisan() {
   try {
     // PRIORITÉ 1: Vérifier NextAuth session (OAuth Google) - prioritaire car plus récent
-    const session = await getServerSession(authOptions)
+    // Mais seulement si NextAuth est configuré (évite erreurs si non configuré)
+    let session = null
+    try {
+      session = await getServerSession(authOptions)
+    } catch (nextAuthError: any) {
+      // Si NextAuth échoue (ex: variables d'environnement manquantes), continuer avec cookies
+      console.warn('⚠️ NextAuth session check failed, using cookies:', nextAuthError?.message)
+    }
     
     console.log('getCurrentArtisan - Session NextAuth:', {
       hasSession: !!session,
