@@ -21,7 +21,6 @@ import { DashboardScreenshot } from '@/components/DashboardScreenshot'
 
 export default function HomePage() {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null)
-  const [showScreenshot, setShowScreenshot] = useState(false)
 
   return (
     <div className="min-h-screen bg-white">
@@ -100,41 +99,21 @@ export default function HomePage() {
               </motion.div>
             </motion.div>
 
-            {/* Right side - Screenshot on hover */}
+            {/* Right side - Screenshot visible directly */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.6, duration: 0.8 }}
               className="relative hidden lg:block"
-              onHoverStart={() => setShowScreenshot(true)}
-              onHoverEnd={() => setShowScreenshot(false)}
             >
               <div className="relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-gray-200 shadow-2xl bg-white">
                 <motion.div
-                  animate={{
-                    scale: showScreenshot ? 1.05 : 1,
-                    opacity: showScreenshot ? 1 : 0.3,
-                  }}
-                  transition={{ duration: 0.5 }}
-                  className="absolute inset-0"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.8 }}
+                  className="w-full h-full relative rounded-lg overflow-hidden"
                 >
-                  {showScreenshot ? (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.4 }}
-                      className="w-full h-full relative rounded-lg overflow-hidden"
-                    >
-                      <DashboardScreenshot />
-                    </motion.div>
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-white">
-                      <div className="text-center">
-                        <BarChart3 className="w-20 h-20 mx-auto mb-4" style={{ color: 'rgba(150, 185, 220, 0.5)' }} />
-                        <p className="text-gray-400 font-medium">Survolez pour voir l'aperçu</p>
-                      </div>
-                    </div>
-                  )}
+                  <DashboardScreenshot />
                 </motion.div>
               </div>
             </motion.div>
