@@ -299,8 +299,8 @@ async function main() {
   
   console.log(`  ${interventions.length} interventions créées au total`)
 
-  // Générer des devis (40)
-  console.log('Création de 40 devis...')
+  // Générer des devis (40) - Répartis équitablement par mois avec variations
+  console.log('Création de 40 devis (lissés par mois)...')
   const quotes = []
   const quoteStatuses = ['draft', 'sent', 'accepted', 'rejected', 'converted'] as const
 
@@ -323,13 +323,33 @@ async function main() {
   
   let quoteCounter = maxQuoteNumber + 1
   console.log(` 🔢 Début de la numérotation à DEV-${quoteCounter.toString().padStart(4, '0')}`)
-
-  for (let i = 0; i < 40; i++) {
-    const client = randomElement(clients)
-    const date = randomDate(startDate, endDate)
-    const status = randomElement([...quoteStatuses])
-    const validUntil = new Date(date)
-    validUntil.setDate(validUntil.getDate() + randomInt(7, 90))
+  
+  const baseQuotesPerMonth = Math.floor(40 / invoiceMonths.length)
+  console.log(`  Répartition: ~${baseQuotesPerMonth} devis par mois avec variations`)
+  
+  let totalQuotesCreated = 0
+  
+  for (let monthIndex = 0; monthIndex < invoiceMonths.length; monthIndex++) {
+    const monthData = invoiceMonths[monthIndex]
+    // Variation de ±30% autour de la moyenne
+    const variation = randomFloat(0.7, 1.3)
+    let quotesThisMonth = Math.round(baseQuotesPerMonth * variation)
+    
+    // Ajuster pour atteindre exactement 40 au dernier mois
+    if (monthIndex === invoiceMonths.length - 1) {
+      quotesThisMonth = 40 - totalQuotesCreated
+    }
+    
+    for (let i = 0; i < quotesThisMonth; i++) {
+      const client = randomElement(clients)
+      
+      // Répartir équitablement dans le mois
+      const day = Math.floor((i / quotesThisMonth) * 27) + 1
+      const date = new Date(monthData.year, monthData.month, day, 10, 0, 0)
+      
+      const status = randomElement([...quoteStatuses])
+      const validUntil = new Date(date)
+      validUntil.setDate(validUntil.getDate() + randomInt(7, 90))
     
     // Calculer d'abord les totaux
     const numItems = randomInt(1, 5)
@@ -403,14 +423,16 @@ async function main() {
     }
 
     quotes.push(quote)
-    
-    if ((i + 1) % 10 === 0) {
-      console.log(`  ${i + 1}/40 devis créés`)
+    totalQuotesCreated++
+      
+      if (totalQuotesCreated % 10 === 0) {
+        console.log(`  ${totalQuotesCreated}/40 devis créés`)
+      }
     }
   }
 
-  // Générer des factures (60)
-  console.log('Création de 60 factures...')
+  // Générer des factures (60) - Réparties équitablement par mois avec variations
+  console.log('Création de 60 factures (lissées par mois)...')
   const invoices = []
   const invoiceStatuses = ['draft', 'sent', 'paid', 'overdue'] as const
   
@@ -433,13 +455,53 @@ async function main() {
   
   let invoiceCounter = maxInvoiceNumber + 1
   console.log(` 🔢 Début de la numérotation à FAC-${invoiceCounter.toString().padStart(4, '0')}`)
-
-  for (let i = 0; i < 60; i++) {
-    const client = randomElement(clients)
-    const date = randomDate(startDate, endDate)
-    const status = randomElement([...invoiceStatuses])
-    const dueDate = new Date(date)
-    dueDate.setDate(dueDate.getDate() + randomInt(15, 60))
+  
+  // Calculer les mois entre startDate et endDate
+  const invoiceMonths = []
+  const currentMonth = new Date(startDate.getFullYear(), startDate.getMonth(), 1)
+  const lastMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 1)
+  
+  while (currentMonth <= lastMonth) {
+    invoiceMonths.push({
+      year: currentMonth.getFullYear(),
+      month: currentMonth.getMonth()
+    })
+    currentMonth.setMonth(currentMonth.getMonth() + 1)
+  }
+  
+  const baseInvoicesPerMonth = Math.floor(60 / invoiceMonths.length)
+  console.log(`  Répartition: ~${baseInvoicesPerMonth} factures par mois avec variations`)
+  
+  let totalInvoicesCreated = 0
+  
+  for (let monthIndex = 0; monthIndex < invoiceMonths.length; monthIndex++) {
+    const monthData = invoiceMonths[monthIndex]
+    // Variation de ±30% autour de la moyenne
+    const variation = randomFloat(0.7, 1.3)
+    let invoicesThisMonth = Math.round(baseInvoicesPerMonth * variation)
+    
+    // Ajuster pour atteindre exactement 60 au dernier mois
+    if (monthIndex === invoiceMonths.length - 1) {
+      invoicesThisMonth = 60 - totalInvoicesCreated
+    }
+    
+    for (let i = 0; i < invoicesThisMonth; i++) {
+      const client = randomElement(clients)
+      
+      // Répartir équitablement dans le mois (entre le 1 et le 28)
+      const day = Math.floor((i / invoicesThisMonth) * 27) + 1
+      const date = new Date(monthData.year, monthData.month, day, 12, 0, 0)
+      
+      // 70% de factures payées, 15% envoyées, 10% en retard, 5% brouillon
+      let status: 'draft' | 'sent' | 'paid' | 'overdue'
+      const rand = Math.random()
+      if (rand < 0.70) status = 'paid'
+      else if (rand < 0.85) status = 'sent'
+      else if (rand < 0.95) status = 'overdue'
+      else status = 'draft'
+      
+      const dueDate = new Date(date)
+      dueDate.setDate(dueDate.getDate() + randomInt(15, 60))
     
     // Calculer d'abord les totaux
     const numItems = randomInt(1, 8)
@@ -513,30 +575,55 @@ async function main() {
     }
 
     invoices.push(invoice)
-    
-    if ((i + 1) % 10 === 0) {
-      console.log(`  ${i + 1}/60 factures créées`)
+    totalInvoicesCreated++
+      
+      if (totalInvoicesCreated % 10 === 0) {
+        console.log(`  ${totalInvoicesCreated}/60 factures créées`)
+      }
     }
   }
 
-  // Générer des dépenses (30)
-  console.log('Création de 30 dépenses...')
-  for (let i = 0; i < 30; i++) {
-    const date = randomDate(startDate, endDate)
-    const category = randomElement(expenseCategories)
+  // Générer des dépenses (30) - Réparties équitablement par mois avec variations
+  console.log('Création de 30 dépenses (lissées par mois)...')
+  
+  const baseExpensesPerMonth = Math.floor(30 / invoiceMonths.length)
+  console.log(`  Répartition: ~${baseExpensesPerMonth} dépenses par mois avec variations`)
+  
+  let totalExpensesCreated = 0
+  
+  for (let monthIndex = 0; monthIndex < invoiceMonths.length; monthIndex++) {
+    const monthData = invoiceMonths[monthIndex]
+    // Variation de ±30% autour de la moyenne
+    const variation = randomFloat(0.7, 1.3)
+    let expensesThisMonth = Math.round(baseExpensesPerMonth * variation)
     
-    await prisma.expense.create({
-      data: {
-        description: `Dépense ${category.toLowerCase()} - ${randomElement(['Fournisseur A', 'Fournisseur B', 'Magasin', 'En ligne', 'Local'])}`,
-        amount: randomFloat(10, 2000),
-        category,
-        date,
-        artisanId: artisan.id
+    // Ajuster pour atteindre exactement 30 au dernier mois
+    if (monthIndex === invoiceMonths.length - 1) {
+      expensesThisMonth = 30 - totalExpensesCreated
+    }
+    
+    for (let i = 0; i < expensesThisMonth; i++) {
+      const category = randomElement(expenseCategories)
+      
+      // Répartir équitablement dans le mois
+      const day = Math.floor((i / expensesThisMonth) * 27) + 1
+      const date = new Date(monthData.year, monthData.month, day, randomInt(8, 18), 0, 0)
+      
+      await prisma.expense.create({
+        data: {
+          description: `Dépense ${category.toLowerCase()} - ${randomElement(['Fournisseur A', 'Fournisseur B', 'Magasin', 'En ligne', 'Local'])}`,
+          amount: randomFloat(10, 2000),
+          category,
+          date,
+          artisanId: artisan.id
+        }
+      })
+      
+      totalExpensesCreated++
+      
+      if (totalExpensesCreated % 10 === 0) {
+        console.log(`  ${totalExpensesCreated}/30 dépenses créées`)
       }
-    })
-    
-    if ((i + 1) % 10 === 0) {
-      console.log(`  ${i + 1}/30 dépenses créées`)
     }
   }
 
