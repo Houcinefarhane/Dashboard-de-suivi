@@ -232,9 +232,17 @@ export default function PlanningPage() {
       const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 })
       return eachDayOfInterval({ start: weekStart, end: addDays(weekStart, 6) })
     } else {
+      // Vue mois : inclure les jours des mois adjacents pour compléter les semaines
       const monthStart = startOfMonth(currentDate)
       const monthEnd = endOfMonth(currentDate)
-      return eachDayOfInterval({ start: monthStart, end: monthEnd })
+      
+      // Trouver le lundi de la semaine du premier jour du mois
+      const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 })
+      
+      // Trouver le dimanche de la semaine du dernier jour du mois
+      const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 1 })
+      
+      return eachDayOfInterval({ start: calendarStart, end: calendarEnd })
     }
   }
 
@@ -747,6 +755,7 @@ export default function PlanningPage() {
                   const dayInterventions = getInterventionsForDate(day)
                   const isToday = isSameDay(day, new Date())
                   const isSelected = selectedDate && isSameDay(day, selectedDate)
+                  const isCurrentMonth = isSameMonth(day, currentDate)
 
                   return (
                     <motion.div
@@ -761,9 +770,10 @@ export default function PlanningPage() {
                         min-h-[80px] p-2 rounded-lg border-2 cursor-pointer transition-all
                         ${isToday ? 'border-primary bg-primary/10' : 'border-transparent hover:border-primary/50'}
                         ${isSelected ? 'border-primary bg-primary/20' : ''}
+                        ${!isCurrentMonth ? 'opacity-40' : ''}
                       `}
                     >
-                      <div className={`text-sm font-medium mb-1 ${isToday ? 'text-primary' : ''}`}>
+                      <div className={`text-sm font-medium mb-1 ${isToday ? 'text-primary' : ''} ${!isCurrentMonth ? 'text-muted-foreground' : ''}`}>
                         {format(day, 'd')}
                       </div>
                       <div className="space-y-0.5">
