@@ -3,7 +3,6 @@ import { prisma } from '@/lib/prisma'
 import { compare } from 'bcryptjs'
 import { rateLimit } from '@/lib/rate-limit'
 import { headers } from 'next/headers'
-import { serialize } from 'cookie'
 
 export const dynamic = 'force-dynamic'
 
@@ -155,7 +154,7 @@ export async function POST(request: Request) {
     // Définir le cookie dans la réponse
     const isProduction = process.env.NODE_ENV === 'production'
     
-    // Méthode 1: Utiliser response.cookies.set() (méthode Next.js recommandée)
+    // Utiliser response.cookies.set() (méthode Next.js recommandée)
     response.cookies.set('artisanId', artisan.id, {
       httpOnly: true,
       secure: isProduction, // HTTPS en production
@@ -164,20 +163,9 @@ export async function POST(request: Request) {
       path: '/',
     })
     
-    // Méthode 2: Définir aussi manuellement dans les headers pour compatibilité
-    const cookieString = serialize('artisanId', artisan.id, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/',
-    })
-    response.headers.set('Set-Cookie', cookieString)
-    
     // Vérifier que le cookie est bien défini (logs en développement seulement)
     if (process.env.NODE_ENV === 'development') {
       console.log('✅ Cookie artisanId défini:', artisan.id)
-      console.log('✅ Cookie string:', cookieString)
     }
     
     // Ajouter headers rate limit dans la réponse
