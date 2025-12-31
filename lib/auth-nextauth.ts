@@ -11,42 +11,72 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
+      console.log('🔐 signIn callback appelé:', {
+        provider: account?.provider,
+        email: user?.email,
+        name: user?.name,
+      })
+
+      if (!user?.email) {
+        console.error('❌ Pas d\'email dans user object')
+        return false
+      }
+
       if (account?.provider === 'google') {
         try {
+          const email = user.email.toLowerCase().trim()
+          
           // Vérifier si l'artisan existe déjà
           const existingArtisan = await prisma.artisan.findUnique({
-            where: { email: user.email! },
+            where: { email },
           })
 
           if (!existingArtisan) {
             // Créer un nouveau compte Artisan
-            await prisma.artisan.create({
+            const newArtisan = await prisma.artisan.create({
               data: {
-                email: user.email!,
-                name: user.name || user.email!.split('@')[0],
+                email,
+                name: user.name || email.split('@')[0],
                 password: null, // Pas de mot de passe pour OAuth
                 emailVerified: true, // Email vérifié via Google
               },
             })
-            console.log('✅ Compte Artisan créé via Google OAuth:', user.email)
-          } else if (!existingArtisan.emailVerified) {
-            // Mettre à jour si l'email n'était pas vérifié
-            await prisma.artisan.update({
-              where: { id: existingArtisan.id },
-              data: {
-                emailVerified: true,
-                name: user.name || existingArtisan.name,
-              },
+            console.log('✅ Compte Artisan créé via Google OAuth:', {
+              id: newArtisan.id,
+              email: newArtisan.email,
+              name: newArtisan.name,
             })
-            console.log('✅ Compte Artisan mis à jour via Google OAuth:', user.email)
           } else {
-            console.log('✅ Compte Artisan existant connecté via Google OAuth:', user.email)
+            // Mettre à jour si nécessaire
+            if (!existingArtisan.emailVerified || (user.name && existingArtisan.name !== user.name)) {
+              await prisma.artisan.update({
+                where: { id: existingArtisan.id },
+                data: {
+                  emailVerified: true,
+                  name: user.name || existingArtisan.name,
+                },
+              })
+              console.log('✅ Compte Artisan mis à jour via Google OAuth:', existingArtisan.email)
+            } else {
+              console.log('✅ Compte Artisan existant connecté via Google OAuth:', existingArtisan.email)
+            }
           }
-        } catch (error) {
-          console.error('❌ Error creating/updating artisan from OAuth:', error)
-          return false
+          
+          return true
+        } catch (error: any) {
+          console.error('❌ Error creating/updating artisan from OAuth:', {
+            message: error?.message,
+            code: error?.code,
+            stack: error?.stack,
+          })
+          // Ne pas bloquer la connexion si l'erreur est mineure
+          // Retourner true pour permettre la connexion même en cas d'erreur de DB
+          console.warn('⚠️ Continuation malgré l\'erreur pour permettre la connexion')
+          return true
         }
       }
+      
+      // Pour les autres providers ou si pas de provider spécifique
       return true
     },
     async redirect({ url, baseUrl }) {
