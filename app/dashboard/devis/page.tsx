@@ -151,12 +151,16 @@ export default function DevisPage() {
       newItems[index] = {
         ...newItems[index],
         quantity: intValue,
+        // Recalculer le total automatiquement
+        total: Math.round((intValue * Number(newItems[index].unitPrice || 0)) * 100) / 100,
       }
     } else if (field === 'unitPrice') {
       const numValue = parseFloat(String(value)) || 0
       newItems[index] = {
         ...newItems[index],
         unitPrice: numValue,
+        // Recalculer le total automatiquement
+        total: Math.round((Number(newItems[index].quantity || 1) * numValue) * 100) / 100,
       }
     } else {
       newItems[index] = {
