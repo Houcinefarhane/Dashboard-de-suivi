@@ -1,6 +1,6 @@
-# Dashboard Pro
+# Gestion Pro
 
-Application web de gestion professionnelle pour tous types d'entreprises. Permet de gérer clients, rendez-vous, factures, devis, stock et suivi financier.
+ERP (Enterprise Resource Planning) complet pour tous types d'entreprises. Solution de gestion intégrée permettant de gérer l'ensemble de votre activité : clients, rendez-vous, factures, devis, stock, finances, planning et bien plus.
 
 ## Technologies utilisées
 
@@ -65,16 +65,17 @@ Les variables `GOOGLE_CLIENT_ID` et `GOOGLE_CLIENT_SECRET` sont optionnelles si 
 
 Important : pour `DATABASE_URL` en production, utiliser le format pooler Supabase avec `?pgbouncer=true`. Pour `NEXTAUTH_URL`, mettre l'URL de ton déploiement Vercel.
 
-## Fonctionnalités principales
+## Modules ERP
 
-- Gestion complète des clients avec recherche
-- Planning avec calendrier interactif pour les interventions
-- Création et gestion des factures et devis avec export PDF
-- Suivi financier avec graphiques et objectifs OKR
-- Gestion du stock avec alertes automatiques
-- Authentification email/password ou via Google
-- Recherche globale sur toutes les données
-- Thème clair/sombre
+- **Gestion clients** : Base de données complète avec recherche avancée et historique
+- **Planning & Rendez-vous** : Calendrier interactif avec vue mensuelle et géolocalisation
+- **Facturation** : Création, suivi et export PDF des factures avec relances automatiques
+- **Devis** : Gestion complète des devis avec conversion en factures
+- **Finances** : Tableaux de bord financiers, graphiques, objectifs OKR et suivi de trésorerie
+- **Stock** : Gestion des produits avec alertes de seuil et suivi des mouvements
+- **Notifications** : Système d'alertes pour factures impayées, stocks faibles, rendez-vous
+- **Analytics** : Tableaux de bord avec statistiques en temps réel et heatmaps d'activité
+- **Sécurité** : Authentification multi-facteurs, rate limiting, headers de sécurité
 
 ## Sécurité
 

@@ -12,10 +12,10 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Dashboard - Gestion Professionnelle',
-    template: '%s | Dashboard',
+    default: 'Gestion Pro - ERP Complet',
+    template: '%s | Gestion Pro',
   },
-  description: 'Solution moderne de gestion pour organiser vos clients, planifier vos rendez-vous, gérer vos finances et suivre votre activité en temps réel.',
+  description: 'ERP complet pour gérer l\'ensemble de votre entreprise : clients, factures, devis, stock, planning, finances et analytics en temps réel.',
   keywords: ['dashboard', 'gestion', 'factures', 'devis', 'planning', 'clients', 'finances', 'stock', 'analytics'],
   authors: [{ name: 'Dashboard' }],
   creator: 'Dashboard',
@@ -34,14 +34,14 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'fr_FR',
     url: '/',
-    title: 'Dashboard - Gestion Professionnelle',
-    description: 'Solution moderne de gestion pour organiser vos clients, planifier vos rendez-vous, gérer vos finances et suivre votre activité en temps réel.',
-    siteName: 'Dashboard',
+    title: 'Gestion Pro - ERP Complet',
+    description: 'ERP complet pour gérer l\'ensemble de votre entreprise : clients, factures, devis, stock, planning, finances et analytics en temps réel.',
+    siteName: 'Gestion Pro',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Dashboard - Gestion Professionnelle',
-    description: 'Solution moderne de gestion pour organiser votre activité',
+    title: 'Gestion Pro - ERP Complet',
+    description: 'Solution ERP complète pour gérer votre entreprise',
   },
   robots: {
     index: true,
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Dashboard Pro',
+    title: 'Gestion Pro',
   },
   icons: {
     icon: '/favicon.ico',
@@ -78,7 +78,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#96B9DC" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Dashboard Pro" />
+        <meta name="apple-mobile-web-app-title" content="Gestion Pro" />
         <meta name="color-scheme" content="light dark" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />

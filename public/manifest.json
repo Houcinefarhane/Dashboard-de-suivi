@@ -1,7 +1,7 @@
 {
-  "name": "Dashboard Pro",
-  "short_name": "Dashboard Pro",
-  "description": "Solution moderne de gestion professionnelle pour tous types d'entreprises",
+  "name": "Gestion Pro - ERP Complet",
+  "short_name": "Gestion Pro",
+  "description": "ERP complet pour gérer l'ensemble de votre entreprise : clients, factures, devis, stock, planning et finances",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#141414",
