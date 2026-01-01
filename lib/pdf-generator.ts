@@ -122,12 +122,41 @@ export function generateInvoicePDF(invoice: InvoiceData): void {
       doc.text(`Tél: ${invoice.artisan.phone}`, margin + 40, companyInfoY)
       companyInfoY += 5
     }
-    if ((!customization || customization.showLegalInfo) && invoice.artisan?.siret) {
-      doc.text(`SIRET: ${invoice.artisan.siret}`, margin + 40, companyInfoY)
-      companyInfoY += 5
+  }
+  
+  // Informations légales (si activées) - En-tête
+  if (!customization || customization.showLegalInfo) {
+    doc.setFontSize(8)
+    doc.setFont('helvetica', 'normal')
+    doc.setTextColor(80, 80, 80)
+    let legalInfoY = yPos + 20
+    
+    if (invoice.artisan?.siren) {
+      doc.text(`SIREN: ${invoice.artisan.siren}`, margin + 40, legalInfoY)
+      legalInfoY += 4
     }
-    if ((!customization || customization.showLegalInfo) && invoice.artisan?.vatNumber) {
-      doc.text(`TVA: ${invoice.artisan.vatNumber}`, margin + 40, companyInfoY)
+    if (invoice.artisan?.siret) {
+      doc.text(`SIRET: ${invoice.artisan.siret}`, margin + 40, legalInfoY)
+      legalInfoY += 4
+    }
+    if (invoice.artisan?.kbis) {
+      doc.text(`KBIS: ${invoice.artisan.kbis}`, margin + 40, legalInfoY)
+      legalInfoY += 4
+    }
+    if (invoice.artisan?.rcs) {
+      doc.text(`RCS: ${invoice.artisan.rcs}`, margin + 40, legalInfoY)
+      legalInfoY += 4
+    }
+    if (invoice.artisan?.vatNumber) {
+      doc.text(`TVA Intracommunautaire: ${invoice.artisan.vatNumber}`, margin + 40, legalInfoY)
+      legalInfoY += 4
+    }
+    if (invoice.artisan?.capital) {
+      doc.text(`Capital social: ${invoice.artisan.capital}`, margin + 40, legalInfoY)
+      legalInfoY += 4
+    }
+    if (invoice.artisan?.legalAddress) {
+      doc.text(`Siège social: ${invoice.artisan.legalAddress}`, margin + 40, legalInfoY)
     }
   }
   
@@ -303,14 +332,16 @@ export function generateInvoicePDF(invoice: InvoiceData): void {
   doc.setFontSize(7)
   doc.setTextColor(120, 120, 120)
   
-  // Informations légales (si activées)
+  // Informations légales (si activées) - Pied de page
   if (!customization || customization.showLegalInfo) {
     const legalInfo: string[] = []
-    if (invoice.artisan?.siret) {
-      legalInfo.push(`SIRET: ${invoice.artisan.siret}`)
-    }
+    
+    // Ordre recommandé pour les informations légales françaises
     if (invoice.artisan?.siren) {
       legalInfo.push(`SIREN: ${invoice.artisan.siren}`)
+    }
+    if (invoice.artisan?.siret) {
+      legalInfo.push(`SIRET: ${invoice.artisan.siret}`)
     }
     if (invoice.artisan?.rcs) {
       legalInfo.push(`RCS: ${invoice.artisan.rcs}`)
@@ -318,16 +349,25 @@ export function generateInvoicePDF(invoice: InvoiceData): void {
     if (invoice.artisan?.kbis) {
       legalInfo.push(`KBIS: ${invoice.artisan.kbis}`)
     }
+    if (invoice.artisan?.vatNumber) {
+      legalInfo.push(`TVA Intracommunautaire: ${invoice.artisan.vatNumber}`)
+    }
     if (invoice.artisan?.capital) {
-      legalInfo.push(`Capital: ${invoice.artisan.capital}`)
+      legalInfo.push(`Capital social: ${invoice.artisan.capital}`)
     }
     if (invoice.artisan?.legalAddress) {
       legalInfo.push(`Siège social: ${invoice.artisan.legalAddress}`)
     }
     
     if (legalInfo.length > 0) {
-      doc.text(legalInfo.join(' | '), pageWidth / 2, footerY, { align: 'center', maxWidth: pageWidth - 2 * margin })
-      footerY += 5
+      // Afficher les informations légales sur plusieurs lignes si nécessaire
+      const fullText = legalInfo.join(' | ')
+      const textLines = doc.splitTextToSize(fullText, pageWidth - 2 * margin)
+      
+      textLines.forEach((line: string, index: number) => {
+        doc.text(line, pageWidth / 2, footerY, { align: 'center' })
+        footerY += 4
+      })
     }
   }
   
