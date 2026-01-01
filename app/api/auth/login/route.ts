@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { compare } from 'bcryptjs'
 import { rateLimit } from '@/lib/rate-limit'
 import { headers } from 'next/headers'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 

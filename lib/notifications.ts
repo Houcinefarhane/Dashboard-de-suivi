@@ -394,7 +394,7 @@ export async function sendInvoiceReminder(
     },
   })
 
-  // TODO: Envoyer email/SMS au client
+  // Note: L'envoi d'email/SMS au client peut être implémenté ici si nécessaire
   // if (method === 'email' && invoice.client.email) {
   //   await sendEmail(invoice.client.email, reminderContent.title, reminderContent.message)
   // }
