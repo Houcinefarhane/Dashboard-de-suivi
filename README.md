@@ -1,6 +1,6 @@
-# Dashboard Artisan
+# Dashboard Pro
 
-Application web de gestion pour plombiers, serruriers et autres artisans. Permet de gérer clients, interventions, factures, devis, stock et suivi financier.
+Application web de gestion professionnelle pour tous types d'entreprises. Permet de gérer clients, rendez-vous, factures, devis, stock et suivi financier.
 
 ## Technologies utilisées
 
@@ -84,7 +84,7 @@ Le projet inclut plusieurs mesures de sécurité :
 - Headers de sécurité HTTP (CSP, HSTS, X-Frame-Options, etc.)
 - Logs sécurisés qui n'exposent pas d'informations sensibles en production
 - Authentification requise sur toutes les routes API
-- Vérification systématique que les ressources appartiennent à l'artisan connecté
+- Vérification systématique que les ressources appartiennent à l'utilisateur connecté
 
 ## Structure du projet
 
@@ -106,8 +106,8 @@ Pour générer des données de test et tester l'application :
 npm run db:seed
 ```
 
-Cela génère environ 50 clients, 60 factures, 120 interventions, etc. Les identifiants de connexion après le seed sont :
-- Email: `test@artisan.com`
+Cela génère environ 50 clients, 60 factures, 120 rendez-vous, etc. Les identifiants de connexion après le seed sont :
+- Email: `test@example.com`
 - Mot de passe: `password123`
 
 ## Licence

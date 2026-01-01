@@ -58,7 +58,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'ArtisanPro',
+    title: 'Dashboard Pro',
   },
   icons: {
     icon: '/favicon.ico',
@@ -78,7 +78,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#96B9DC" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="ArtisanPro" />
+        <meta name="apple-mobile-web-app-title" content="Dashboard Pro" />
         <meta name="color-scheme" content="light dark" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />

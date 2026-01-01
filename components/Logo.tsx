@@ -27,7 +27,7 @@ export function Logo({ className = '', size = 'md', showText = true }: LogoProps
       {showText && (
         <div>
           <h1 className={`${textSizes[size]} font-bold tracking-tight`}>
-            ArtisanPro
+            Dashboard Pro
           </h1>
           <p className={`${size === 'sm' ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
             Gestion professionnelle

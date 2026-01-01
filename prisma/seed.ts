@@ -67,7 +67,7 @@ async function main() {
   console.log('Début du seed...')
 
   // Récupérer ou créer l'artisan avec les identifiants de test
-  const artisanEmail = process.env.SEED_EMAIL || 'test@artisan.com'
+  const artisanEmail = process.env.SEED_EMAIL || 'test@example.com'
   // Mot de passe par défaut pour les comptes de test
   const artisanPassword = process.env.SEED_PASSWORD || 'password123'
   
