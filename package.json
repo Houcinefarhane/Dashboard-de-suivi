@@ -12,6 +12,7 @@
     "db:studio": "prisma studio",
     "db:generate": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
+    "db:add-2026": "tsx prisma/add-2026-data.ts",
     "db:check": "tsx prisma/check-data.ts",
     "db:transfer": "tsx prisma/transfer-data.ts",
     "db:clear-notifications": "tsx prisma/clear-notifications.ts",
