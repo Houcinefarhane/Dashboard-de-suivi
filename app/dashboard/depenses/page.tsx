@@ -64,6 +64,7 @@ export default function DepensesPage() {
     total: 0,
     totalPages: 1,
   })
+  const [totalAmount, setTotalAmount] = useState(0)
   const [formData, setFormData] = useState({
     description: '',
     category: 'matériel',
@@ -91,6 +92,7 @@ export default function DepensesPage() {
           total: 0,
           totalPages: 1,
         })
+        setTotalAmount(data.totalAmount || 0)
       }
     } catch (error) {
       console.error('Error fetching expenses:', error)
@@ -190,8 +192,6 @@ export default function DepensesPage() {
 
   // Recherche côté serveur - pas besoin de filtrage côté client
   const filteredExpenses = expenses
-  
-  const totalExpenses = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0)
 
   // Dépenses récentes (10 dernières) - depuis toutes les dépenses chargées
   const recentExpenses = expenses
@@ -447,7 +447,7 @@ export default function DepensesPage() {
                 </div>
               </div>
               <CardTitle className="text-2xl mt-4">
-                {formatCurrency(totalExpenses)}
+                {formatCurrency(totalAmount)}
               </CardTitle>
               <CardDescription>Total des dépenses</CardDescription>
             </CardHeader>
@@ -460,7 +460,7 @@ export default function DepensesPage() {
         >
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl">{filteredExpenses.length}</CardTitle>
+              <CardTitle className="text-2xl">{pagination.total}</CardTitle>
               <CardDescription>Nombre de dépenses</CardDescription>
             </CardHeader>
           </Card>
@@ -474,7 +474,7 @@ export default function DepensesPage() {
             <CardHeader>
               <CardTitle className="text-2xl">
                 {formatCurrency(
-                  filteredExpenses.length > 0 ? totalExpenses / filteredExpenses.length : 0
+                  pagination.total > 0 ? totalAmount / pagination.total : 0
                 )}
               </CardTitle>
               <CardDescription>Moyenne par dépense</CardDescription>

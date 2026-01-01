@@ -37,10 +37,18 @@ export async function GET(request: Request) {
       whereClause.category = category
     }
 
-    // Compter le total de dépenses
-    const total = await prisma.expense.count({
-      where: whereClause,
-    })
+    // Compter le total de dépenses et calculer le montant total
+    const [total, totalAmountResult] = await Promise.all([
+      prisma.expense.count({
+        where: whereClause,
+      }),
+      prisma.expense.aggregate({
+        where: whereClause,
+        _sum: {
+          amount: true,
+        },
+      }),
+    ])
 
     // Récupérer les dépenses avec pagination
     const expenses = await prisma.expense.findMany({
@@ -74,6 +82,7 @@ export async function GET(request: Request) {
         total,
         totalPages,
       },
+      totalAmount: totalAmountResult._sum.amount || 0,
     })
   } catch (error) {
     console.error('Error fetching expenses:', error)
