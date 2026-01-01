@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { FileText, Plus, Download, Eye, Search, Filter, X, Trash2, CheckCircle2, XCircle, Clock, AlertCircle, ArrowRight, FileDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import { FileText, Plus, Download, Eye, Search, Filter, X, Trash2, CheckCircle2, XCircle, Clock, AlertCircle, ArrowRight, FileDown, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { Logo } from '@/components/Logo'
 import { generateInvoicePDF } from '@/lib/pdf-generator'
@@ -378,6 +378,34 @@ export default function DevisPage() {
               </p>
             </div>
             <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  try {
+                    console.log('🔧 [MANUEL] Correction manuelle des totaux...')
+                    const res = await fetch('/api/quotes/fix-totals', { method: 'POST' })
+                    const data = await res.json()
+                    console.log('🔧 [MANUEL] Réponse:', data)
+                    if (res.ok) {
+                      if (data.itemsCorrected > 0 || data.quotesCorrected > 0) {
+                        alert(`✅ ${data.message}`)
+                        await fetchQuotes(currentPage, searchTerm, statusFilter)
+                      } else {
+                        alert('ℹ️ Aucun total à corriger, tout est déjà correct')
+                      }
+                    } else {
+                      alert(`❌ Erreur: ${data.error}`)
+                    }
+                  } catch (error: any) {
+                    console.error('❌ [MANUEL] Erreur:', error)
+                    alert(`❌ Erreur: ${error?.message || 'Erreur inconnue'}`)
+                  }
+                }}
+                className="w-full sm:w-auto"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Corriger totaux
+              </Button>
               <Button
                 variant="outline"
                 onClick={async () => {
