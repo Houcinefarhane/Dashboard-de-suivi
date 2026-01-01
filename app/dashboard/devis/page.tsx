@@ -111,7 +111,23 @@ export default function DevisPage() {
   useEffect(() => {
     fetchQuotes(currentPage, searchTerm, statusFilter)
     fetchClients()
+    // Corriger automatiquement les totaux au chargement
+    fixQuoteTotals()
   }, [currentPage, searchTerm, statusFilter])
+
+  const fixQuoteTotals = async () => {
+    try {
+      const res = await fetch('/api/quotes/fix-totals', { method: 'POST' })
+      const data = await res.json()
+      if (res.ok && (data.itemsCorrected > 0 || data.quotesCorrected > 0)) {
+        console.log('Totaux corrigés:', data.message)
+        // Recharger les devis après correction
+        fetchQuotes(currentPage, searchTerm, statusFilter)
+      }
+    } catch (error) {
+      console.error('Error fixing quote totals:', error)
+    }
+  }
 
   const calculateTotals = (items: QuoteItem[], taxRate: number) => {
     const subtotal = items.reduce((sum, item) => {
