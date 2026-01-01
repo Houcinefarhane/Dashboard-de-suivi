@@ -110,7 +110,7 @@ export async function checkAndCreateInvoiceReminders(artisanId: string) {
           },
         })
 
-        // TODO: Envoyer email/SMS au client
+        // Note: L'envoi d'email/SMS au client peut être implémenté ici si nécessaire
         // if (reminderToSend.method === 'email' && invoice.client.email) {
         //   await sendReminderEmail(invoice, reminderToSend.reminderNumber)
         // }

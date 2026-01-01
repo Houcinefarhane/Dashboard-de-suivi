@@ -578,7 +578,7 @@ export default function DepensesPage() {
                         id="description"
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        placeholder="Ex: Achat de matériel plomberie"
+                        placeholder="Ex: Achat de matériel"
                         required
                         className="h-11"
                       />

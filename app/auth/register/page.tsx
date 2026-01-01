@@ -130,7 +130,7 @@ export default function RegisterPage() {
                 <Input
                   id="companyName"
                   name="companyName"
-                  placeholder="Plomberie Dupont"
+                  placeholder="Nom de votre entreprise"
                   value={formData.companyName}
                   onChange={handleChange}
                   className="h-11"

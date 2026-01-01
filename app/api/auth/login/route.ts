@@ -46,18 +46,9 @@ export async function POST(request: Request) {
       )
     }
 
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: 'Email et mot de passe requis' },
-        { status: 400 }
-      )
-    }
-
     // Vérifier DATABASE_URL (sans logger les détails sensibles)
     if (!process.env.DATABASE_URL) {
-      if (process.env.NODE_ENV === 'development') {
-        console.error('ERREUR: DATABASE_URL n\'est pas défini!')
-      }
+      logger.error('DATABASE_URL non défini')
       return NextResponse.json(
         { error: 'Configuration de la base de données manquante. Contactez l\'administrateur.' },
         { status: 500 }
@@ -73,37 +64,28 @@ export async function POST(request: Request) {
       artisan = await prisma.artisan.findUnique({
         where: { email: emailNormalized },
       })
-    } catch (dbError: any) {
-      console.error('=== ERREUR BASE DE DONNÉES ===')
-      console.error('Type:', dbError?.constructor?.name)
-      console.error('Message:', dbError?.message)
-      console.error('Code:', dbError?.code)
-      console.error('Stack:', dbError?.stack)
-      
-      // Vérifier le type d'erreur Prisma
-      if (dbError?.code === 'P1001') {
-        console.error('ERREUR: Impossible de se connecter au serveur de base de données')
-        console.error('Vérifiez que DATABASE_URL est correct et que Supabase est accessible')
-        throw new Error('Impossible de se connecter à la base de données. Vérifiez votre configuration DATABASE_URL dans Vercel.')
-      }
-      
-      if (dbError?.code === 'P1000') {
-        console.error('ERREUR: Échec d\'authentification')
-        throw new Error('Échec d\'authentification à la base de données. Vérifiez le mot de passe dans DATABASE_URL.')
-      }
-      
-      // Vérifier si c'est une erreur de format DATABASE_URL
-      if (dbError?.message?.includes('did not match the expected pattern') || 
-          dbError?.message?.includes('Invalid connection string') ||
-          dbError?.code === 'P1013') {
-        console.error('ERREUR: Format DATABASE_URL invalide')
-        throw new Error('Format de connexion à la base de données invalide. Vérifiez votre DATABASE_URL dans Vercel.')
-      }
-      
-      // Erreur générique
-      console.error('Erreur complète:', JSON.stringify(dbError, Object.getOwnPropertyNames(dbError), 2))
-      throw new Error(`Erreur de connexion à la base de données: ${dbError?.message || 'Erreur inconnue'} (Code: ${dbError?.code || 'N/A'})`)
-    }
+           } catch (dbError: any) {
+             logger.error('Erreur base de données', { code: dbError?.code })
+             
+             // Vérifier le type d'erreur Prisma
+             if (dbError?.code === 'P1001') {
+               throw new Error('Impossible de se connecter à la base de données. Vérifiez votre configuration DATABASE_URL dans Vercel.')
+             }
+             
+             if (dbError?.code === 'P1000') {
+               throw new Error('Échec d\'authentification à la base de données. Vérifiez le mot de passe dans DATABASE_URL.')
+             }
+             
+             // Vérifier si c'est une erreur de format DATABASE_URL
+             if (dbError?.message?.includes('did not match the expected pattern') || 
+                 dbError?.message?.includes('Invalid connection string') ||
+                 dbError?.code === 'P1013') {
+               throw new Error('Format de connexion à la base de données invalide. Vérifiez votre DATABASE_URL dans Vercel.')
+             }
+             
+             // Erreur générique
+             throw new Error(`Erreur de connexion à la base de données: ${dbError?.message || 'Erreur inconnue'} (Code: ${dbError?.code || 'N/A'})`)
+           }
 
     if (!artisan) {
       return NextResponse.json(
@@ -136,10 +118,8 @@ export async function POST(request: Request) {
       )
     }
 
-    // Connexion autorisée (logs seulement en développement)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('✅ Connexion réussie pour:', artisan.email)
-    }
+           // Connexion autorisée
+           logger.info('Connexion réussie')
 
     // Créer un cookie de session (simplifié - dans un vrai projet, utiliser JWT)
     const response = NextResponse.json({
@@ -163,10 +143,7 @@ export async function POST(request: Request) {
       path: '/',
     })
     
-    // Vérifier que le cookie est bien défini (logs en développement seulement)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('✅ Cookie artisanId défini:', artisan.id)
-    }
+           // Cookie défini avec succès
     
     // Ajouter headers rate limit dans la réponse
     response.headers.set('X-RateLimit-Limit', '5')
@@ -174,18 +151,8 @@ export async function POST(request: Request) {
     response.headers.set('X-RateLimit-Reset', new Date(rateLimitResult.resetTime).toISOString())
 
     return response
-  } catch (error: any) {
-    // Logs sécurisés : seulement en développement, pas de stack trace en production
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Erreur login:', {
-        type: error?.constructor?.name,
-        message: error?.message,
-        code: error?.code,
-      })
-    } else {
-      // En production : logger seulement le type d'erreur, pas les détails
-      console.error('Erreur login:', error?.code || 'UNKNOWN')
-    }
+         } catch (error: any) {
+           logger.error('Erreur login', { code: error?.code })
     
     // Messages d'erreur génériques (ne pas exposer de détails techniques)
     let errorMessage = 'Erreur lors de la connexion'

@@ -68,7 +68,7 @@ Important : pour `DATABASE_URL` en production, utiliser le format pooler Supabas
 ## Modules ERP
 
 - **Gestion clients** : Base de données complète avec recherche avancée et historique
-- **Planning & Rendez-vous** : Calendrier interactif avec vue mensuelle et géolocalisation
+- **Planning & Interventions** : Calendrier interactif avec vue mensuelle et géolocalisation
 - **Facturation** : Création, suivi et export PDF des factures avec relances automatiques
 - **Devis** : Gestion complète des devis avec conversion en factures
 - **Finances** : Tableaux de bord financiers, graphiques, objectifs OKR et suivi de trésorerie
@@ -107,7 +107,7 @@ Pour générer des données de test et tester l'application :
 npm run db:seed
 ```
 
-Cela génère environ 50 clients, 60 factures, 120 rendez-vous, etc. Les identifiants de connexion après le seed sont :
+Cela génère environ 50 clients, 60 factures, 120 interventions, etc. Les identifiants de connexion après le seed sont :
 - Email: `test@example.com`
 - Mot de passe: `password123`
 

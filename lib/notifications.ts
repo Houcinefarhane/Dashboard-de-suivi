@@ -26,7 +26,7 @@ export async function createNotification(params: CreateNotificationParams) {
       },
     })
 
-    // TODO: Envoyer email/SMS au client si nécessaire
+    // Note: L'envoi d'email/SMS au client peut être implémenté ici si nécessaire
     // await sendNotificationEmail(notification)
     // await sendNotificationSMS(notification)
 

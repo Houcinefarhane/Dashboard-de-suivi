@@ -28,18 +28,18 @@ const cities = [
 ]
 
 const services = [
-  'Réparation de fuite', 'Remplacement de robinet', 'Installation sanitaire', 'Débouchage canalisation',
-  'Réparation chaudière', 'Installation plomberie', 'Rénovation salle de bain', 'Dépannage urgence',
-  'Installation radiateur', 'Réparation WC', 'Installation douche', 'Remplacement tuyauterie',
-  'Réparation serrure', 'Installation serrure', 'Déblocage porte', 'Changement serrure',
-  'Installation alarme', 'Réparation porte', 'Installation blindage', 'Dépannage serrure'
+  'Consultation', 'Installation', 'Réparation', 'Maintenance', 'Dépannage urgence',
+  'Rénovation', 'Remplacement', 'Diagnostic', 'Contrôle qualité', 'Formation',
+  'Audit', 'Optimisation', 'Mise en service', 'Configuration', 'Support technique',
+  'Intervention sur site', 'Assistance', 'Conseil', 'Réglage', 'Nettoyage professionnel'
 ]
 
 const materials = [
-  'Robinet mélangeur', 'Tuyau PVC', 'Collier de serrage', 'Joint torique', 'Vanne d\'arrêt',
-  'Siphon', 'Flexible', 'Raccord', 'Manchon', 'Réducteur', 'Té', 'Coude',
-  'Serrure multipoint', 'Cylindre', 'Gâche électrique', 'Béquille', 'Pêne', 'Cylindre double entrée',
-  'Boulon', 'Vis', 'Clou', 'Cheville', 'Colle', 'Mastic', 'Joint', 'Ruban téflon'
+  'Composant électronique', 'Pièce mécanique', 'Accessoire standard', 'Élément de fixation',
+  'Câble et connectique', 'Boîtier et protection', 'Module fonctionnel', 'Kit de montage',
+  'Consommable professionnel', 'Outillage spécialisé', 'Équipement de sécurité', 'Matériel de mesure',
+  'Fourniture générale', 'Produit d\'entretien', 'Accessoire optionnel', 'Pièce de rechange',
+  'Composant principal', 'Élément auxiliaire', 'Matériau de base', 'Produit fini'
 ]
 
 const expenseCategories = [

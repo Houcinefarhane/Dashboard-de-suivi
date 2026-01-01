@@ -182,12 +182,6 @@ export default function DevisPage() {
         [field]: value,
       }
     }
-    // Toujours recalculer le total après modification de quantity ou unitPrice
-    if (field === 'quantity' || field === 'unitPrice') {
-      const quantity = Number(newItems[index].quantity) || 0
-      const unitPrice = Number(newItems[index].unitPrice) || 0
-      newItems[index].total = Math.round((quantity * unitPrice) * 100) / 100 // Arrondir à 2 décimales
-    }
     setFormData({ ...formData, items: newItems })
   }
 
