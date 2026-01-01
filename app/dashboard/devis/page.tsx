@@ -108,28 +108,6 @@ export default function DevisPage() {
     }
   }
 
-  const fixQuoteTotals = useCallback(async () => {
-    try {
-      console.log('🔧 [FIX] Correction automatique des totaux des devis...')
-      const res = await fetch('/api/quotes/fix-totals', { method: 'POST' })
-      const data = await res.json()
-      console.log('🔧 [FIX] Réponse API:', data)
-      if (res.ok) {
-        if (data.itemsCorrected > 0 || data.quotesCorrected > 0) {
-          console.log('✅ [FIX] Totaux corrigés:', data.message)
-          // Recharger les devis après correction
-          await fetchQuotes(currentPage, searchTerm, statusFilter)
-        } else {
-          console.log('ℹ️ [FIX] Aucun total à corriger, tout est déjà correct')
-        }
-      } else {
-        console.error('❌ [FIX] Erreur lors de la correction:', data.error)
-      }
-    } catch (error) {
-      console.error('❌ [FIX] Error fixing quote totals:', error)
-    }
-  }, [currentPage, searchTerm, statusFilter])
-
   // Charger les devis et clients
   useEffect(() => {
     fetchQuotes(currentPage, searchTerm, statusFilter)
@@ -138,8 +116,31 @@ export default function DevisPage() {
 
   // Corriger les totaux une seule fois au montage du composant
   useEffect(() => {
+    const fixQuoteTotals = async () => {
+      try {
+        console.log('🔧 [FIX] Correction automatique des totaux des devis...')
+        const res = await fetch('/api/quotes/fix-totals', { method: 'POST' })
+        const data = await res.json()
+        console.log('🔧 [FIX] Réponse API:', data)
+        if (res.ok) {
+          if (data.itemsCorrected > 0 || data.quotesCorrected > 0) {
+            console.log('✅ [FIX] Totaux corrigés:', data.message)
+            // Recharger les devis après correction
+            fetchQuotes(currentPage, searchTerm, statusFilter)
+          } else {
+            console.log('ℹ️ [FIX] Aucun total à corriger, tout est déjà correct')
+          }
+        } else {
+          console.error('❌ [FIX] Erreur lors de la correction:', data.error)
+        }
+      } catch (error) {
+        console.error('❌ [FIX] Error fixing quote totals:', error)
+      }
+    }
+    
     console.log('🔧 [FIX] useEffect déclenché, correction des totaux...')
     fixQuoteTotals()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // Exécuté une seule fois au montage
 
   const calculateTotals = (items: QuoteItem[], taxRate: number) => {
