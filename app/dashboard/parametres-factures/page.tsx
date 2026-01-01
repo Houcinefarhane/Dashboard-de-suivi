@@ -67,7 +67,7 @@ export default function ParametresFacturesPage() {
       toast.show({
         title: 'Erreur',
         message: 'Impossible de charger les paramètres',
-        type: 'error',
+        type: 'info',
       })
     } finally {
       setLoading(false)
@@ -89,14 +89,14 @@ export default function ParametresFacturesPage() {
         toast.show({
           title: 'Paramètres sauvegardés',
           message: 'Vos préférences de facture ont été mises à jour',
-          type: 'success',
+          type: 'info',
         })
       } else {
         const errorData = await res.json()
         toast.show({
           title: 'Erreur',
           message: errorData.error || 'Impossible de sauvegarder les paramètres',
-          type: 'error',
+          type: 'info',
         })
       }
     } catch (error) {
@@ -104,7 +104,7 @@ export default function ParametresFacturesPage() {
       toast.show({
         title: 'Erreur',
         message: 'Impossible de sauvegarder les paramètres',
-        type: 'error',
+        type: 'info',
       })
     } finally {
       setSaving(false)
@@ -138,7 +138,7 @@ export default function ParametresFacturesPage() {
       toast.show({
         title: 'Erreur',
         message: 'Impossible de générer l\'aperçu',
-        type: 'error',
+        type: 'info',
       })
     }
   }
