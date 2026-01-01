@@ -197,10 +197,35 @@ export default function StockPage() {
             Gérez votre matériel et inventaire
           </p>
         </div>
-        <Button onClick={() => setShowForm(true)} className="w-full sm:w-auto">
-          <Plus className="w-4 h-4 mr-2" />
-          Nouvel article
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={async () => {
+              try {
+                console.log('🔄 Mise à jour des catégories...')
+                const res = await fetch('/api/stock/update-categories', { method: 'POST' })
+                const data = await res.json()
+                if (res.ok) {
+                  alert(`✅ ${data.message}`)
+                  fetchItems(currentPage, searchTerm, categoryFilter)
+                } else {
+                  alert(`❌ Erreur: ${data.error}`)
+                }
+              } catch (error: any) {
+                console.error('Erreur:', error)
+                alert(`❌ Erreur: ${error?.message || 'Erreur inconnue'}`)
+              }
+            }}
+            className="w-full sm:w-auto"
+          >
+            <Package className="w-4 h-4 mr-2" />
+            Mettre à jour catégories
+          </Button>
+          <Button onClick={() => setShowForm(true)} className="w-full sm:w-auto">
+            <Plus className="w-4 h-4 mr-2" />
+            Nouvel article
+          </Button>
+        </div>
       </motion.div>
 
       {/* Filtres */}
