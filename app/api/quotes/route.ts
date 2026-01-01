@@ -196,8 +196,8 @@ export async function POST(request: Request) {
           create: items.map((item: any) => ({
             description: item.description.trim(),
             quantity: Math.floor(Math.max(1, parseFloat(item.quantity) || 1)),
-            unitPrice: Math.max(0, parseFloat(item.unitPrice) || 0),
-            total: Math.max(0, parseFloat(item.total) || 0),
+            unitPrice: parseFloat(item.unitPrice) || 0,
+            total: Math.round((Math.floor(Math.max(1, parseFloat(item.quantity) || 1)) * (parseFloat(item.unitPrice) || 0)) * 100) / 100, // Recalculer le total
           })),
         },
       },
