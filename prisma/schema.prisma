@@ -316,6 +316,15 @@ model InvoiceCustomization {
   showLegalInfo Boolean   @default(true) // Afficher SIRET, SIREN, etc.
   showCompanyInfo Boolean @default(true) // Afficher adresse, téléphone entreprise
   
+  // Informations légales (pour personnalisation factures)
+  siren         String?   // Numéro SIREN
+  siret         String?   // Numéro SIRET
+  kbis          String?   // Numéro KBIS
+  rcs           String?   // RCS (Registre du Commerce et des Sociétés)
+  vatNumber    String?   // Numéro de TVA intracommunautaire
+  capital       String?   // Capital social
+  legalAddress  String?   // Adresse du siège social
+  
   // Champs personnalisés (JSON array: [{label: string, value: string, position: 'header' | 'footer' | 'client'}])
   customFields  Json?     // Champs personnalisés à afficher sur les factures
   

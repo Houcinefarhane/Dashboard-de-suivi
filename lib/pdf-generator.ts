@@ -46,6 +46,13 @@ interface InvoiceData {
     headerText: string | null
     showLegalInfo: boolean
     showCompanyInfo: boolean
+    siren?: string | null
+    siret?: string | null
+    kbis?: string | null
+    rcs?: string | null
+    vatNumber?: string | null
+    capital?: string | null
+    legalAddress?: string | null
     customFields?: Array<{ id: string; label: string; value: string; position: 'header' | 'footer' | 'client' }>
   }
 }
@@ -125,38 +132,47 @@ export function generateInvoicePDF(invoice: InvoiceData): void {
   }
   
   // Informations légales (si activées) - En-tête
+  // Utiliser les valeurs de la personnalisation en priorité, sinon celles de l'artisan
   if (!customization || customization.showLegalInfo) {
     doc.setFontSize(8)
     doc.setFont('helvetica', 'normal')
     doc.setTextColor(80, 80, 80)
     let legalInfoY = yPos + 20
     
-    if (invoice.artisan?.siren) {
-      doc.text(`SIREN: ${invoice.artisan.siren}`, margin + 40, legalInfoY)
+    const siren = customization?.siren || invoice.artisan?.siren
+    const siret = customization?.siret || invoice.artisan?.siret
+    const kbis = customization?.kbis || invoice.artisan?.kbis
+    const rcs = customization?.rcs || invoice.artisan?.rcs
+    const vatNumber = customization?.vatNumber || invoice.artisan?.vatNumber
+    const capital = customization?.capital || invoice.artisan?.capital
+    const legalAddress = customization?.legalAddress || invoice.artisan?.legalAddress
+    
+    if (siren) {
+      doc.text(`SIREN: ${siren}`, margin + 40, legalInfoY)
       legalInfoY += 4
     }
-    if (invoice.artisan?.siret) {
-      doc.text(`SIRET: ${invoice.artisan.siret}`, margin + 40, legalInfoY)
+    if (siret) {
+      doc.text(`SIRET: ${siret}`, margin + 40, legalInfoY)
       legalInfoY += 4
     }
-    if (invoice.artisan?.kbis) {
-      doc.text(`KBIS: ${invoice.artisan.kbis}`, margin + 40, legalInfoY)
+    if (kbis) {
+      doc.text(`KBIS: ${kbis}`, margin + 40, legalInfoY)
       legalInfoY += 4
     }
-    if (invoice.artisan?.rcs) {
-      doc.text(`RCS: ${invoice.artisan.rcs}`, margin + 40, legalInfoY)
+    if (rcs) {
+      doc.text(`RCS: ${rcs}`, margin + 40, legalInfoY)
       legalInfoY += 4
     }
-    if (invoice.artisan?.vatNumber) {
-      doc.text(`TVA Intracommunautaire: ${invoice.artisan.vatNumber}`, margin + 40, legalInfoY)
+    if (vatNumber) {
+      doc.text(`TVA Intracommunautaire: ${vatNumber}`, margin + 40, legalInfoY)
       legalInfoY += 4
     }
-    if (invoice.artisan?.capital) {
-      doc.text(`Capital social: ${invoice.artisan.capital}`, margin + 40, legalInfoY)
+    if (capital) {
+      doc.text(`Capital social: ${capital}`, margin + 40, legalInfoY)
       legalInfoY += 4
     }
-    if (invoice.artisan?.legalAddress) {
-      doc.text(`Siège social: ${invoice.artisan.legalAddress}`, margin + 40, legalInfoY)
+    if (legalAddress) {
+      doc.text(`Siège social: ${legalAddress}`, margin + 40, legalInfoY)
     }
   }
   
@@ -333,30 +349,40 @@ export function generateInvoicePDF(invoice: InvoiceData): void {
   doc.setTextColor(120, 120, 120)
   
   // Informations légales (si activées) - Pied de page
+  // Utiliser les valeurs de la personnalisation en priorité, sinon celles de l'artisan
   if (!customization || customization.showLegalInfo) {
     const legalInfo: string[] = []
     
+    // Utiliser les valeurs de la personnalisation en priorité
+    const siren = customization?.siren || invoice.artisan?.siren
+    const siret = customization?.siret || invoice.artisan?.siret
+    const rcs = customization?.rcs || invoice.artisan?.rcs
+    const kbis = customization?.kbis || invoice.artisan?.kbis
+    const vatNumber = customization?.vatNumber || invoice.artisan?.vatNumber
+    const capital = customization?.capital || invoice.artisan?.capital
+    const legalAddress = customization?.legalAddress || invoice.artisan?.legalAddress
+    
     // Ordre recommandé pour les informations légales françaises
-    if (invoice.artisan?.siren) {
-      legalInfo.push(`SIREN: ${invoice.artisan.siren}`)
+    if (siren) {
+      legalInfo.push(`SIREN: ${siren}`)
     }
-    if (invoice.artisan?.siret) {
-      legalInfo.push(`SIRET: ${invoice.artisan.siret}`)
+    if (siret) {
+      legalInfo.push(`SIRET: ${siret}`)
     }
-    if (invoice.artisan?.rcs) {
-      legalInfo.push(`RCS: ${invoice.artisan.rcs}`)
+    if (rcs) {
+      legalInfo.push(`RCS: ${rcs}`)
     }
-    if (invoice.artisan?.kbis) {
-      legalInfo.push(`KBIS: ${invoice.artisan.kbis}`)
+    if (kbis) {
+      legalInfo.push(`KBIS: ${kbis}`)
     }
-    if (invoice.artisan?.vatNumber) {
-      legalInfo.push(`TVA Intracommunautaire: ${invoice.artisan.vatNumber}`)
+    if (vatNumber) {
+      legalInfo.push(`TVA Intracommunautaire: ${vatNumber}`)
     }
-    if (invoice.artisan?.capital) {
-      legalInfo.push(`Capital social: ${invoice.artisan.capital}`)
+    if (capital) {
+      legalInfo.push(`Capital social: ${capital}`)
     }
-    if (invoice.artisan?.legalAddress) {
-      legalInfo.push(`Siège social: ${invoice.artisan.legalAddress}`)
+    if (legalAddress) {
+      legalInfo.push(`Siège social: ${legalAddress}`)
     }
     
     if (legalInfo.length > 0) {

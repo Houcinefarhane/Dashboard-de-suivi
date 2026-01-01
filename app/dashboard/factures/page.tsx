@@ -86,6 +86,14 @@ export default function FacturesPage() {
     headerText: '',
     showLegalInfo: true,
     showCompanyInfo: true,
+    // Informations légales
+    siren: '',
+    siret: '',
+    kbis: '',
+    rcs: '',
+    vatNumber: '',
+    capital: '',
+    legalAddress: '',
     customFields: [] as Array<{ id: string; label: string; value: string; position: 'header' | 'footer' | 'client' }>,
   })
   const [formData, setFormData] = useState({
@@ -320,6 +328,13 @@ export default function FacturesPage() {
           headerText: data.headerText || '',
           showLegalInfo: data.showLegalInfo ?? true,
           showCompanyInfo: data.showCompanyInfo ?? true,
+          siren: data.siren || '',
+          siret: data.siret || '',
+          kbis: data.kbis || '',
+          rcs: data.rcs || '',
+          vatNumber: data.vatNumber || '',
+          capital: data.capital || '',
+          legalAddress: data.legalAddress || '',
           customFields: (data.customFields as any) || [],
         })
       }
@@ -752,6 +767,93 @@ export default function FacturesPage() {
                       </CardContent>
                     </Card>
                   </div>
+
+                  {/* Informations légales */}
+                  <Card>
+                    <CardHeader>
+                      <div className="flex items-center gap-2">
+                        <FileText className="w-5 h-5" />
+                        <CardTitle>Informations légales</CardTitle>
+                      </div>
+                      <CardDescription>
+                        Renseignez vos informations légales pour qu'elles apparaissent sur vos factures
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="siren">SIREN</Label>
+                          <Input
+                            id="siren"
+                            value={customizationFormData.siren}
+                            onChange={(e) => setCustomizationFormData({ ...customizationFormData, siren: e.target.value })}
+                            placeholder="123 456 789"
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="siret">SIRET</Label>
+                          <Input
+                            id="siret"
+                            value={customizationFormData.siret}
+                            onChange={(e) => setCustomizationFormData({ ...customizationFormData, siret: e.target.value })}
+                            placeholder="123 456 789 00012"
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="rcs">RCS</Label>
+                          <Input
+                            id="rcs"
+                            value={customizationFormData.rcs}
+                            onChange={(e) => setCustomizationFormData({ ...customizationFormData, rcs: e.target.value })}
+                            placeholder="RCS Paris B 123 456 789"
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="kbis">KBIS</Label>
+                          <Input
+                            id="kbis"
+                            value={customizationFormData.kbis}
+                            onChange={(e) => setCustomizationFormData({ ...customizationFormData, kbis: e.target.value })}
+                            placeholder="Numéro KBIS"
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="vatNumber">TVA Intracommunautaire</Label>
+                          <Input
+                            id="vatNumber"
+                            value={customizationFormData.vatNumber}
+                            onChange={(e) => setCustomizationFormData({ ...customizationFormData, vatNumber: e.target.value })}
+                            placeholder="FR12 345678901"
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="capital">Capital social</Label>
+                          <Input
+                            id="capital"
+                            value={customizationFormData.capital}
+                            onChange={(e) => setCustomizationFormData({ ...customizationFormData, capital: e.target.value })}
+                            placeholder="10 000 €"
+                            className="mt-2"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <Label htmlFor="legalAddress">Siège social</Label>
+                        <Input
+                          id="legalAddress"
+                          value={customizationFormData.legalAddress}
+                          onChange={(e) => setCustomizationFormData({ ...customizationFormData, legalAddress: e.target.value })}
+                          placeholder="123 Rue Example, 75001 Paris"
+                          className="mt-2"
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
 
                   {/* Champs personnalisés */}
                   <Card>
