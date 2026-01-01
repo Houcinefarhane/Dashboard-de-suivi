@@ -67,6 +67,15 @@ export default function HomePage() {
                 Avantages
               </button>
               <button
+                onClick={() => scrollToSection('pricing')}
+                className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+                style={{ color: 'inherit' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'rgb(150, 185, 220)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+              >
+                Tarifs
+              </button>
+              <button
                 onClick={() => scrollToSection('faq')}
                 className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
                 style={{ color: 'inherit' }}
@@ -120,6 +129,12 @@ export default function HomePage() {
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors"
               >
                 Avantages
+              </button>
+              <button
+                onClick={() => scrollToSection('pricing')}
+                className="block w-full text-left px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors"
+              >
+                Tarifs
               </button>
               <button
                 onClick={() => scrollToSection('faq')}
@@ -198,18 +213,16 @@ export default function HomePage() {
                 transition={{ delay: 0.5, duration: 0.6 }}
                 className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start"
               >
-                <Link href="/auth/register">
-                  <Button 
-                    size="lg" 
-                    className="text-lg px-8 py-6 h-14 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 group"
-                    style={{ backgroundColor: 'rgb(150, 185, 220)' }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(130, 165, 200)'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(150, 185, 220)'}
-                  >
-                    Commencer gratuitement
-                    <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
+                <button
+                  onClick={() => scrollToSection('pricing')}
+                  className="text-lg px-8 py-6 h-14 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 group rounded-lg"
+                  style={{ backgroundColor: 'rgb(150, 185, 220)' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(130, 165, 200)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(150, 185, 220)'}
+                >
+                  Voir les tarifs
+                  <ArrowRight className="ml-2 w-5 h-5 inline-block group-hover:translate-x-1 transition-transform" />
+                </button>
                 <Link href="/auth/login">
                   <Button 
                     size="lg" 
@@ -434,6 +447,152 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Pricing Section */}
+      <section id="pricing" className="py-12 bg-white scroll-mt-16">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-8"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+              Tarifs simples et transparents
+            </h2>
+            <p className="text-lg text-gray-600 max-w-xl mx-auto">
+              Choisissez la formule qui correspond à vos besoins
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Option 1: Paiement unique */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="relative"
+            >
+              <div className="h-full p-6 rounded-2xl border-2 border-gray-200 bg-white hover:border-gray-300 shadow-lg hover:shadow-xl transition-all duration-300">
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    Paiement unique
+                  </h3>
+                  <div className="mb-4">
+                    <span className="text-5xl font-bold" style={{ color: 'rgb(150, 185, 220)' }}>
+                      900€
+                    </span>
+                  </div>
+                  <p className="text-gray-600 text-sm">
+                    Accès à vie, sans engagement
+                  </p>
+                </div>
+                <ul className="space-y-3 mb-6">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
+                    <span className="text-gray-700 text-sm">Toutes les fonctionnalités incluses</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
+                    <span className="text-gray-700 text-sm">Mises à jour gratuites à vie</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
+                    <span className="text-gray-700 text-sm">Support technique inclus</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
+                    <span className="text-gray-700 text-sm">Aucun frais récurrent</span>
+                  </li>
+                </ul>
+                <Link href="/auth/register" className="block">
+                  <Button 
+                    className="w-full h-12 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+                    style={{ backgroundColor: 'rgb(150, 185, 220)' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(130, 165, 200)'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(150, 185, 220)'}
+                  >
+                    Choisir cette option
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* Option 2: Abonnement mensuel */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="px-4 py-1 rounded-full text-xs font-semibold text-white shadow-lg" style={{ backgroundColor: 'rgb(150, 185, 220)' }}>
+                  Le plus populaire
+                </span>
+              </div>
+              <div className="h-full p-6 rounded-2xl border-2 shadow-xl transition-all duration-300" style={{ borderColor: 'rgb(150, 185, 220)', backgroundColor: 'rgba(150, 185, 220, 0.05)' }}>
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    Abonnement mensuel
+                  </h3>
+                  <div className="mb-4">
+                    <span className="text-5xl font-bold" style={{ color: 'rgb(150, 185, 220)' }}>
+                      120€
+                    </span>
+                    <span className="text-gray-600 text-lg ml-2">/mois</span>
+                  </div>
+                  <p className="text-gray-600 text-sm">
+                    Résiliable à tout moment
+                  </p>
+                </div>
+                <ul className="space-y-3 mb-6">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
+                    <span className="text-gray-700 text-sm">Toutes les fonctionnalités incluses</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
+                    <span className="text-gray-700 text-sm">Mises à jour automatiques</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
+                    <span className="text-gray-700 text-sm">Support prioritaire</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
+                    <span className="text-gray-700 text-sm">Flexibilité totale</span>
+                  </li>
+                </ul>
+                <Link href="/auth/register" className="block">
+                  <Button 
+                    className="w-full h-12 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+                    style={{ backgroundColor: 'rgb(150, 185, 220)' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(130, 165, 200)'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(150, 185, 220)'}
+                  >
+                    Choisir cette option
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="text-center mt-8"
+          >
+            <p className="text-gray-600 text-sm">
+              Les deux formules incluent toutes les fonctionnalités. Aucun frais caché.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-12" style={{ backgroundColor: 'rgb(150, 185, 220)' }}>
         <div className="container mx-auto px-4 max-w-3xl">
@@ -450,16 +609,14 @@ export default function HomePage() {
             <p className="text-lg mb-6" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
               Rejoignez dès aujourd'hui et découvrez comment gagner du temps sur vos tâches administratives.
             </p>
-            <Link href="/auth/register">
-              <Button 
-                size="lg" 
-                className="text-lg px-8 py-6 h-14 bg-white hover:bg-gray-100 font-medium shadow-xl hover:shadow-2xl transition-all duration-300 group"
-                style={{ color: 'rgb(150, 185, 220)' }}
-              >
-                Créer mon compte gratuitement
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
+            <button
+              onClick={() => scrollToSection('pricing')}
+              className="text-lg px-8 py-6 h-14 bg-white hover:bg-gray-100 font-medium shadow-xl hover:shadow-2xl transition-all duration-300 group rounded-lg inline-flex items-center"
+              style={{ color: 'rgb(150, 185, 220)' }}
+            >
+              Voir les tarifs
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
           </motion.div>
         </div>
       </section>
@@ -614,11 +771,11 @@ const benefits = [
 const faqData = [
   {
     question: 'Comment créer mon compte ?',
-    answer: 'La création de compte est simple et gratuite. Cliquez sur "Créer mon compte" et remplissez le formulaire avec vos informations. Vous pourrez commencer à utiliser la plateforme immédiatement après votre inscription.',
+    answer: 'La création de compte est simple. Cliquez sur "Créer mon compte" et remplissez le formulaire avec vos informations. Vous pourrez choisir votre formule (paiement unique 900€ ou abonnement 120€/mois) et commencer à utiliser la plateforme immédiatement.',
   },
   {
     question: 'Quels sont les tarifs ?',
-    answer: 'Nous proposons un plan gratuit qui vous permet de découvrir toutes les fonctionnalités essentielles. Des options premium sont disponibles pour les besoins plus avancés.',
+    answer: 'Nous proposons deux formules : un paiement unique de 900€ pour un accès à vie, ou un abonnement mensuel de 120€/mois résiliable à tout moment. Les deux formules incluent toutes les fonctionnalités, les mises à jour et le support technique.',
   },
   {
     question: 'Mes données sont-elles sécurisées ?',
