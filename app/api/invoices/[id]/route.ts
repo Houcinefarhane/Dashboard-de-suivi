@@ -18,13 +18,16 @@ export async function PUT(
     }
 
     const body = await request.json()
-    const { status, ...otherFields } = body
+    const { status, items, subtotal, taxRate, tax, total, ...otherFields } = body
 
     // Vérifier que la facture appartient à l'artisan
     const existingInvoice = await prisma.invoice.findFirst({
       where: {
         id: params.id,
         artisanId: artisan.id,
+      },
+      include: {
+        items: true,
       },
     })
 
@@ -40,6 +43,55 @@ export async function PUT(
     if (otherFields.date) updateData.date = new Date(otherFields.date)
     if (otherFields.dueDate !== undefined) updateData.dueDate = otherFields.dueDate ? new Date(otherFields.dueDate) : null
     if (otherFields.notes !== undefined) updateData.notes = otherFields.notes
+
+    // Si des items sont fournis, mettre à jour les items et recalculer les totaux
+    if (items && Array.isArray(items)) {
+      // Supprimer les anciens items
+      await prisma.invoiceItem.deleteMany({
+        where: { invoiceId: params.id },
+      })
+
+      // Créer les nouveaux items avec calcul correct du total
+      const itemsToCreate = items
+        .filter((item: any) => item.description && item.description.trim() !== '')
+        .map((item: any) => ({
+          description: item.description.trim(),
+          quantity: Math.floor(parseFloat(item.quantity) || 1),
+          unitPrice: parseFloat(item.unitPrice) || 0,
+          total: Math.round((Math.floor(parseFloat(item.quantity) || 1) * (parseFloat(item.unitPrice) || 0)) * 100) / 100, // Recalculer le total
+        }))
+
+      // Recalculer les totaux à partir des items
+      const calculatedSubtotal = itemsToCreate.reduce((sum: number, item: any) => sum + item.total, 0)
+      const calculatedTaxRate = taxRate ? parseFloat(taxRate) : existingInvoice.taxRate
+      const calculatedTax = Math.round(calculatedSubtotal * (calculatedTaxRate / 100) * 100) / 100
+      const calculatedTotal = Math.round((calculatedSubtotal + calculatedTax) * 100) / 100
+
+      updateData.subtotal = calculatedSubtotal
+      updateData.taxRate = calculatedTaxRate
+      updateData.tax = calculatedTax
+      updateData.total = calculatedTotal
+
+      // Mettre à jour la facture avec les nouveaux totaux
+      await prisma.invoice.update({
+        where: { id: params.id },
+        data: updateData,
+      })
+
+      // Créer les nouveaux items
+      await prisma.invoiceItem.createMany({
+        data: itemsToCreate.map((item: any) => ({
+          ...item,
+          invoiceId: params.id,
+        })),
+      })
+    } else if (subtotal !== undefined && taxRate !== undefined && tax !== undefined && total !== undefined) {
+      // Si les totaux sont fournis directement, les utiliser
+      updateData.subtotal = parseFloat(subtotal)
+      updateData.taxRate = parseFloat(taxRate)
+      updateData.tax = parseFloat(tax)
+      updateData.total = parseFloat(total)
+    }
 
     const invoice = await prisma.invoice.update({
       where: { id: params.id },

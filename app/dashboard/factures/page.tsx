@@ -146,14 +146,23 @@ export default function FacturesPage() {
         ...newItems[index],
         quantity: intValue,
       }
+    } else if (field === 'unitPrice') {
+      const numValue = parseFloat(String(value)) || 0
+      newItems[index] = {
+        ...newItems[index],
+        unitPrice: numValue,
+      }
     } else {
       newItems[index] = {
         ...newItems[index],
         [field]: value,
       }
     }
+    // Toujours recalculer le total après modification de quantity ou unitPrice
     if (field === 'quantity' || field === 'unitPrice') {
-      newItems[index].total = newItems[index].quantity * newItems[index].unitPrice
+      const quantity = Number(newItems[index].quantity) || 0
+      const unitPrice = Number(newItems[index].unitPrice) || 0
+      newItems[index].total = Math.round((quantity * unitPrice) * 100) / 100 // Arrondir à 2 décimales
     }
     setFormData({ ...formData, items: newItems })
   }
