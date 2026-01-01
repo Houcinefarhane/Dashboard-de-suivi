@@ -117,15 +117,22 @@ export default function DevisPage() {
 
   const fixQuoteTotals = async () => {
     try {
+      console.log('🔧 Correction automatique des totaux des devis...')
       const res = await fetch('/api/quotes/fix-totals', { method: 'POST' })
       const data = await res.json()
-      if (res.ok && (data.itemsCorrected > 0 || data.quotesCorrected > 0)) {
-        console.log('Totaux corrigés:', data.message)
-        // Recharger les devis après correction
-        fetchQuotes(currentPage, searchTerm, statusFilter)
+      if (res.ok) {
+        if (data.itemsCorrected > 0 || data.quotesCorrected > 0) {
+          console.log('✅ Totaux corrigés:', data.message)
+          // Recharger les devis après correction
+          await fetchQuotes(currentPage, searchTerm, statusFilter)
+        } else {
+          console.log('ℹ️ Aucun total à corriger, tout est déjà correct')
+        }
+      } else {
+        console.error('❌ Erreur lors de la correction:', data.error)
       }
     } catch (error) {
-      console.error('Error fixing quote totals:', error)
+      console.error('❌ Error fixing quote totals:', error)
     }
   }
 
