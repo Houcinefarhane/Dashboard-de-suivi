@@ -46,6 +46,7 @@ interface InvoiceData {
     headerText: string | null
     showLegalInfo: boolean
     showCompanyInfo: boolean
+    customFields?: Array<{ id: string; label: string; value: string; position: 'header' | 'footer' | 'client' }>
   }
 }
 
