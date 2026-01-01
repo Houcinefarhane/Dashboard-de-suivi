@@ -16,7 +16,9 @@ import {
   CheckCircle2,
   ChevronDown,
   Menu,
-  X
+  X,
+  Phone,
+  Mail
 } from 'lucide-react'
 import { Logo } from '@/components/Logo'
 import { useState } from 'react'
@@ -89,16 +91,15 @@ export default function HomePage() {
                   Se connecter
                 </Button>
               </Link>
-              <Link href="/auth/register">
-                <Button 
-                  className="text-white font-medium"
-                  style={{ backgroundColor: 'rgb(150, 185, 220)' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(130, 165, 200)'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(150, 185, 220)'}
-                >
-                  Commencer
-                </Button>
-              </Link>
+              <a
+                href="mailto:houcine.farhane@outlook.fr?subject=Demande d'information - Gestion Pro"
+                className="text-white font-medium px-4 py-2 rounded-lg transition-all duration-300 hover:opacity-90"
+                style={{ backgroundColor: 'rgb(150, 185, 220)' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(130, 165, 200)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(150, 185, 220)'}
+              >
+                Nous contacter
+              </a>
             </div>
 
             {/* Mobile Menu Button */}
@@ -148,14 +149,13 @@ export default function HomePage() {
                     Se connecter
                   </Button>
                 </Link>
-                <Link href="/auth/register" className="block">
-                  <Button 
-                    className="w-full text-white"
-                    style={{ backgroundColor: 'rgb(150, 185, 220)' }}
-                  >
-                    Commencer
-                  </Button>
-                </Link>
+                <a
+                  href="mailto:houcine.farhane@outlook.fr?subject=Demande d'information - Gestion Pro"
+                  className="block w-full text-white text-center px-4 py-2 rounded-lg transition-all duration-300 hover:opacity-90"
+                  style={{ backgroundColor: 'rgb(150, 185, 220)' }}
+                >
+                  Nous contacter
+                </a>
               </div>
             </motion.div>
           )}
@@ -215,13 +215,13 @@ export default function HomePage() {
               >
                 <button
                   onClick={() => scrollToSection('pricing')}
-                  className="text-lg px-8 py-6 h-14 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 group rounded-lg"
+                  className="text-lg px-8 py-6 h-14 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 group rounded-lg flex items-center justify-center"
                   style={{ backgroundColor: 'rgb(150, 185, 220)' }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(130, 165, 200)'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(150, 185, 220)'}
                 >
                   Voir les tarifs
-                  <ArrowRight className="ml-2 w-5 h-5 inline-block group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
                 <Link href="/auth/login">
                   <Button 
@@ -495,7 +495,7 @@ export default function HomePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
-                    <span className="text-gray-700 text-sm">Mises à jour gratuites à vie</span>
+                    <span className="text-gray-700 text-sm">Mises à jour automatiques</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
@@ -503,19 +503,18 @@ export default function HomePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
-                    <span className="text-gray-700 text-sm">Aucun frais récurrent</span>
+                    <span className="text-gray-700 text-sm">Accès complet à toutes les fonctionnalités</span>
                   </li>
                 </ul>
-                <Link href="/auth/register" className="block">
-                  <Button 
-                    className="w-full h-12 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300"
-                    style={{ backgroundColor: 'rgb(150, 185, 220)' }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(130, 165, 200)'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(150, 185, 220)'}
-                  >
-                    Choisir cette option
-                  </Button>
-                </Link>
+                <a
+                  href="mailto:houcine.farhane@outlook.fr?subject=Demande d'information - Gestion Pro - Paiement unique"
+                  className="block w-full h-12 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg flex items-center justify-center"
+                  style={{ backgroundColor: 'rgb(150, 185, 220)' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(130, 165, 200)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(150, 185, 220)'}
+                >
+                  Nous contacter
+                </a>
               </div>
             </motion.div>
 
@@ -558,23 +557,22 @@ export default function HomePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
-                    <span className="text-gray-700 text-sm">Support prioritaire</span>
+                    <span className="text-gray-700 text-sm">Support technique inclus</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
-                    <span className="text-gray-700 text-sm">Flexibilité totale</span>
+                    <span className="text-gray-700 text-sm">Accès complet à toutes les fonctionnalités</span>
                   </li>
                 </ul>
-                <Link href="/auth/register" className="block">
-                  <Button 
-                    className="w-full h-12 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300"
-                    style={{ backgroundColor: 'rgb(150, 185, 220)' }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(130, 165, 200)'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(150, 185, 220)'}
-                  >
-                    Choisir cette option
-                  </Button>
-                </Link>
+                <a
+                  href="mailto:houcine.farhane@outlook.fr?subject=Demande d'information - Gestion Pro - Paiement unique"
+                  className="block w-full h-12 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg flex items-center justify-center"
+                  style={{ backgroundColor: 'rgb(150, 185, 220)' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(130, 165, 200)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(150, 185, 220)'}
+                >
+                  Nous contacter
+                </a>
               </div>
             </motion.div>
           </div>
@@ -681,6 +679,52 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="py-12 bg-gray-50 scroll-mt-16">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+              Contactez-nous
+            </h2>
+            <p className="text-lg text-gray-600 mb-8">
+              Une question ? Besoin d'un devis personnalisé ? N'hésitez pas à nous contacter.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <a
+                href="tel:0785691300"
+                className="flex items-center gap-3 px-6 py-4 rounded-xl bg-white border-2 border-gray-200 hover:border-gray-300 shadow-lg hover:shadow-xl transition-all duration-300 group"
+              >
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(150, 185, 220, 0.1)' }}>
+                  <Phone className="w-6 h-6" style={{ color: 'rgb(150, 185, 220)' }} />
+                </div>
+                <div className="text-left">
+                  <p className="text-xs text-gray-500 mb-1">Téléphone</p>
+                  <p className="text-lg font-semibold text-gray-900">07 85 69 13 00</p>
+                </div>
+              </a>
+              <a
+                href="mailto:houcine.farhane@outlook.fr?subject=Demande d'information - Gestion Pro"
+                className="flex items-center gap-3 px-6 py-4 rounded-xl bg-white border-2 border-gray-200 hover:border-gray-300 shadow-lg hover:shadow-xl transition-all duration-300 group"
+              >
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(150, 185, 220, 0.1)' }}>
+                  <Mail className="w-6 h-6" style={{ color: 'rgb(150, 185, 220)' }} />
+                </div>
+                <div className="text-left">
+                  <p className="text-xs text-gray-500 mb-1">Email</p>
+                  <p className="text-lg font-semibold text-gray-900">houcine.farhane@outlook.fr</p>
+                </div>
+              </a>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>
