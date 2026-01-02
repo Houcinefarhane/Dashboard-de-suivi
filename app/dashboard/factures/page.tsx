@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { FileText, Plus, Download, Eye, CheckCircle2, XCircle, Clock, Search, Filter, X, Trash2, Wrench, FileDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import { FileText, Plus, Download, Eye, CheckCircle2, XCircle, Clock, Search, Filter, X, Trash2, Wrench, FileDown, ChevronLeft, ChevronRight, Edit } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { Logo } from '@/components/Logo'
 import { generateInvoicePDF } from '@/lib/pdf-generator'
@@ -72,6 +72,7 @@ export default function FacturesPage() {
   })
   const [showForm, setShowForm] = useState(false)
   const [showDetails, setShowDetails] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     clientId: '',
     date: new Date().toISOString().split('T')[0],
@@ -181,6 +182,30 @@ export default function FacturesPage() {
     })
   }
 
+  const handleEditInvoice = (id: string) => {
+    const invoice = invoices.find((inv) => inv.id === id)
+    if (!invoice) return
+
+    setEditingId(id)
+    setFormData({
+      clientId: invoice.client.id,
+      date: invoice.date.split('T')[0],
+      dueDate: invoice.dueDate ? invoice.dueDate.split('T')[0] : '',
+      taxRate: String(invoice.taxRate || 20),
+      notes: invoice.notes || '',
+      items: invoice.items.length > 0 
+        ? invoice.items.map(item => ({
+            description: item.description,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            total: item.total,
+          }))
+        : [{ description: '', quantity: 1, unitPrice: 0, total: 0 }],
+    })
+    setShowDetails(null)
+    setShowForm(true)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -194,8 +219,11 @@ export default function FacturesPage() {
     const { subtotal, tax, total } = calculateTotals(validItems, parseFloat(formData.taxRate))
 
     try {
-      const res = await fetch('/api/invoices', {
-        method: 'POST',
+      const url = editingId ? `/api/invoices/${editingId}` : '/api/invoices'
+      const method = editingId ? 'PUT' : 'POST'
+      
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           clientId: formData.clientId,
@@ -213,16 +241,16 @@ export default function FacturesPage() {
       const data = await res.json()
 
       if (res.ok) {
-        fetchInvoices(currentPage)
+        fetchInvoices(currentPage, searchTerm, statusFilter)
         resetForm()
       } else {
         // Afficher l'erreur retournée par l'API
-        alert(`Erreur: ${data.error || 'Impossible de créer la facture'}`)
+        alert(`Erreur: ${data.error || `Impossible de ${editingId ? 'modifier' : 'créer'} la facture`}`)
         console.error('Error response:', data)
       }
     } catch (error) {
-      console.error('Error creating invoice:', error)
-      alert('Une erreur est survenue lors de la création de la facture. Vérifiez la console pour plus de détails.')
+      console.error(`Error ${editingId ? 'updating' : 'creating'} invoice:`, error)
+      alert(`Une erreur est survenue lors de ${editingId ? 'la modification' : 'la création'} de la facture. Vérifiez la console pour plus de détails.`)
     }
   }
 
@@ -235,6 +263,7 @@ export default function FacturesPage() {
       notes: '',
       items: [{ description: '', quantity: 1, unitPrice: 0, total: 0 }],
     })
+    setEditingId(null)
     setShowForm(false)
   }
 
@@ -627,7 +656,7 @@ export default function FacturesPage() {
                 <CardHeader className="border-b border-border">
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle className="text-2xl">Nouvelle facture</CardTitle>
+                      <CardTitle className="text-2xl">{editingId ? 'Modifier la facture' : 'Nouvelle facture'}</CardTitle>
                       <CardDescription>Créez une facture professionnelle</CardDescription>
                     </div>
                     <Button variant="ghost" size="icon" onClick={resetForm}>
@@ -927,9 +956,12 @@ export default function FacturesPage() {
 
 
                   <div className="flex gap-2 justify-end pt-4 border-t border-border no-print">
-                    <Button variant="outline" onClick={() => window.print()}>
-                      <FileText className="w-4 h-4 mr-2" />
-                      Imprimer
+                    <Button
+                      variant="outline"
+                      onClick={() => handleEditInvoice(selectedInvoice.id)}
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Modifier
                     </Button>
                     <Button
                       variant="outline"
@@ -938,6 +970,10 @@ export default function FacturesPage() {
                     >
                       <Trash2 className="w-4 h-4 mr-2" />
                       Supprimer
+                    </Button>
+                    <Button variant="outline" onClick={() => window.print()}>
+                      <FileText className="w-4 h-4 mr-2" />
+                      Imprimer
                     </Button>
                     <Button onClick={() => handleDownloadPDF(selectedInvoice.id)}>
                       <Download className="w-4 h-4 mr-2" />

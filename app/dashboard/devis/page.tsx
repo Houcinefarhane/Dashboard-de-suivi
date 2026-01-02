@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { FileText, Plus, Download, Eye, Search, Filter, X, Trash2, CheckCircle2, XCircle, Clock, AlertCircle, ArrowRight, FileDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import { FileText, Plus, Download, Eye, Search, Filter, X, Trash2, CheckCircle2, XCircle, Clock, AlertCircle, ArrowRight, FileDown, ChevronLeft, ChevronRight, Edit } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { Logo } from '@/components/Logo'
 import { generateQuotePDF } from '@/lib/quote-pdf-generator'
@@ -61,6 +61,7 @@ export default function DevisPage() {
   })
   const [showForm, setShowForm] = useState(false)
   const [showDetails, setShowDetails] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     clientId: '',
     date: new Date().toISOString().split('T')[0],
@@ -170,6 +171,30 @@ export default function DevisPage() {
     })
   }
 
+  const handleEditQuote = (id: string) => {
+    const quote = quotes.find((q) => q.id === id)
+    if (!quote) return
+
+    setEditingId(id)
+    setFormData({
+      clientId: quote.client.id,
+      date: quote.date.split('T')[0],
+      validUntil: quote.validUntil ? quote.validUntil.split('T')[0] : '',
+      taxRate: String(quote.taxRate || 20),
+      notes: quote.notes || '',
+      items: quote.items.length > 0 
+        ? quote.items.map(item => ({
+            description: item.description,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            total: item.total,
+          }))
+        : [{ description: '', quantity: 1, unitPrice: 0, total: 0 }],
+    })
+    setShowDetails(null)
+    setShowForm(true)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -205,26 +230,27 @@ export default function DevisPage() {
       })),
     }
 
-    console.log('Creating quote with payload:', payload)
-
     try {
-      const res = await fetch('/api/quotes', {
-        method: 'POST',
+      const url = editingId ? `/api/quotes/${editingId}` : '/api/quotes'
+      const method = editingId ? 'PUT' : 'POST'
+      
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
 
       if (res.ok) {
-        fetchQuotes(currentPage)
+        fetchQuotes(currentPage, searchTerm, statusFilter)
         resetForm()
       } else {
         const errorData = await res.json()
         console.error('Error response:', errorData)
-        alert(errorData.details || errorData.error || 'Erreur lors de la création du devis')
+        alert(errorData.details || errorData.error || `Erreur lors de ${editingId ? 'la modification' : 'la création'} du devis`)
       }
     } catch (error: any) {
-      console.error('Error creating quote:', error)
-      alert(`Erreur lors de la création du devis: ${error?.message || 'Erreur inconnue'}`)
+      console.error(`Error ${editingId ? 'updating' : 'creating'} quote:`, error)
+      alert(`Erreur lors de ${editingId ? 'la modification' : 'la création'} du devis: ${error?.message || 'Erreur inconnue'}`)
     }
   }
 
@@ -237,6 +263,7 @@ export default function DevisPage() {
       notes: '',
       items: [{ description: '', quantity: 1, unitPrice: 0, total: 0 }],
     })
+    setEditingId(null)
     setShowForm(false)
   }
 
@@ -546,6 +573,17 @@ export default function DevisPage() {
                               size="icon"
                               onClick={(e) => {
                                 e.stopPropagation()
+                                handleEditQuote(quote.id)
+                              }}
+                              title="Modifier le devis"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={(e) => {
+                                e.stopPropagation()
                                 setShowDetails(quote.id)
                               }}
                               title="Voir les détails"
@@ -640,7 +678,7 @@ export default function DevisPage() {
                   <Card className="border-0">
                     <CardHeader className="border-b border-border">
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-2xl">Nouveau devis</CardTitle>
+                        <CardTitle className="text-2xl">{editingId ? 'Modifier le devis' : 'Nouveau devis'}</CardTitle>
                         <Button variant="ghost" size="icon" onClick={() => resetForm()}>
                           <X className="w-5 h-5" />
                         </Button>
@@ -938,6 +976,13 @@ export default function DevisPage() {
                       )}
 
                       <div className="flex gap-2 justify-end pt-4 border-t border-border">
+                        <Button
+                          variant="outline"
+                          onClick={() => handleEditQuote(selectedQuote.id)}
+                        >
+                          <Edit className="w-4 h-4 mr-2" />
+                          Modifier
+                        </Button>
                         <Button
                           variant="outline"
                           onClick={() => handleDeleteQuote(selectedQuote.id)}
