@@ -204,11 +204,25 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
-                className="text-lg md:text-xl text-gray-600 mb-6 leading-relaxed max-w-xl mx-auto lg:mx-0"
+                className="text-lg md:text-xl text-gray-600 mb-4 leading-relaxed max-w-xl mx-auto lg:mx-0"
               >
                 La solution moderne pour organiser vos clients, planifier vos rendez-vous, 
                 gérer vos finances et suivre votre activité en temps réel.
               </motion.p>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45, duration: 0.6 }}
+                className="mb-6"
+              >
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 border-2 border-green-200 max-w-xl mx-auto lg:mx-0">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                  <span className="text-base font-semibold text-green-700">
+                    Essai gratuit de 14 jours - Sans engagement
+                  </span>
+                </div>
+              </motion.div>
               
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -463,9 +477,15 @@ export default function HomePage() {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               Tarifs simples et transparents
             </h2>
-            <p className="text-lg text-gray-600 max-w-xl mx-auto">
+            <p className="text-lg text-gray-600 max-w-xl mx-auto mb-4">
               Choisissez la formule qui correspond à vos besoins
             </p>
+            <div className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-green-50 border-2 border-green-200 mb-6">
+              <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <span className="text-base font-semibold text-green-700">
+                Essai gratuit de 14 jours - Sans engagement, sans carte bancaire
+              </span>
+            </div>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
@@ -487,9 +507,13 @@ export default function HomePage() {
                       900€
                     </span>
                   </div>
-                  <p className="text-gray-600 text-sm">
+                  <p className="text-gray-600 text-sm mb-2">
                     Accès à vie, sans engagement
                   </p>
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 border border-green-200">
+                    <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
+                    <span className="text-xs font-semibold text-green-700">14 jours d'essai gratuit</span>
+                  </div>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2">
