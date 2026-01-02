@@ -744,11 +744,11 @@ const features = [
   },
   {
     title: 'Planning Intelligent',
-    description: 'Organisez vos rendez-vous avec un calendrier interactif.',
+    description: 'Organisez vos rendez-vous avec un calendrier interactif et des rappels automatiques.',
     icon: Calendar,
     benefits: [
       'Vue jour, semaine, mois',
-      'Gestion des interventions',
+      'Rappels automatiques des interventions',
       'Photos avant/après',
     ],
   },
