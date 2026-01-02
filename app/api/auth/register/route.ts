@@ -5,13 +5,24 @@ import { hash } from 'bcryptjs'
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { name, email, password, companyName, phone } = body
+    const { name, email, password, companyName, phone, invitationCode } = body
 
     if (!name || !email || !password) {
       return NextResponse.json(
         { error: 'Tous les champs requis doivent être remplis' },
         { status: 400 }
       )
+    }
+
+    // Vérifier le code d'invitation
+    const requiredInvitationCode = process.env.INVITATION_CODE
+    if (requiredInvitationCode) {
+      if (!invitationCode || invitationCode !== requiredInvitationCode) {
+        return NextResponse.json(
+          { error: 'Code d\'invitation invalide. Veuillez nous contacter pour obtenir un code d\'accès.' },
+          { status: 403 }
+        )
+      }
     }
 
     // Vérifier si l'utilisateur existe déjà

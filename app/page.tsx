@@ -818,7 +818,7 @@ const benefits = [
 const faqData = [
   {
     question: 'Comment créer mon compte ?',
-    answer: 'La création de compte est simple. Cliquez sur "Créer mon compte" et remplissez le formulaire avec vos informations. Vous pourrez choisir votre formule (paiement unique 900€ ou abonnement 120€/mois) et commencer à utiliser la plateforme immédiatement.',
+    answer: 'Pour créer un compte, contactez-nous par email (houcine.farhane@outlook.fr) ou par téléphone (07 85 69 13 00) pour obtenir un code d\'invitation. Une fois le code obtenu, vous pourrez créer votre compte et choisir votre formule (paiement unique 900€ ou abonnement 120€/mois).',
   },
   {
     question: 'Quels sont les tarifs ?',

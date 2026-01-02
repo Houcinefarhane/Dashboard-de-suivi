@@ -20,6 +20,7 @@ export default function RegisterPage() {
     confirmPassword: '',
     companyName: '',
     phone: '',
+    invitationCode: '',
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -54,6 +55,7 @@ export default function RegisterPage() {
           password: formData.password,
           companyName: formData.companyName,
           phone: formData.phone,
+          invitationCode: formData.invitationCode,
         }),
       })
 
@@ -164,6 +166,24 @@ export default function RegisterPage() {
                   onChange={handleChange}
                   className="h-11"
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="invitationCode" className="text-sm font-medium">
+                  Code d'invitation *
+                </Label>
+                <Input
+                  id="invitationCode"
+                  name="invitationCode"
+                  type="text"
+                  placeholder="Code d'accès fourni"
+                  value={formData.invitationCode}
+                  onChange={handleChange}
+                  required
+                  className="h-11"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Contactez-nous pour obtenir un code d'accès
+                </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
