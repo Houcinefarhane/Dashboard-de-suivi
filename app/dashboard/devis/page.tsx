@@ -377,34 +377,6 @@ export default function DevisPage() {
                 variant="outline"
                 onClick={async () => {
                   try {
-                    console.log('🔧 [MANUEL] Correction manuelle des totaux...')
-                    const res = await fetch('/api/quotes/fix-totals', { method: 'POST' })
-                    const data = await res.json()
-                    console.log('🔧 [MANUEL] Réponse:', data)
-                    if (res.ok) {
-                      if (data.itemsCorrected > 0 || data.quotesCorrected > 0) {
-                        alert(`✅ ${data.message}`)
-                        await fetchQuotes(currentPage, searchTerm, statusFilter)
-                      } else {
-                        alert('ℹ️ Aucun total à corriger, tout est déjà correct')
-                      }
-                    } else {
-                      alert(`❌ Erreur: ${data.error}`)
-                    }
-                  } catch (error: any) {
-                    console.error('❌ [MANUEL] Erreur:', error)
-                    alert(`❌ Erreur: ${error?.message || 'Erreur inconnue'}`)
-                  }
-                }}
-                className="w-full sm:w-auto"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Corriger totaux
-              </Button>
-              <Button
-                variant="outline"
-                onClick={async () => {
-                  try {
                     const { exportQuotes } = require('@/lib/export')
                     exportQuotes(quotes, `devis-${new Date().toISOString().split('T')[0]}`)
                   } catch (error) {
