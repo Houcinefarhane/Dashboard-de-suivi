@@ -36,6 +36,7 @@ const menuItems = [
   { href: '/dashboard/finances', label: 'Finances', icon: TrendingUp },
   { href: '/dashboard/stock', label: 'Stock', icon: Package },
   { href: '/dashboard/notifications', label: 'Notifications', icon: Bell },
+  { href: '/dashboard/personnalisation', label: 'Personnalisation', icon: Settings },
 ]
 
 export function Sidebar() {

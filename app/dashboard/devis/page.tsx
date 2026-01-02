@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { FileText, Plus, Download, Eye, Search, Filter, X, Trash2, CheckCircle2, XCircle, Clock, AlertCircle, ArrowRight, FileDown, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { Logo } from '@/components/Logo'
-import { generateInvoicePDF } from '@/lib/pdf-generator'
+import { generateQuotePDF } from '@/lib/quote-pdf-generator'
 import ClientSearchSelect from '@/components/ClientSearchSelect'
 
 interface QuoteItem {
@@ -285,6 +285,36 @@ export default function DevisPage() {
     }
   }
 
+  const handleDownloadPDF = async (id: string) => {
+    const quote = quotes.find((q) => q.id === id)
+    if (quote) {
+      try {
+        // Récupérer les informations de l'artisan et la personnalisation
+        const [artisanRes, customizationRes] = await Promise.all([
+          fetch('/api/artisan'),
+          fetch('/api/invoice-customization'),
+        ])
+
+        let artisan = null
+        let customization = null
+
+        if (artisanRes.ok) {
+          artisan = await artisanRes.json()
+        }
+
+        if (customizationRes.ok) {
+          customization = await customizationRes.json()
+        }
+
+        generateQuotePDF({ ...quote, artisan, customization })
+      } catch (error) {
+        console.error('Error fetching info:', error)
+        // Générer quand même le PDF sans les infos
+        generateQuotePDF(quote)
+      }
+    }
+  }
+
   const handleConvertToInvoice = async (id: string) => {
     if (!confirm('Convertir ce devis en facture ?')) return
 
@@ -532,8 +562,20 @@ export default function DevisPage() {
                               size="icon"
                               onClick={(e) => {
                                 e.stopPropagation()
+                                handleDownloadPDF(quote.id)
+                              }}
+                              title="Télécharger PDF"
+                            >
+                              <Download className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={(e) => {
+                                e.stopPropagation()
                                 setShowDetails(quote.id)
                               }}
+                              title="Voir les détails"
                             >
                               <Eye className="w-4 h-4" />
                             </Button>
@@ -917,9 +959,9 @@ export default function DevisPage() {
                             Convertir en facture
                           </Button>
                         )}
-                        <Button variant="outline" onClick={() => window.print()}>
+                        <Button variant="outline" onClick={() => handleDownloadPDF(selectedQuote.id)}>
                           <Download className="w-4 h-4 mr-2" />
-                          Imprimer
+                          Télécharger PDF
                         </Button>
                       </div>
                     </CardContent>
