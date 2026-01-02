@@ -830,19 +830,11 @@ const faqData = [
     answer: 'Oui, vous pouvez exporter vos données en CSV (factures, devis, clients, dépenses, interventions) et en PDF (factures et devis). Les exports sont disponibles directement depuis chaque module.',
   },
   {
-    question: 'Y a-t-il une application mobile ?',
-    answer: 'Notre solution est entièrement responsive et fonctionne parfaitement sur tous les appareils mobiles (smartphones, tablettes) via votre navigateur web. Pas besoin d\'installer une application.',
-  },
-  {
     question: 'Puis-je personnaliser les documents (factures, devis) ?',
     answer: 'Oui, vous pouvez personnaliser vos documents avec votre logo, vos couleurs, vos textes personnalisés, vos informations légales (SIREN, SIRET, RCS, KBIS, TVA, Capital) et ajouter des champs personnalisés. Tout est configurable dans le module Personnalisation.',
   },
   {
     question: 'Comment fonctionne le support client ?',
     answer: 'Vous pouvez nous contacter par email (houcine.farhane@outlook.fr) ou par téléphone (07 85 69 13 00) pour toute question ou assistance. Nous répondons dans les meilleurs délais.',
-  },
-  {
-    question: 'Puis-je migrer mes données depuis un autre système ?',
-    answer: 'Pour l\'instant, l\'import de données n\'est pas disponible directement dans l\'interface. Contactez-nous si vous avez besoin d\'aide pour migrer vos données, nous pouvons vous assister dans ce processus.',
   },
 ]
