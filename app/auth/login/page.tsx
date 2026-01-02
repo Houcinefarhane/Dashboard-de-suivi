@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Wrench, Mail, CheckCircle } from 'lucide-react'
+import { Building2, Mail, CheckCircle } from 'lucide-react'
 
 function LoginContent() {
   const router = useRouter()
@@ -113,7 +113,7 @@ function LoginContent() {
               transition={{ delay: 0.1, type: "spring", stiffness: 200, damping: 15 }}
               className="mx-auto w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-lg"
             >
-              <Wrench className="w-7 h-7 text-primary-foreground" strokeWidth={1.5} />
+              <Building2 className="w-7 h-7 text-primary-foreground" strokeWidth={1.5} />
             </motion.div>
             <div className="space-y-2">
               <CardTitle className="text-2xl font-semibold tracking-tight">

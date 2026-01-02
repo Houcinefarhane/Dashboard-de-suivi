@@ -1,4 +1,4 @@
-import { Wrench } from 'lucide-react'
+import { Building2 } from 'lucide-react'
 
 interface LogoProps {
   className?: string
@@ -22,7 +22,7 @@ export function Logo({ className = '', size = 'md', showText = true }: LogoProps
   return (
     <div className={`flex items-center gap-3 ${className}`} role="banner">
       <div className={`${sizeClasses[size]} rounded-xl bg-primary flex items-center justify-center shadow-lg`} aria-hidden="true">
-        <Wrench className={`${size === 'sm' ? 'w-4 h-4' : size === 'md' ? 'w-6 h-6' : 'w-8 h-8'} text-primary-foreground`} strokeWidth={2} aria-hidden="true" />
+        <Building2 className={`${size === 'sm' ? 'w-4 h-4' : size === 'md' ? 'w-6 h-6' : 'w-8 h-8'} text-primary-foreground`} strokeWidth={2} aria-hidden="true" />
       </div>
       {showText && (
         <div>

@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { FileText, Plus, Download, Eye, CheckCircle2, XCircle, Clock, Search, Filter, X, Trash2, Wrench, FileDown, ChevronLeft, ChevronRight, Edit } from 'lucide-react'
+import { FileText, Plus, Download, Eye, CheckCircle2, XCircle, Clock, Search, Filter, X, Trash2, Building2, FileDown, ChevronLeft, ChevronRight, Edit } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { Logo } from '@/components/Logo'
 import { generateInvoicePDF } from '@/lib/pdf-generator'
@@ -996,7 +996,7 @@ export default function FacturesPage() {
               <div className="flex items-center gap-4">
                 <div className="w-20 h-20 rounded-xl" style={{ backgroundColor: 'rgb(30, 64, 175)' }}>
                   <div className="w-full h-full flex items-center justify-center">
-                    <Wrench className="w-10 h-10 text-white" strokeWidth={2} />
+                    <Building2 className="w-10 h-10 text-white" strokeWidth={2} />
                   </div>
                 </div>
                 <div>
