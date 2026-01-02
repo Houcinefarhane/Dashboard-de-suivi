@@ -268,6 +268,36 @@ export default function FacturesPage() {
     }
   }
 
+  const handleDeleteInvoice = async (id: string) => {
+    const invoice = invoices.find((inv) => inv.id === id)
+    if (!invoice) return
+
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer la facture ${invoice.invoiceNumber} ?\n\nCette action est irréversible.`)) {
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/invoices/${id}`, {
+        method: 'DELETE',
+      })
+
+      if (res.ok) {
+        // Fermer les détails si la facture supprimée est celle affichée
+        if (showDetails === id) {
+          setShowDetails(null)
+        }
+        // Recharger la liste
+        fetchInvoices(currentPage, searchTerm, statusFilter)
+      } else {
+        const data = await res.json()
+        alert(`Erreur: ${data.error || 'Impossible de supprimer la facture'}`)
+      }
+    } catch (error) {
+      console.error('Error deleting invoice:', error)
+      alert('Erreur lors de la suppression de la facture')
+    }
+  }
+
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
       const res = await fetch(`/api/invoices/${id}`, {
