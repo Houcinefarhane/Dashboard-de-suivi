@@ -28,6 +28,7 @@ export default function HomePage() {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [pricingType, setPricingType] = useState<'unique' | 'mensuel'>('mensuel')
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
@@ -488,89 +489,70 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {/* Option 1: Paiement unique */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="relative"
-            >
-              <div className="h-full p-6 rounded-2xl border-2 border-gray-200 bg-white hover:border-gray-300 shadow-lg hover:shadow-xl transition-all duration-300">
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    Paiement unique
-                  </h3>
-                  <div className="mb-4">
-                    <span className="text-5xl font-bold" style={{ color: 'rgb(150, 185, 220)' }}>
-                      900€
-                    </span>
-                  </div>
-                  <p className="text-gray-600 text-sm mb-2">
-                    Accès à vie, sans engagement
-                  </p>
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 border border-green-200">
-                    <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                    <span className="text-xs font-semibold text-green-700">14 jours d'essai gratuit</span>
-                  </div>
-                </div>
-                <ul className="space-y-3 mb-6">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
-                    <span className="text-gray-700 text-sm">Toutes les fonctionnalités incluses</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
-                    <span className="text-gray-700 text-sm">Mises à jour automatiques</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
-                    <span className="text-gray-700 text-sm">Support technique inclus</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
-                    <span className="text-gray-700 text-sm">Accès complet à toutes les fonctionnalités</span>
-                  </li>
-                </ul>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="max-w-2xl mx-auto"
+          >
+            {/* Toggle Buttons */}
+            <div className="flex items-center justify-center mb-8">
+              <div className="inline-flex rounded-lg p-1 bg-gray-100 border-2 border-gray-200">
                 <button
-                  onClick={() => scrollToSection('contact')}
-                  className="block w-full h-12 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: 'rgb(150, 185, 220)' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(130, 165, 200)'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(150, 185, 220)'}
+                  onClick={() => setPricingType('unique')}
+                  className={`px-6 py-3 rounded-md font-medium transition-all duration-200 ${
+                    pricingType === 'unique'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
                 >
-                  Nous contacter
+                  Paiement unique
+                </button>
+                <button
+                  onClick={() => setPricingType('mensuel')}
+                  className={`px-6 py-3 rounded-md font-medium transition-all duration-200 relative ${
+                    pricingType === 'mensuel'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Abonnement mensuel
+                  {pricingType === 'mensuel' && (
+                    <span className="absolute -top-2 -right-2 px-2 py-0.5 rounded-full text-xs font-semibold text-white shadow-sm" style={{ backgroundColor: 'rgb(150, 185, 220)' }}>
+                      Populaire
+                    </span>
+                  )}
                 </button>
               </div>
-            </motion.div>
+            </div>
 
-            {/* Option 2: Abonnement mensuel */}
+            {/* Pricing Card */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              key={pricingType}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
               className="relative"
             >
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="px-4 py-1 rounded-full text-xs font-semibold text-white shadow-lg" style={{ backgroundColor: 'rgb(150, 185, 220)' }}>
-                  Le plus populaire
-                </span>
-              </div>
-              <div className="h-full p-6 rounded-2xl border-2 shadow-xl transition-all duration-300" style={{ borderColor: 'rgb(150, 185, 220)', backgroundColor: 'rgba(150, 185, 220, 0.05)' }}>
+              <div className="p-8 rounded-2xl border-2 shadow-xl transition-all duration-300" style={{ 
+                borderColor: pricingType === 'mensuel' ? 'rgb(150, 185, 220)' : 'rgb(200, 200, 200)',
+                backgroundColor: pricingType === 'mensuel' ? 'rgba(150, 185, 220, 0.05)' : 'white'
+              }}>
                 <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    Abonnement mensuel
+                    {pricingType === 'unique' ? 'Paiement unique' : 'Abonnement mensuel'}
                   </h3>
                   <div className="mb-4">
                     <span className="text-5xl font-bold" style={{ color: 'rgb(150, 185, 220)' }}>
-                      120€
+                      {pricingType === 'unique' ? '900€' : '120€'}
                     </span>
-                    <span className="text-gray-600 text-lg ml-2">/mois</span>
+                    {pricingType === 'mensuel' && (
+                      <span className="text-gray-600 text-lg ml-2">/mois</span>
+                    )}
                   </div>
                   <p className="text-gray-600 text-sm mb-2">
-                    Résiliable à tout moment
+                    {pricingType === 'unique' ? 'Accès à vie, sans engagement' : 'Résiliable à tout moment'}
                   </p>
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 border border-green-200">
                     <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
@@ -606,7 +588,7 @@ export default function HomePage() {
                 </button>
               </div>
             </motion.div>
-          </div>
+          </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
