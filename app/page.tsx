@@ -521,27 +521,27 @@ export default function HomePage() {
             <div className="flex items-center justify-center mb-8">
               <div className="inline-flex rounded-lg p-1 bg-gray-100 border-2 border-gray-200">
                 <button
-                  onClick={() => setPricingType('unique')}
-                  className={`px-6 py-3 rounded-md font-medium transition-all duration-200 ${
-                    pricingType === 'unique'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Paiement unique
-                </button>
-                <button
                   onClick={() => setPricingType('mensuel')}
-                  className={`px-6 py-3 rounded-md font-medium transition-all duration-200 relative ${
+                  className={`px-6 py-3 rounded-md font-medium transition-all duration-200 ${
                     pricingType === 'mensuel'
                       ? 'bg-white text-gray-900 shadow-sm'
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
                   Abonnement mensuel
-                  {pricingType === 'mensuel' && (
-                    <span className="absolute -top-2 -right-2 px-2 py-0.5 rounded-full text-xs font-semibold text-white shadow-sm" style={{ backgroundColor: 'rgb(150, 185, 220)' }}>
-                      Populaire
+                </button>
+                <button
+                  onClick={() => setPricingType('unique')}
+                  className={`px-6 py-3 rounded-md font-medium transition-all duration-200 relative ${
+                    pricingType === 'unique'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Paiement annuel
+                  {pricingType === 'unique' && (
+                    <span className="absolute -top-2 -right-2 px-2 py-0.5 rounded-full text-xs font-semibold text-white shadow-sm" style={{ backgroundColor: 'rgb(34, 197, 94)' }}>
+                      -29%
                     </span>
                   )}
                 </button>
