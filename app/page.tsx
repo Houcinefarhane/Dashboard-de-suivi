@@ -195,9 +195,9 @@ export default function HomePage() {
                 transition={{ delay: 0.3, duration: 0.6 }}
                 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight text-gray-900"
               >
-                Gérez votre activité
+                L'ERP complet qui remplace
                 <span className="block mt-1" style={{ color: 'rgb(150, 185, 220)' }}>
-                  en toute simplicité
+                  5 outils
                 </span>
               </motion.h1>
               
@@ -205,10 +205,31 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
-                className="text-lg md:text-xl text-gray-600 mb-4 leading-relaxed max-w-xl mx-auto lg:mx-0"
+                className="text-lg md:text-xl text-gray-600 mb-2 leading-relaxed max-w-xl mx-auto lg:mx-0"
               >
-                La solution moderne pour organiser vos clients, planifier vos rendez-vous, 
-                gérer vos finances et suivre votre activité en temps réel.
+                pour gérer votre entreprise artisanale
+              </motion.p>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45, duration: 0.6 }}
+                className="flex flex-wrap items-center gap-3 mb-4 max-w-xl mx-auto lg:mx-0"
+              >
+                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium text-sm">Clients</span>
+                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium text-sm">Planning</span>
+                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium text-sm">Factures</span>
+                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium text-sm">Stock</span>
+                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium text-sm">Finances</span>
+              </motion.div>
+              
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="text-lg md:text-xl text-gray-600 mb-4 leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium"
+              >
+                Le tout dans une seule interface moderne.
               </motion.p>
               
               <motion.div
@@ -545,14 +566,17 @@ export default function HomePage() {
                   </h3>
                   <div className="mb-4">
                     <span className="text-5xl font-bold" style={{ color: 'rgb(150, 185, 220)' }}>
-                      {pricingType === 'unique' ? '900€' : '120€'}
+                      {pricingType === 'unique' ? '1699€' : '199€'}
                     </span>
                     {pricingType === 'mensuel' && (
                       <span className="text-gray-600 text-lg ml-2">/mois</span>
                     )}
+                    {pricingType === 'unique' && (
+                      <span className="text-gray-600 text-lg ml-2">/an</span>
+                    )}
                   </div>
                   <p className="text-gray-600 text-sm mb-2">
-                    {pricingType === 'unique' ? 'Accès à vie, sans engagement' : 'Résiliable à tout moment'}
+                    {pricingType === 'unique' ? 'Économisez 689€ par rapport au paiement mensuel' : 'Résiliable à tout moment'}
                   </p>
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 border border-green-200">
                     <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
@@ -601,6 +625,86 @@ export default function HomePage() {
               Les deux formules incluent toutes les fonctionnalités. Aucun frais caché.
             </p>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-12 bg-gray-50 scroll-mt-16">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-8"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+              Ce que disent nos utilisateurs
+            </h2>
+            <p className="text-lg text-gray-600">
+              Découvrez comment Gestion Pro transforme leur quotidien
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Testimonial 1 - Jordan Lopes */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200"
+            >
+              <div className="flex items-center gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-gray-700 mb-4 leading-relaxed">
+                "Gestion Pro a complètement transformé ma façon de travailler. Avant, je perdais des heures chaque semaine à jongler entre plusieurs outils. Maintenant, tout est centralisé dans une seule interface moderne et intuitive. La gestion des factures et du planning est devenue un jeu d'enfant !"
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-lg">
+                  JL
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900">Jordan Lopes</p>
+                  <p className="text-sm text-gray-600">Plombier, Paris</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Testimonial 2 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200"
+            >
+              <div className="flex items-center gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-gray-700 mb-4 leading-relaxed">
+                "En tant qu'artisan indépendant, j'avais besoin d'un outil simple mais complet. Gestion Pro répond parfaitement à mes besoins : gestion des clients, planning des interventions, facturation et suivi financier. L'interface est moderne et je n'ai eu besoin d'aucune formation pour m'y retrouver. Un vrai gain de temps !"
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-lg">
+                  MS
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900">Marie Dubois</p>
+                  <p className="text-sm text-gray-600">Électricienne, Lyon</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -728,7 +832,7 @@ const features = [
     ],
   },
   {
-    title: 'Planning Intelligent',
+    title: 'Gestion Pro',
     description: 'Organisez vos rendez-vous avec un calendrier interactif et des rappels automatiques.',
     icon: Calendar,
     benefits: [
@@ -800,11 +904,11 @@ const benefits = [
 const faqData = [
   {
     question: 'Comment créer mon compte ?',
-    answer: 'Pour créer un compte, contactez-nous par email (houcine.farhane@outlook.fr) ou par téléphone (07 85 69 13 00) pour obtenir un code d\'invitation. Une fois le code obtenu, vous pourrez créer votre compte et choisir votre formule (paiement unique 900€ ou abonnement 120€/mois).',
+    answer: 'Pour créer un compte, contactez-nous par email (houcine.farhane@outlook.fr) ou par téléphone (07 85 69 13 00) pour obtenir un code d\'invitation. Une fois le code obtenu, vous pourrez créer votre compte et choisir votre formule (paiement annuel 1699€ ou abonnement 199€/mois).',
   },
   {
     question: 'Quels sont les tarifs ?',
-    answer: 'Nous proposons deux formules : un paiement unique de 900€ pour un accès à vie, ou un abonnement mensuel de 120€/mois résiliable à tout moment. Les deux formules incluent toutes les fonctionnalités, les mises à jour et le support technique.',
+    answer: 'Nous proposons deux formules : un paiement annuel de 1699€ (économisez 689€ par rapport au mensuel), ou un abonnement mensuel de 199€/mois résiliable à tout moment. Les deux formules incluent toutes les fonctionnalités, les mises à jour et le support technique.',
   },
   {
     question: 'Mes données sont-elles sécurisées ?',
