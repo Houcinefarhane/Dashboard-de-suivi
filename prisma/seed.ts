@@ -78,8 +78,11 @@ async function main() {
   if (!artisan) {
     console.log('Création du compte artisan...')
     const hashedPassword = await hash(artisanPassword, 10)
+    // Générer un ID (cuid pour compatibilité avec anciens utilisateurs)
+    const { randomUUID } = await import('crypto')
     artisan = await prisma.artisan.create({
       data: {
+        id: randomUUID(),
         email: artisanEmail,
         password: hashedPassword,
         name: 'Admin Artisan',
