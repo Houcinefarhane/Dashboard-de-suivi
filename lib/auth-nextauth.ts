@@ -37,8 +37,11 @@ export const authOptions: NextAuthOptions = {
 
           if (!existingArtisan) {
             // Créer un nouveau compte Artisan
+            // Générer un UUID pour l'ID (compatible avec Supabase Auth)
+            const { randomUUID } = await import('crypto')
             const newArtisan = await prisma.artisan.create({
               data: {
+                id: randomUUID(),
                 email,
                 name: user.name || email.split('@')[0],
                 password: null, // Pas de mot de passe pour OAuth
