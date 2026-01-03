@@ -34,6 +34,17 @@ export async function POST(request: Request) {
         )
       }
 
+      // Erreur spécifique pour email non vérifié
+      if (authError.message.includes('email') && authError.message.includes('confirm')) {
+        return NextResponse.json(
+          { 
+            error: 'Votre email n\'a pas été vérifié. Veuillez vérifier votre boîte mail et cliquer sur le lien de confirmation.',
+            requiresEmailVerification: true
+          },
+          { status: 401 }
+        )
+      }
+
       return NextResponse.json(
         { error: 'Email ou mot de passe incorrect' },
         { status: 401 }

@@ -72,7 +72,7 @@ export async function POST(request: Request) {
         id: authData.user.id, // Utiliser l'ID de Supabase Auth
         name,
         email: email.toLowerCase().trim(),
-        password: null, // Plus besoin de stocker le mot de passe
+        password: null, // Plus besoin de stocker le mot de passe (stocké dans Supabase Auth)
         companyName: companyName || null,
         phone: phone || null,
         emailVerified: authData.user.email_confirmed_at !== null,
@@ -80,6 +80,9 @@ export async function POST(request: Request) {
         emailVerificationTokenExpires: null,
       },
     })
+
+    // Si l'email n'est pas vérifié, mettre à jour Prisma quand il sera vérifié
+    // (géré automatiquement par Supabase Auth)
 
     // Compte créé avec succès
     return NextResponse.json({

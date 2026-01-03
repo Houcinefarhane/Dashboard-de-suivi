@@ -64,9 +64,9 @@ function LoginContent() {
         console.error('Erreur de connexion:', data)
         console.error('Status:', res.status)
         console.error('Response OK:', res.ok)
-        if (data.requiresVerification) {
+        if (data.requiresEmailVerification) {
           setRequiresVerification(true)
-          setError(data.error || 'Email non vérifié')
+          setError(data.error || 'Votre email n\'a pas été vérifié. Veuillez vérifier votre boîte mail et cliquer sur le lien de confirmation.')
         } else {
           // Afficher l'erreur avec les suggestions si disponibles
           let errorMsg = data.error || 'Erreur de connexion'
@@ -186,14 +186,15 @@ function LoginContent() {
                           setResending(true)
                           setResendMessage('')
                           try {
-                            const res = await fetch('/api/auth/resend-verification', {
+                            // Utiliser la nouvelle route Supabase pour renvoyer l'email de vérification
+                            const res = await fetch('/api/auth/resend-supabase-verification', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
                               body: JSON.stringify({ email }),
                             })
                             const data = await res.json()
                             if (res.ok) {
-                              setResendMessage('Un nouveau lien a été envoyé à votre adresse email.')
+                              setResendMessage(data.message || 'Un nouveau lien a été envoyé à votre adresse email.')
                             } else {
                               setResendMessage(data.error || 'Erreur lors de l\'envoi')
                             }
