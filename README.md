@@ -45,6 +45,8 @@ NEXTAUTH_SECRET=générez-avec-openssl-rand-base64-32
 NEXTAUTH_URL=http://localhost:3010
 GOOGLE_CLIENT_ID=votre-client-id
 GOOGLE_CLIENT_SECRET=votre-client-secret
+NEXT_PUBLIC_SUPABASE_URL=https://votre-projet.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=votre-clé-anon-publique
 ```
 
 Pour `DATABASE_URL`, utiliser le format pooler Supabase avec le port 6543 et `?pgbouncer=true` pour éviter les problèmes de connexion en production.
@@ -55,6 +57,11 @@ openssl rand -base64 32
 ```
 
 Les variables `GOOGLE_CLIENT_ID` et `GOOGLE_CLIENT_SECRET` sont optionnelles si tu n'utilises pas l'authentification Google.
+
+**Important pour Supabase Auth** : 
+- `NEXT_PUBLIC_SUPABASE_URL` : L'URL de votre projet Supabase (ex: `https://tqvdjfesnavnsqchufjg.supabase.co`)
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` : La clé **anon (publique)** depuis Supabase Dashboard → Settings → API → **anon public** key (commence par `eyJ...`)
+- ⚠️ **NE PAS** utiliser la clé service role (`sb_secret_...`) côté client, elle est réservée aux opérations admin serveur uniquement
 
 ## Déploiement sur Vercel
 
