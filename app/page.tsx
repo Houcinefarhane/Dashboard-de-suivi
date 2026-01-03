@@ -45,8 +45,11 @@ export default function HomePage() {
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <div className="flex items-center">
+            <div className="flex items-center gap-3">
               <Logo size="md" showText={false} />
+              <span className="hidden sm:block text-sm font-medium text-gray-600 tracking-wider">
+                BILLIEVE IN YOUR BUSINESS
+              </span>
             </div>
 
             {/* Desktop Navigation */}
@@ -198,6 +201,9 @@ export default function HomePage() {
                 L'ERP complet qui remplace
                 <span className="block mt-1" style={{ color: 'rgb(150, 185, 220)' }}>
                   5 outils
+                </span>
+                <span className="block mt-2 text-2xl md:text-3xl lg:text-4xl font-normal" style={{ color: 'rgb(150, 185, 220)' }}>
+                  Billieve
                 </span>
               </motion.h1>
               
