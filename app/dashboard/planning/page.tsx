@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Calendar, Plus, Clock, MapPin, User, CheckCircle2, XCircle, Loader, Camera, X, Image as ImageIcon, FileDown } from 'lucide-react'
+import { Calendar, Plus, Clock, MapPin, User, CheckCircle2, XCircle, Loader, Camera, X, Image as ImageIcon, FileDown, Edit } from 'lucide-react'
 import { formatDate, formatDateTime } from '@/lib/utils'
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, startOfWeek, endOfWeek, addDays, subDays, startOfDay, isToday, addWeeks, subWeeks, getHours, getMinutes, setHours, setMinutes } from 'date-fns'
 import { fr } from 'date-fns/locale/fr'
@@ -50,6 +50,7 @@ export default function PlanningPage() {
   const [photoUrl, setPhotoUrl] = useState('')
   const [loading, setLoading] = useState(true)
   const [showSidePanel, setShowSidePanel] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -127,27 +128,33 @@ export default function PlanningPage() {
     }
 
     try {
-          const res = await fetch('/api/interventions', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              title: formData.title,
-              description: formData.description,
-              date: dateTime.toISOString(),
-              duration: formData.duration ? parseInt(formData.duration) : null,
-              clientId: formData.clientId,
-              address: formData.address,
-              price: formData.price ? parseFloat(formData.price) : null,
-              status: finalStatus,
-            }),
-          })
+      const url = editingId ? `/api/interventions/${editingId}` : '/api/interventions'
+      const method = editingId ? 'PUT' : 'POST'
+      
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: formData.title,
+          description: formData.description,
+          date: dateTime.toISOString(),
+          duration: formData.duration ? parseInt(formData.duration) : null,
+          clientId: formData.clientId,
+          address: formData.address,
+          price: formData.price ? parseFloat(formData.price) : null,
+          status: finalStatus,
+        }),
+      })
 
       if (res.ok) {
         fetchInterventions()
         resetForm()
+        if (editingId && selectedIntervention?.id === editingId) {
+          setSelectedIntervention(null)
+        }
       }
     } catch (error) {
-      console.error('Error creating intervention:', error)
+      console.error(`Error ${editingId ? 'updating' : 'creating'} intervention:`, error)
     }
   }
 
@@ -222,6 +229,28 @@ export default function PlanningPage() {
     })
     setSelectedDate(null)
     setShowForm(false)
+    setEditingId(null)
+  }
+
+  const handleEditIntervention = (intervention: Intervention) => {
+    const interventionDate = new Date(intervention.date)
+    const dateStr = format(interventionDate, 'yyyy-MM-dd')
+    const timeStr = format(interventionDate, 'HH:mm')
+    
+    setFormData({
+      title: intervention.title,
+      description: intervention.description || '',
+      date: dateStr,
+      time: timeStr,
+      duration: intervention.duration ? intervention.duration.toString() : '',
+      clientId: intervention.client.id,
+      address: intervention.address || '',
+      price: intervention.price ? intervention.price.toString() : '',
+      status: intervention.status,
+    })
+    setEditingId(intervention.id)
+    setShowForm(true)
+    setSelectedIntervention(null)
   }
 
   // Calculer les jours à afficher selon la vue
@@ -898,7 +927,7 @@ export default function PlanningPage() {
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
                               <h3 className="font-semibold text-lg">{intervention.title}</h3>
-                              <span className={`px-2 py-1 rounded text-xs text-white ${getStatusColor(intervention.status)}`}>
+                              <span className={`px-2 py-1 rounded text-xs text-white ${getStatusColor(intervention.status).monthBar}`}>
                                 {intervention.status === 'completed' ? 'Terminée' :
                                  intervention.status === 'cancelled' ? 'Annulée' : 'À faire'}
                               </span>
@@ -941,6 +970,17 @@ export default function PlanningPage() {
                             </div>
                           </div>
                           <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleEditIntervention(intervention)
+                              }}
+                            >
+                              <Edit className="w-4 h-4 mr-1" />
+                              Modifier
+                            </Button>
                             {intervention.status === 'todo' && (
                               <Button
                                 size="sm"
@@ -994,9 +1034,9 @@ export default function PlanningPage() {
             >
               <Card className="border-0">
                 <CardHeader>
-                  <CardTitle>Nouvelle intervention</CardTitle>
+                  <CardTitle>{editingId ? 'Modifier l\'intervention' : 'Nouvelle intervention'}</CardTitle>
                   <CardDescription>
-                    Planifiez une nouvelle intervention
+                    {editingId ? 'Modifiez les informations de l\'intervention' : 'Planifiez une nouvelle intervention'}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -1206,20 +1246,30 @@ export default function PlanningPage() {
                       <X className="w-5 h-5" />
                     </Button>
                   </div>
-                  {/* Status badge */}
-                  <div className="flex items-center gap-2">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium text-white ${getStatusColor(selectedIntervention.status)}`}>
+                  {/* Status badge and Action buttons */}
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium text-white ${getStatusColor(selectedIntervention.status).monthBar}`}>
                       {selectedIntervention.status === 'completed' ? 'Terminée' :
                        selectedIntervention.status === 'cancelled' ? 'Annulée' : 'À faire'}
                     </span>
                     {/* Action buttons */}
-                    <div className="flex gap-2 ml-auto">
+                    <div className="flex gap-2 flex-wrap">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleEditIntervention(selectedIntervention)}
+                        className="flex items-center gap-1"
+                      >
+                        <Edit className="w-4 h-4" />
+                        Modifier
+                      </Button>
                       {selectedIntervention.status === 'todo' && (
                         <Button
                           size="sm"
                           onClick={() => handleStatusChange(selectedIntervention.id, 'completed')}
+                          className="flex items-center gap-1"
                         >
-                          <CheckCircle2 className="w-4 h-4 mr-1" />
+                          <CheckCircle2 className="w-4 h-4" />
                           Terminer
                         </Button>
                       )}
@@ -1227,7 +1277,7 @@ export default function PlanningPage() {
                         size="sm"
                         variant="destructive"
                         onClick={async () => {
-                          if (confirm('Êtes-vous sûr de vouloir annuler cette intervention ?')) {
+                          if (confirm('Êtes-vous sûr de vouloir supprimer cette intervention ?')) {
                             try {
                               const res = await fetch(`/api/interventions/${selectedIntervention.id}`, {
                                 method: 'DELETE',
@@ -1243,9 +1293,10 @@ export default function PlanningPage() {
                             }
                           }
                         }}
+                        className="flex items-center gap-1"
                       >
-                        <XCircle className="w-4 h-4 mr-1" />
-                        Annuler l'intervention
+                        <XCircle className="w-4 h-4" />
+                        Supprimer
                       </Button>
                     </div>
                   </div>

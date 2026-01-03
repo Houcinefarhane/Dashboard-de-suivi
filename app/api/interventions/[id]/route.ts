@@ -82,6 +82,7 @@ export async function PUT(
     if (otherFields.duration !== undefined) updateData.duration = otherFields.duration
     if (otherFields.price !== undefined) updateData.price = otherFields.price
     if (otherFields.address !== undefined) updateData.address = otherFields.address
+    if (otherFields.clientId) updateData.clientId = otherFields.clientId
     if (otherFields.photosBefore !== undefined) updateData.photosBefore = otherFields.photosBefore
     if (otherFields.photosAfter !== undefined) updateData.photosAfter = otherFields.photosAfter
 
