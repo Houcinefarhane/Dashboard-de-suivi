@@ -110,10 +110,11 @@ model Invoice {
   dueDate       DateTime?
   status        String    @default("draft") // draft, sent, paid, overdue
   subtotal      Float
-  taxRate       Float     @default(20) // Taux de TVA en pourcentage (5, 10, 20)
+  taxRate       Float     @default(20) // Taux de TVA en pourcentage (0, 5, 10, 20)
   tax           Float     @default(0)
   total         Float
   notes         String?
+  taxExemptionText String? // Texte pour TVA non applicable (ex: "TVA non applicable article 261-4-4 du CGI")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   
