@@ -63,6 +63,8 @@ export default function DevisPage() {
   const [showForm, setShowForm] = useState(false)
   const [showDetails, setShowDetails] = useState<string | null>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
+  // Feature flags : vérifier les features activées pour cet utilisateur
+  const [enabledFeatures, setEnabledFeatures] = useState<string[]>([])
   const [formData, setFormData] = useState({
     clientId: '',
     date: new Date().toISOString().split('T')[0],
@@ -111,10 +113,29 @@ export default function DevisPage() {
     }
   }
 
-  // Charger les devis et clients
+  // Charger les features activées pour cet utilisateur
+  const fetchFeatures = async () => {
+    try {
+      const res = await fetch('/api/features')
+      const data = await res.json()
+      if (res.ok) {
+        setEnabledFeatures(data.features || [])
+      }
+    } catch (error) {
+      console.error('Error fetching features:', error)
+    }
+  }
+
+  // Fonction utilitaire pour vérifier si une feature est activée
+  const hasFeature = (featureName: string): boolean => {
+    return enabledFeatures.includes(featureName)
+  }
+
+  // Charger les devis, clients et features
   useEffect(() => {
     fetchQuotes(currentPage, searchTerm, statusFilter)
     fetchClients()
+    fetchFeatures()
   }, [currentPage, searchTerm, statusFilter])
 
   const calculateTotals = (items: QuoteItem[], taxRate: number) => {
@@ -451,6 +472,19 @@ export default function DevisPage() {
                 <FileDown className="w-4 h-4 mr-2" />
                 Exporter
               </Button>
+              {/* Exemple de feature flag : Export avancé (uniquement pour certains comptes) */}
+              {hasFeature('advanced-export') && (
+                <Button
+                  variant="outline"
+                  onClick={async () => {
+                    alert('Fonctionnalité Export Avancé activée !\n\nCette fonctionnalité est en test pour votre compte.')
+                  }}
+                  className="w-full sm:w-auto bg-primary/10"
+                >
+                  <FileDown className="w-4 h-4 mr-2" />
+                  Export Avancé (Beta)
+                </Button>
+              )}
               <Button onClick={() => setShowForm(true)} className="w-full sm:w-auto">
                 <Plus className="w-4 h-4 mr-2" />
                 Nouveau devis
