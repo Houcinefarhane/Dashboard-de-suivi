@@ -17,7 +17,7 @@
     <path d="M 45,-30 L 60,-15 L 60,-30 Z" fill="#b8d4ed" opacity="0.5"/>
     
     <!-- B blanc découpé -->
-    <text x="30" y="12" 
+    <text x="30" y="3" 
           font-family="'Space Grotesk', -apple-system, sans-serif" 
           font-size="48" 
           font-weight="800" 
