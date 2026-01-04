@@ -148,7 +148,7 @@ export function Sidebar() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-6 lg:mb-10 flex items-center justify-between"
           >
-            <Logo size="sm" />
+            <Logo size="md" />
             <Button
               variant="ghost"
               size="icon"

@@ -97,7 +97,7 @@ export function TopNav() {
             animate={{ opacity: 1, x: 0 }}
             className="flex-shrink-0"
           >
-            <Logo size="sm" showText={false} />
+            <Logo size="md" showText={false} />
           </motion.div>
 
           {/* Desktop Navigation */}
