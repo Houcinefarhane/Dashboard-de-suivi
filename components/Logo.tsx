@@ -41,8 +41,8 @@ export function Logo({ className = '', size = 'md', showText = true }: LogoProps
           alt="Billiev"
           width={size === 'sm' ? 200 : size === 'md' ? 320 : 1200}
           height={size === 'sm' ? 75 : size === 'md' ? 120 : 450}
-          className={`${sizeClasses[size]} w-auto`}
-          style={{ objectFit: 'contain' }}
+          className="w-auto h-auto max-h-full"
+          style={{ maxHeight: size === 'sm' ? '24px' : size === 'md' ? '40px' : '224px' }}
           priority
         />
       ) : (
