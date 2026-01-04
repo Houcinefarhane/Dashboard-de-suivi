@@ -10,7 +10,7 @@ export function Logo({ className = '', size = 'md', showText = true }: LogoProps
   const sizeClasses = {
     sm: 'h-6',
     md: 'h-10',
-    lg: 'h-40',
+    lg: 'h-48',
   }
 
   const textSizes = {
@@ -39,8 +39,8 @@ export function Logo({ className = '', size = 'md', showText = true }: LogoProps
         <Image
           src="/logo-billieve.svg"
           alt="Billiev"
-          width={size === 'sm' ? 200 : size === 'md' ? 320 : 800}
-          height={size === 'sm' ? 75 : size === 'md' ? 120 : 300}
+          width={size === 'sm' ? 200 : size === 'md' ? 320 : 1000}
+          height={size === 'sm' ? 75 : size === 'md' ? 120 : 375}
           className={sizeClasses[size]}
           priority
         />
