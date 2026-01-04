@@ -146,7 +146,7 @@ export function Sidebar() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 lg:mb-10 flex items-center justify-between"
+            className="mb-4 flex items-center justify-between"
           >
             <Logo size="lg" />
             <Button
