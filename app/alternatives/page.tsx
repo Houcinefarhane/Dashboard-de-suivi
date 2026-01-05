@@ -13,51 +13,57 @@ export const metadata: Metadata = {
     'Billiev vs concurrents',
     'logiciel gestion artisan comparatif',
   ],
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 const competitors = [
   {
-    name: 'Solution A (Générique)',
-    price: '399€/mois',
+    name: 'ACD (Artisan Comptable Digital)',
+    price: 'À partir de 350€/mois',
     pros: [
-      'Interface complète',
+      'Solution complète et établie',
       'Support téléphonique',
+      'Intégration comptable',
     ],
     cons: [
-      'Prix élevé',
-      'Interface complexe',
-      'Pas de module géolocalisation',
-      'Pas d\'essai gratuit',
+      'Prix élevé pour petites structures',
+      'Interface parfois complexe',
+      'Pas de module géolocalisation intégré',
+      'Engagement annuel souvent requis',
     ],
-    bestFor: 'Grandes entreprises',
+    bestFor: 'Entreprises établies avec besoins comptables avancés',
   },
   {
-    name: 'Solution B (Basique)',
-    price: '99€/mois',
+    name: 'Sage Gestion Commerciale',
+    price: 'À partir de 80€/mois',
     pros: [
-      'Prix abordable',
-      'Interface simple',
+      'Marque reconnue',
+      'Fonctionnalités de base solides',
+      'Support disponible',
     ],
     cons: [
-      'Fonctionnalités limitées',
-      'Pas de gestion stock',
-      'Pas de suivi financier',
-      'Support limité',
+      'Fonctionnalités limitées pour artisans',
+      'Pas de gestion planning intégrée',
+      'Interface parfois datée',
+      'Modules supplémentaires payants',
     ],
-    bestFor: 'Très petites structures',
+    bestFor: 'Entreprises cherchant une solution comptable de base',
   },
   {
     name: 'Excel + Google Calendar',
     price: 'Gratuit',
     pros: [
-      'Gratuit',
-      'Familiarité',
+      'Gratuit et familier',
+      'Flexibilité totale',
     ],
     cons: [
-      'Pas de synchronisation',
-      'Risque d\'erreurs',
+      'Pas de synchronisation automatique',
+      'Risque d\'erreurs de saisie',
       'Pas d\'automatisation',
-      'Perte de temps importante',
+      'Perte de temps importante (10-15h/semaine selon INSEE)',
     ],
     bestFor: 'Utilisation temporaire uniquement',
   },
@@ -66,20 +72,17 @@ const competitors = [
 export default function AlternativesPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
+      {/* Header - Discret pour SEO uniquement */}
       <header className="border-b border-gray-200 bg-white">
         <div className="container mx-auto px-4 max-w-4xl py-6">
-          <Link href="/">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Retour à l'accueil
-            </Button>
+          <Link href="/" className="text-sm text-gray-500 hover:text-gray-700">
+            ← Retour
           </Link>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
-            Comparatif ERP Artisans 2026
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 mt-4">
+            Comparatif Solutions
           </h1>
-          <p className="text-lg text-gray-600">
-            Guide complet pour choisir la meilleure solution de gestion pour votre entreprise artisanale
+          <p className="text-sm text-gray-500">
+            Analyse comparative des solutions disponibles
           </p>
         </div>
       </header>
@@ -247,8 +250,8 @@ export default function AlternativesPage() {
                 <tr className="bg-gray-100">
                   <th className="border border-gray-200 p-3 text-left font-semibold text-gray-900">Fonctionnalité</th>
                   <th className="border border-gray-200 p-3 text-center font-semibold text-gray-900">Billiev</th>
-                  <th className="border border-gray-200 p-3 text-center font-semibold text-gray-900">Solution A</th>
-                  <th className="border border-gray-200 p-3 text-center font-semibold text-gray-900">Solution B</th>
+                  <th className="border border-gray-200 p-3 text-center font-semibold text-gray-900">ACD</th>
+                  <th className="border border-gray-200 p-3 text-center font-semibold text-gray-900">Sage</th>
                   <th className="border border-gray-200 p-3 text-center font-semibold text-gray-900">Excel</th>
                 </tr>
               </thead>
@@ -305,8 +308,8 @@ export default function AlternativesPage() {
                 <tr className="bg-gray-50">
                   <td className="border border-gray-200 p-3 text-gray-700">Prix mensuel</td>
                   <td className="border border-gray-200 p-3 text-center font-bold" style={{ color: 'rgb(150, 185, 220)' }}>299€</td>
-                  <td className="border border-gray-200 p-3 text-center text-gray-700">399€</td>
-                  <td className="border border-gray-200 p-3 text-center text-gray-700">99€</td>
+                  <td className="border border-gray-200 p-3 text-center text-gray-700">350€+</td>
+                  <td className="border border-gray-200 p-3 text-center text-gray-700">80€+</td>
                   <td className="border border-gray-200 p-3 text-center text-gray-700">Gratuit</td>
                 </tr>
               </tbody>

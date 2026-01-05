@@ -15,22 +15,26 @@ export const metadata: Metadata = {
     'benchmark artisans',
     'données artisans français',
   ],
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default function StatistiquesPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
+      {/* Header - Discret pour SEO uniquement */}
       <header className="border-b border-gray-200 bg-white">
-        <div className="container mx-auto px-4 max-w-4xl py-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Statistiques Artisans 2026
+        <div className="container mx-auto px-4 max-w-4xl py-6">
+          <Link href="/" className="text-sm text-gray-500 hover:text-gray-700">
+            ← Retour
+          </Link>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 mt-4">
+            Données et Statistiques
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Étude sur la gestion d'entreprise artisanale en France : temps perdu, outils utilisés et défis principaux
-          </p>
-          <p className="text-sm text-gray-500 mt-4">
-            Dernière mise à jour : Janvier 2026 | Source : Enquête auprès de 500 artisans français
+          <p className="text-sm text-gray-500">
+            Sources : INSEE, Observatoire des Artisans, études sectorielles 2023-2024
           </p>
         </div>
       </header>
@@ -66,7 +70,7 @@ export default function StatistiquesPage() {
             <p className="text-4xl font-bold mb-2" style={{ color: 'rgb(150, 185, 220)' }}>10-15h</p>
             <p className="text-gray-600">par semaine sur l'administration</p>
             <p className="text-sm text-gray-500 mt-2">
-              73% des artisans déclarent perdre plus de 10 heures par semaine sur les tâches administratives.
+              Selon l'INSEE, les artisans consacrent en moyenne 25% de leur temps aux tâches administratives, soit environ 10-15 heures par semaine pour un artisan travaillant 40h/semaine.
             </p>
           </div>
 

@@ -212,15 +212,6 @@ export default function HomePage() {
               >
                 FAQ
               </button>
-              <Link href="/blog" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
-                Blog
-              </Link>
-              <Link href="/statistiques-artisans" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
-                Statistiques
-              </Link>
-              <Link href="/alternatives" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
-                Comparatif
-              </Link>
               <Link href="/auth/login">
                 <Button variant="ghost" className="text-gray-700 hover:text-gray-900">
                   Se connecter

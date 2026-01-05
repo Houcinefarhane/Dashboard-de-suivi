@@ -13,6 +13,10 @@ export const metadata: Metadata = {
     'gestion entreprise artisanale',
     'astuces ERP artisan',
   ],
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 const articles = [
