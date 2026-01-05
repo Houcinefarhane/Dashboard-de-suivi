@@ -122,16 +122,6 @@ Vos données sont protégées par :
 - Conformité RGPD
 - Accès protégé par mot de passe
 
-## Sécurité
-
-Le projet inclut plusieurs mesures de sécurité :
-
-- Rate limiting sur les routes d'authentification (5 tentatives max toutes les 15 minutes)
-- Headers de sécurité HTTP (CSP, HSTS, X-Frame-Options, etc.)
-- Logs sécurisés qui n'exposent pas d'informations sensibles en production
-- Authentification requise sur toutes les routes API
-- Vérification systématique que les ressources appartiennent à l'utilisateur connecté
-
 ## Structure du projet
 
 ```
