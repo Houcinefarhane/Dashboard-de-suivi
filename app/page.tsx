@@ -171,6 +171,75 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       <StructuredData data={structuredData} />
+      
+      {/* Demo Popup */}
+      {showDemoPopup && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+          onClick={handleClosePopup}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            onClick={(e) => e.stopPropagation()}
+            className="relative bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full border-2"
+            style={{ borderColor: 'rgb(150, 185, 220)' }}
+          >
+            <button
+              onClick={handleClosePopup}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
+                   style={{ backgroundColor: 'rgba(150, 185, 220, 0.1)' }}>
+                <MessageCircle className="w-8 h-8" style={{ color: 'rgb(150, 185, 220)' }} />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Vous êtes artisan ?
+              </h3>
+              <p className="text-lg text-gray-700 mb-6">
+                Je peux vous montrer Billiev en 15 minutes.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={handleContactDemo}
+                className="flex-1 px-6 py-3 rounded-lg font-medium text-white transition-all duration-300 hover:shadow-lg"
+                style={{ backgroundColor: 'rgb(150, 185, 220)' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(130, 165, 200)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(150, 185, 220)'}
+              >
+                Réserver une démo
+              </button>
+              <a
+                href="tel:0785691300"
+                className="flex-1 px-6 py-3 rounded-lg font-medium border-2 transition-all duration-300 hover:shadow-lg text-center flex items-center justify-center"
+                style={{ 
+                  borderColor: 'rgb(150, 185, 220)',
+                  color: 'rgb(150, 185, 220)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(150, 185, 220, 0.1)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                }}
+              >
+                <Phone className="w-4 h-4 inline mr-2" />
+                07 85 69 13 00
+              </a>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
       {/* Navigation Bar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div className="container mx-auto px-4 max-w-7xl">
