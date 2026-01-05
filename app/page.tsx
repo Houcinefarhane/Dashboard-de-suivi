@@ -897,6 +897,58 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Footer avec liens discrets */}
+      <footer className="border-t border-gray-200 bg-white py-8 mt-16">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-3">Billiev</h3>
+              <p className="text-sm text-gray-600">
+                L'ERP complet pour gérer votre entreprise artisanale en toute simplicité.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-3">Ressources</h3>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <Link href="/blog" className="text-gray-600 hover:text-gray-900 transition-colors">
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/statistiques-artisans" className="text-gray-600 hover:text-gray-900 transition-colors">
+                    Statistiques
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/alternatives" className="text-gray-600 hover:text-gray-900 transition-colors">
+                    Comparatif
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-3">Contact</h3>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li>
+                  <a href="tel:+33785691300" className="hover:text-gray-900 transition-colors">
+                    📞 07 85 69 13 00
+                  </a>
+                </li>
+                <li>
+                  <a href="mailto:houcine.farhane@outlook.fr" className="hover:text-gray-900 transition-colors">
+                    ✉️ houcine.farhane@outlook.fr
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-200 pt-6 text-center text-sm text-gray-500">
+            <p>© 2026 Billiev. Tous droits réservés.</p>
+          </div>
+        </div>
+      </footer>
+
       {/* Contact Section */}
       <section id="contact" className="py-12 bg-gray-50 scroll-mt-16">
         <div className="container mx-auto px-4 max-w-4xl">
