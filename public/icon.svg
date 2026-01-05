@@ -10,7 +10,7 @@
   <!-- Coin plié en haut à droite -->
   <path d="M 24,2 L 30,8 L 24,8 Z" fill="#96b9dc"/>
   <path d="M 24,2 L 30,8 L 30,2 Z" fill="#b8d4ed" opacity="0.5"/>
-  <!-- B blanc au centre -->
-  <text x="16" y="22" font-family="'Space Grotesk', -apple-system, sans-serif" font-size="18" font-weight="800" fill="#ffffff" text-anchor="middle">B</text>
+  <!-- B blanc au centre - positionné plus bas pour centrage visuel -->
+  <text x="16" y="23" font-family="'Space Grotesk', -apple-system, sans-serif" font-size="20" font-weight="800" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">B</text>
 </svg>
 
