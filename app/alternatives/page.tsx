@@ -114,8 +114,7 @@ export default function AlternativesPage() {
               <DollarSign className="w-6 h-6" style={{ color: 'rgb(150, 185, 220)' }} />
               <div>
                 <p className="text-sm text-gray-600">Prix</p>
-                <p className="text-xl font-bold text-gray-900">299€/mois</p>
-                <p className="text-sm text-gray-500">ou 2870€/an (-20%)</p>
+                <p className="text-xl font-bold text-gray-900">49€ HT/mois</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -307,7 +306,7 @@ export default function AlternativesPage() {
                 </tr>
                 <tr className="bg-gray-50">
                   <td className="border border-gray-200 p-3 text-gray-700">Prix mensuel</td>
-                  <td className="border border-gray-200 p-3 text-center font-bold" style={{ color: 'rgb(150, 185, 220)' }}>299€</td>
+                  <td className="border border-gray-200 p-3 text-center font-bold" style={{ color: 'rgb(150, 185, 220)' }}>49€ HT</td>
                   <td className="border border-gray-200 p-3 text-center text-gray-700">350€+</td>
                   <td className="border border-gray-200 p-3 text-center text-gray-700">80€+</td>
                   <td className="border border-gray-200 p-3 text-center text-gray-700">Gratuit</td>
@@ -326,7 +325,7 @@ export default function AlternativesPage() {
           <ul className="space-y-2 mb-6">
             <li className="flex items-start gap-2">
               <span className="text-green-600 font-bold">✓</span>
-              <span className="text-gray-700">Un prix compétitif (299€/mois) avec essai gratuit 14 jours</span>
+              <span className="text-gray-700">Un prix compétitif (49€ HT/mois) avec essai gratuit 14 jours</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-green-600 font-bold">✓</span>

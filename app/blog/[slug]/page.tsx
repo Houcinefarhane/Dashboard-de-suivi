@@ -101,8 +101,7 @@ Vous cherchez un outil de gestion pour votre entreprise artisanale ? Entre les s
 
 Billiev propose un **essai gratuit de 14 jours** pour tester toutes les fonctionnalités sans engagement. Après l'essai, deux formules :
 
-- **299€/mois** : Abonnement flexible, résiliable à tout moment
-- **2870€/an** : Économisez 718€ par rapport au mensuel (-20%)
+- **49€ HT/mois** : Abonnement flexible, résiliable à tout moment
 
 ### Pourquoi choisir Billiev ?
 
