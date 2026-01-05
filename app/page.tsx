@@ -41,6 +41,62 @@ export default function HomePage() {
     }
   }
 
+  // Données structurées JSON-LD pour le SEO (définies après faqData)
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'SoftwareApplication',
+        name: 'Billiev',
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web',
+        offers: {
+          '@type': 'Offer',
+          price: '299',
+          priceCurrency: 'EUR',
+          priceSpecification: {
+            '@type': 'UnitPriceSpecification',
+            price: '299',
+            priceCurrency: 'EUR',
+            billingDuration: 'P1M',
+          },
+        },
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: '5',
+          ratingCount: '2',
+        },
+        description: 'ERP complet pour artisans : gestion clients, planning, factures, stock et finances dans une seule interface moderne.',
+        url: baseUrl,
+        screenshot: `${baseUrl}/Attached_image.png`,
+      },
+      {
+        '@type': 'Organization',
+        name: 'Billiev',
+        url: baseUrl,
+        logo: `${baseUrl}/logo-billieve.png`,
+        contactPoint: {
+          '@type': 'ContactPoint',
+          telephone: '+33-7-85-69-13-00',
+          contactType: 'customer service',
+          email: 'houcine.farhane@outlook.fr',
+          availableLanguage: 'French',
+        },
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: faqData.map((faq) => ({
+          '@type': 'Question',
+          name: faq.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: faq.answer,
+          },
+        })),
+      },
+    ],
+  }
+
   return (
     <div className="min-h-screen bg-white">
       <StructuredData data={structuredData} />
