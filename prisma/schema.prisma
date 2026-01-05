@@ -48,6 +48,7 @@ model Artisan {
   invoiceReminders InvoiceReminder[]
   financialObjectives FinancialObjective[]
   invoiceCustomization InvoiceCustomization?
+  subscription Subscription?
 }
 
 model Client {
@@ -334,5 +335,31 @@ model InvoiceCustomization {
   
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+}
+
+model Subscription {
+  id                String    @id @default(cuid())
+  artisanId         String    @unique
+  artisan            Artisan   @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  
+  // Stripe
+  stripeCustomerId  String?   @unique
+  stripeSubscriptionId String? @unique
+  stripePriceId     String?   // ID du prix Stripe (ex: price_xxx)
+  stripeStatus      String?   // active, canceled, past_due, trialing, etc.
+  
+  // Informations d'abonnement
+  status            String    @default("inactive") // active, canceled, past_due, trialing, inactive
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd  Boolean   @default(false)
+  canceledAt         DateTime?
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  @@index([artisanId])
+  @@index([stripeCustomerId])
+  @@index([stripeSubscriptionId])
 }
 

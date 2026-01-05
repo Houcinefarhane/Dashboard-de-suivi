@@ -870,15 +870,15 @@ export default function HomePage() {
                     <span className="text-gray-700 text-sm">Accès complet à toutes les fonctionnalités</span>
                   </li>
                 </ul>
-                <button
-                  onClick={() => scrollToSection('contact')}
+                <Link
+                  href="/auth/register"
                   className="block w-full h-12 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg flex items-center justify-center"
                   style={{ backgroundColor: 'rgb(150, 185, 220)' }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgb(130, 165, 200)'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgb(150, 185, 220)'}
                 >
-                  Nous contacter
-                </button>
+                  Commencer l'essai gratuit
+                </Link>
               </div>
             </motion.div>
           </motion.div>
