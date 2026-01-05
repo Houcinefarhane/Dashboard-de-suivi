@@ -18,10 +18,11 @@ import {
   Menu,
   X,
   Phone,
-  Mail
+  Mail,
+  MessageCircle
 } from 'lucide-react'
 import { Logo } from '@/components/Logo'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { StructuredData } from '@/components/StructuredData'
 
@@ -31,7 +32,20 @@ export default function HomePage() {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showDemoPopup, setShowDemoPopup] = useState(false)
   // Plus besoin du toggle, seulement mensuel
+
+  // Afficher le popup après 3 secondes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Vérifier si l'utilisateur n'a pas déjà fermé le popup (localStorage)
+      const hasClosedPopup = localStorage.getItem('billiev-demo-popup-closed')
+      if (!hasClosedPopup) {
+        setShowDemoPopup(true)
+      }
+    }, 3000)
+    return () => clearTimeout(timer)
+  }, [])
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
