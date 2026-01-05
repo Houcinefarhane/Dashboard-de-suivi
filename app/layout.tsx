@@ -63,10 +63,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico?v=4', sizes: '32x32', type: 'image/x-icon' },
-      { url: '/icon.svg?v=4', type: 'image/svg+xml' },
+      { url: '/favicon.ico?v=5', sizes: '32x32', type: 'image/x-icon' },
+      { url: '/icon.svg?v=5', type: 'image/svg+xml' },
     ],
-    apple: '/apple-touch-icon.png?v=4',
+    apple: '/apple-touch-icon.png?v=5',
   },
 }
 
@@ -84,9 +84,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Billiev" />
         <meta name="color-scheme" content="light dark" />
-        <link rel="icon" href="/favicon.ico?v=4" sizes="any" />
-        <link rel="icon" href="/icon.svg?v=4" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4" />
+        <link rel="icon" href="/favicon.ico?v=5" sizes="any" />
+        <link rel="icon" href="/icon.svg?v=5" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=5" />
       </head>
       <body className={`${spaceGrotesk.variable} ${spaceGrotesk.className} font-sans`}>
         <Providers>{children}</Providers>
