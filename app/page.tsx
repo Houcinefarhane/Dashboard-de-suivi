@@ -546,7 +546,7 @@ export default function HomePage() {
                 >
                   Paiement annuel
                   <span className="absolute -top-2 -right-2 px-2 py-0.5 rounded-full text-xs font-semibold text-white shadow-sm" style={{ backgroundColor: 'rgb(34, 197, 94)' }}>
-                    -29%
+                    -20%
                   </span>
                 </button>
               </div>
@@ -570,7 +570,7 @@ export default function HomePage() {
                   </h3>
                   <div className="mb-4">
                     <span className="text-5xl font-bold" style={{ color: 'rgb(150, 185, 220)' }}>
-                      {pricingType === 'unique' ? '1699€' : '199€'}
+                      {pricingType === 'unique' ? '2870€' : '299€'}
                     </span>
                     {pricingType === 'mensuel' && (
                       <span className="text-gray-600 text-lg ml-2">/mois</span>
@@ -580,7 +580,7 @@ export default function HomePage() {
                     )}
                   </div>
                   <p className="text-gray-600 text-sm mb-2">
-                    {pricingType === 'unique' ? 'Économisez 689€ par rapport au paiement mensuel' : 'Résiliable à tout moment'}
+                    {pricingType === 'unique' ? 'Économisez 718€ par rapport au paiement mensuel' : 'Résiliable à tout moment'}
                   </p>
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 border border-green-200">
                     <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
@@ -908,11 +908,11 @@ const benefits = [
 const faqData = [
   {
     question: 'Comment créer mon compte ?',
-    answer: 'Pour créer un compte, contactez-nous par email (houcine.farhane@outlook.fr) ou par téléphone (07 85 69 13 00) pour obtenir un code d\'invitation. Une fois le code obtenu, vous pourrez créer votre compte et choisir votre formule (paiement annuel 1699€ ou abonnement 199€/mois).',
+    answer: 'Pour créer un compte, contactez-nous par email (houcine.farhane@outlook.fr) ou par téléphone (07 85 69 13 00) pour obtenir un code d\'invitation. Une fois le code obtenu, vous pourrez créer votre compte et choisir votre formule (paiement annuel 2870€ ou abonnement 299€/mois).',
   },
   {
     question: 'Quels sont les tarifs ?',
-    answer: 'Nous proposons deux formules : un paiement annuel de 1699€ (économisez 689€ par rapport au mensuel), ou un abonnement mensuel de 199€/mois résiliable à tout moment. Les deux formules incluent toutes les fonctionnalités, les mises à jour et le support technique.',
+    answer: 'Nous proposons deux formules : un paiement annuel de 2870€ (économisez 718€ par rapport au mensuel, soit -20%), ou un abonnement mensuel de 299€/mois résiliable à tout moment. Les deux formules incluent toutes les fonctionnalités, les mises à jour et le support technique.',
   },
   {
     question: 'Mes données sont-elles sécurisées ?',
