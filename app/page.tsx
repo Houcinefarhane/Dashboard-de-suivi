@@ -295,7 +295,7 @@ export default function HomePage() {
                   className="w-full h-full relative rounded-lg overflow-hidden"
                 >
                   <Image
-                    src="/dashboard-screenshot.png"
+                    src="/Attached_image.png"
                     alt="Aperçu du tableau de bord"
                     fill
                     className="object-contain"
