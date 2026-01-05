@@ -219,8 +219,8 @@ export default function HomePage() {
               >
                 <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium text-sm">Clients</span>
                 <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium text-sm">Planning</span>
-                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium text-sm">Factures</span>
-                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium text-sm">Stock</span>
+                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium text-sm">Facturation</span>
+                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium text-sm">Gestion</span>
                 <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium text-sm">Finances</span>
               </motion.div>
               
