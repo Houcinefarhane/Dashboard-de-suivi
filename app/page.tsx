@@ -25,7 +25,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { StructuredData } from '@/components/StructuredData'
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://dashboard-de-suivi.vercel.app'
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://billiev.com'
 
 export default function HomePage() {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null)
