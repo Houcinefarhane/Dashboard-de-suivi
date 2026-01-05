@@ -305,7 +305,7 @@ export default function HomePage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3, duration: 0.6 }}
                 >
-                  Gérez votre activité en 2x moins de temps
+                  Arrêtez de perdre du temps sur l'administratif
                 </motion.span>
               </h1>
               
@@ -315,7 +315,7 @@ export default function HomePage() {
                 transition={{ delay: 0.4, duration: 0.6 }}
                 className="text-lg md:text-xl text-gray-600 mb-2 leading-relaxed max-w-xl mx-auto lg:mx-0"
               >
-                Billiev remplace 5 outils par une seule interface moderne
+                Devis, planning, factures et suivi financier réunis dans un seul outil simple pour artisans.
               </motion.p>
               
               <motion.div

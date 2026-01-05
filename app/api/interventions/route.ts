@@ -42,27 +42,30 @@ export async function GET(request: Request) {
     const safeLimit = Math.min(Math.max(1, limit), MAX_LIMIT)
     const safePage = Math.max(1, page)
     
-    const [interventions, total] = await Promise.all([
-      prisma.intervention.findMany({
-        where,
-        include: {
-          client: {
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-              phone: true,
-            },
+    const findManyOptions: any = {
+      where,
+      include: {
+        client: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            phone: true,
           },
         },
-        orderBy: { date: 'desc' },
-        ...(usePagination ? {
-          skip: (safePage - 1) * safeLimit,
-          take: safeLimit,
-        } : {
-          take: MAX_LIMIT, // Limite max même pour heatmap
-        }),
-      }),
+      },
+      orderBy: { date: 'desc' },
+    }
+    
+    if (usePagination) {
+      findManyOptions.skip = (safePage - 1) * safeLimit
+      findManyOptions.take = safeLimit
+    } else {
+      findManyOptions.take = MAX_LIMIT // Limite max même pour heatmap
+    }
+    
+    const [interventions, total] = await Promise.all([
+      prisma.intervention.findMany(findManyOptions),
       usePagination ? prisma.intervention.count({ where }) : Promise.resolve(0)
     ])
 

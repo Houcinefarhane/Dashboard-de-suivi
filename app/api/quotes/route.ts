@@ -193,11 +193,11 @@ export async function POST(request: Request) {
         quoteNumber,
         date: new Date(date),
         validUntil: validUntil ? new Date(validUntil) : null,
-        subtotal: parseFloat(subtotal),
-        taxRate: taxRate ? parseFloat(taxRate) : 20, // Par défaut 20% si non fourni
-        tax: parseFloat(tax),
+        subtotal: typeof subtotal === 'number' ? subtotal : parseFloat(String(subtotal)),
+        taxRate: taxRate ? (typeof taxRate === 'number' ? taxRate : parseFloat(String(taxRate))) : 20, // Par défaut 20% si non fourni
+        tax: typeof tax === 'number' ? tax : parseFloat(String(tax)),
         taxExemptionText: taxExemptionText || null,
-        total: parseFloat(total),
+        total: typeof total === 'number' ? total : parseFloat(String(total)),
         notes: notes || null,
         status: 'draft',
         artisanId: artisan.id,

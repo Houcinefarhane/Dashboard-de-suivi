@@ -223,17 +223,17 @@ export async function POST(request: Request) {
         invoiceNumber,
         date: new Date(date),
         dueDate: dueDate ? new Date(dueDate) : null,
-        subtotal: parseFloat(subtotal),
-        taxRate: taxRate ? parseFloat(taxRate) : 20, // Par défaut 20% si non fourni
-        tax: parseFloat(tax),
+        subtotal: typeof subtotal === 'number' ? subtotal : parseFloat(String(subtotal)),
+        taxRate: taxRate ? (typeof taxRate === 'number' ? taxRate : parseFloat(String(taxRate))) : 20, // Par défaut 20% si non fourni
+        tax: typeof tax === 'number' ? tax : parseFloat(String(tax)),
         taxExemptionText: taxExemptionText || null,
-        total: parseFloat(total),
+        total: typeof total === 'number' ? total : parseFloat(String(total)),
         notes: notes || null,
         status: 'draft',
         artisanId: artisan.id,
         clientId,
         items: {
-          create: itemsWithDescription.map((item: any) => ({
+          create: items.map((item: any) => ({
             description: item.description.trim(),
             quantity: Math.floor(parseFloat(item.quantity) || 1), // Forcer un entier
             unitPrice: parseFloat(item.unitPrice) || 0,
