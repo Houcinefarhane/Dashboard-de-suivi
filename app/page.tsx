@@ -731,7 +731,7 @@ export default function HomePage() {
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-lg">
                   JL
                 </div>
-                <div>
+                <div className="flex-1">
                   <p className="font-semibold text-gray-900">Jordan Lopes</p>
                   <p className="text-sm text-gray-600">Plombier, Paris • 3 ans d'expérience</p>
                   <div className="flex items-center gap-1 mt-1">
@@ -740,6 +740,16 @@ export default function HomePage() {
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
                     ))}
+                  </div>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-50 border border-green-200 text-xs font-medium text-green-700">
+                      <CheckCircle2 className="w-3 h-3" />
+                      Utilisateur actif depuis 8 mois
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-medium text-blue-700">
+                      <CheckCircle2 className="w-3 h-3" />
+                      Testé pendant la bêta et remonte les plus hauts
+                    </span>
                   </div>
                 </div>
               </div>
@@ -765,9 +775,9 @@ export default function HomePage() {
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-lg">
-                  MS
+                  MD
                 </div>
-                <div>
+                <div className="flex-1">
                   <p className="font-semibold text-gray-900">Marie Dubois</p>
                   <p className="text-sm text-gray-600">Électricienne, Lyon • 5 ans d'expérience</p>
                   <div className="flex items-center gap-1 mt-1">
@@ -776,6 +786,16 @@ export default function HomePage() {
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
                     ))}
+                  </div>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-50 border border-green-200 text-xs font-medium text-green-700">
+                      <CheckCircle2 className="w-3 h-3" />
+                      Utilisateur actif depuis 6 mois
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-medium text-blue-700">
+                      <CheckCircle2 className="w-3 h-3" />
+                      Testé pendant la bêta et remonte les plus hauts
+                    </span>
                   </div>
                 </div>
               </div>
@@ -950,18 +970,18 @@ export default function HomePage() {
 
 const features = [
   {
-    title: 'Gestion Clients',
-    description: 'Centralisez toutes les informations de vos clients en un seul endroit.',
+    title: 'Clients',
+    description: 'Fini les infos clients éparpillées',
     icon: Users,
     benefits: [
-      'Fiche client complète',
+      'Toutes les infos clients centralisées',
       'Recherche rapide et intuitive',
       'Export des données en CSV',
     ],
   },
   {
-    title: 'Billiev',
-    description: 'Organisez vos rendez-vous avec un calendrier interactif et des rappels automatiques.',
+    title: 'Planning',
+    description: 'Plus aucun rendez-vous oublié',
     icon: Calendar,
     benefits: [
       'Vue jour, semaine, mois',
@@ -971,7 +991,7 @@ const features = [
   },
   {
     title: 'Devis & Factures',
-    description: 'Créez des documents professionnels en quelques clics, exportables en PDF.',
+    description: 'Devis envoyés, factures encaissées plus vite',
     icon: FileText,
     benefits: [
       'Personnalisation complète (logo, couleurs, champs)',
@@ -980,8 +1000,8 @@ const features = [
     ],
   },
   {
-    title: 'Suivi Financier',
-    description: 'Visualisez vos revenus, dépenses et bénéfices avec des graphiques détaillés.',
+    title: 'Finances',
+    description: 'Savoir ce que vous gagnez vraiment',
     icon: TrendingUp,
     benefits: [
       'Tableaux de bord en temps réel',
@@ -990,23 +1010,13 @@ const features = [
     ],
   },
   {
-    title: 'Gestion Stock',
-    description: 'Suivez votre matériel et recevez des alertes quand les stocks sont bas.',
+    title: 'Stock',
+    description: 'Ne plus manquer de matériel sur un chantier',
     icon: Package,
     benefits: [
       'Inventaire en temps réel',
       'Alertes stock faible',
       'Gestion par catégories',
-    ],
-  },
-  {
-    title: 'Analytics & Rapports',
-    description: 'Analysez vos performances avec des graphiques et statistiques.',
-    icon: BarChart3,
-    benefits: [
-      'Tableaux de bord personnalisés',
-      'Graphiques de tendances',
-      'Export des données',
     ],
   },
 ]
