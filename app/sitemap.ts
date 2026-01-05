@@ -1,25 +1,25 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://billiev.com'
-  const now = new Date()
+  // Utiliser www.billiev.com pour la cohérence avec Google Search Console
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.billiev.com'
   
   return [
     {
       url: baseUrl,
-      lastModified: now,
+      lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
       url: `${baseUrl}/auth/login`,
-      lastModified: now,
+      lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
       url: `${baseUrl}/auth/register`,
-      lastModified: now,
+      lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,
     },
