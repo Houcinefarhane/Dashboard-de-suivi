@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getCurrentArtisan } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { quoteSchema } from '@/lib/validations'
 
 export const dynamic = 'force-dynamic'
 
@@ -117,32 +118,22 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { clientId, date, validUntil, subtotal, taxRate, tax, total, notes, taxExemptionText, items } = body
+    
+    // Validation avec Zod
+    const validationResult = quoteSchema.safeParse(body)
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { 
+          error: 'Données invalides',
+          details: validationResult.error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
+        },
+        { status: 400 }
+      )
+    }
+    
+    const { clientId, date, validUntil, subtotal, taxRate, tax, total, notes, taxExemptionText, items } = validationResult.data
 
     console.log('Received quote data:', { clientId, date, itemsCount: items?.length, subtotal, taxRate, tax, total })
-
-    if (!clientId || !date || !items || items.length === 0) {
-      return NextResponse.json(
-        { error: 'Client, date et articles sont requis' },
-        { status: 400 }
-      )
-    }
-
-    // Valider que tous les items ont les champs requis
-    const invalidItems = items.filter((item: any) => 
-      !item.description || 
-      !item.description.trim() || 
-      isNaN(item.quantity) || 
-      isNaN(item.unitPrice) || 
-      isNaN(item.total)
-    )
-    
-    if (invalidItems.length > 0) {
-      return NextResponse.json(
-        { error: 'Certains articles ont des données invalides' },
-        { status: 400 }
-      )
-    }
 
     // Vérifier que le client appartient à l'artisan
     const client = await prisma.client.findFirst({

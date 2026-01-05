@@ -19,7 +19,11 @@
     "db:fix-interventions": "tsx prisma/fix-interventions.ts",
     "db:add-coordinates": "tsx prisma/add-fake-coordinates.ts",
     "db:test": "npx tsx scripts/test-db-connection.ts",
-    "tunnel": "cloudflared tunnel --url http://localhost:3010"
+    "tunnel": "cloudflared tunnel --url http://localhost:3010",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@prisma/client": "^5.7.1",
@@ -61,11 +65,13 @@
     "@babel/preset-env": "^7.28.5",
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
+    "@playwright/test": "^1.57.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/html2canvas": "^0.5.35",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
+    "@vitest/ui": "^4.0.16",
     "autoprefixer": "^10.4.16",
     "bcryptjs": "^2.4.3",
     "eslint": "^8.56.0",
@@ -75,6 +81,7 @@
     "sharp": "^0.34.5",
     "tailwindcss": "^3.4.0",
     "tsx": "^4.20.6",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^4.0.16"
   }
 }

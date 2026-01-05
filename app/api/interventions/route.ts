@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getCurrentArtisan } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { interventionSchema } from '@/lib/validations'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,9 +33,14 @@ export async function GET(request: Request) {
       }
     }
 
-    // Si start/end fournis (heatmap), pas de pagination
+    // Si start/end fournis (heatmap), pas de pagination mais limite max pour éviter crash
     // Sinon, pagination par défaut (50 par page)
     const usePagination = !start || !end
+    const MAX_LIMIT = 1000 // Limite max pour éviter crash avec gros volumes
+    
+    // Valider et limiter le limit
+    const safeLimit = Math.min(Math.max(1, limit), MAX_LIMIT)
+    const safePage = Math.max(1, page)
     
     const [interventions, total] = await Promise.all([
       prisma.intervention.findMany({
@@ -51,9 +57,11 @@ export async function GET(request: Request) {
         },
         orderBy: { date: 'desc' },
         ...(usePagination ? {
-          skip: (page - 1) * limit,
-          take: limit,
-        } : {}),
+          skip: (safePage - 1) * safeLimit,
+          take: safeLimit,
+        } : {
+          take: MAX_LIMIT, // Limite max même pour heatmap
+        }),
       }),
       usePagination ? prisma.intervention.count({ where }) : Promise.resolve(0)
     ])
@@ -71,10 +79,10 @@ export async function GET(request: Request) {
       return NextResponse.json({
         interventions: serializedInterventions,
         pagination: {
-          page,
-          limit,
+          page: safePage,
+          limit: safeLimit,
           total,
-          totalPages: Math.ceil(total / limit),
+          totalPages: Math.ceil(total / safeLimit),
         }
       })
     }
@@ -102,22 +110,20 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { title, description, date, duration, clientId, address, price, status } = body
-
-    if (!title || !date || !clientId) {
+    
+    // Validation avec Zod
+    const validationResult = interventionSchema.safeParse(body)
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Titre, date et client sont requis' },
+        { 
+          error: 'Données invalides',
+          details: validationResult.error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
+        },
         { status: 400 }
       )
     }
-
-    // Validation de la durée (minimum 1 minute)
-    if (duration && duration < 1) {
-      return NextResponse.json(
-        { error: 'La durée doit être au minimum de 1 minute' },
-        { status: 400 }
-      )
-    }
+    
+    const { title, description, date, duration, clientId, address, price, status } = validationResult.data
 
     // Validation de cohérence : comparer uniquement les dates (sans l'heure)
     const interventionDate = new Date(date)

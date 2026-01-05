@@ -31,7 +31,7 @@ export default function HomePage() {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [pricingType, setPricingType] = useState<'unique' | 'mensuel'>('mensuel')
+  // Plus besoin du toggle, seulement mensuel
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
@@ -53,34 +53,19 @@ export default function HomePage() {
         description: 'ERP complet pour artisans : gestion clients, planning, factures, stock et finances dans une seule interface moderne. Économisez 10-15 heures par semaine.',
         url: baseUrl,
         screenshot: `${baseUrl}/Attached_image.png`,
-        offers: [
-          {
-            '@type': 'Offer',
-            price: '299',
+        offers: {
+          '@type': 'Offer',
+          price: '49',
+          priceCurrency: 'EUR',
+          priceSpecification: {
+            '@type': 'UnitPriceSpecification',
+            price: '49',
             priceCurrency: 'EUR',
-            priceSpecification: {
-              '@type': 'UnitPriceSpecification',
-              price: '299',
-              priceCurrency: 'EUR',
-              billingDuration: 'P1M',
-            },
-            availability: 'https://schema.org/InStock',
-            url: `${baseUrl}/auth/register`,
+            billingDuration: 'P1M',
           },
-          {
-            '@type': 'Offer',
-            price: '2870',
-            priceCurrency: 'EUR',
-            priceSpecification: {
-              '@type': 'UnitPriceSpecification',
-              price: '2870',
-              priceCurrency: 'EUR',
-              billingDuration: 'P1Y',
-            },
-            availability: 'https://schema.org/InStock',
-            url: `${baseUrl}/auth/register`,
-          },
-        ],
+          availability: 'https://schema.org/InStock',
+          url: `${baseUrl}/auth/register`,
+        },
         aggregateRating: {
           '@type': 'AggregateRating',
           ratingValue: '5',
@@ -631,64 +616,29 @@ export default function HomePage() {
             transition={{ duration: 0.6 }}
             className="max-w-2xl mx-auto"
           >
-            {/* Toggle Buttons */}
-            <div className="flex items-center justify-center mb-8">
-              <div className="inline-flex rounded-lg p-1 bg-gray-100 border-2 border-gray-200">
-                <button
-                  onClick={() => setPricingType('mensuel')}
-                  className={`px-6 py-3 rounded-md font-medium transition-all duration-200 ${
-                    pricingType === 'mensuel'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Abonnement mensuel
-                </button>
-                <button
-                  onClick={() => setPricingType('unique')}
-                  className={`px-6 py-3 rounded-md font-medium transition-all duration-200 relative ${
-                    pricingType === 'unique'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Paiement annuel
-                  <span className="absolute -top-2 -right-2 px-2 py-0.5 rounded-full text-xs font-semibold text-white shadow-sm" style={{ backgroundColor: 'rgb(34, 197, 94)' }}>
-                    -20%
-                  </span>
-                </button>
-              </div>
-            </div>
-
             {/* Pricing Card */}
             <motion.div
-              key={pricingType}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
               className="relative"
             >
               <div className="p-8 rounded-2xl border-2 shadow-xl transition-all duration-300" style={{ 
-                borderColor: pricingType === 'mensuel' ? 'rgb(150, 185, 220)' : 'rgb(200, 200, 200)',
-                backgroundColor: pricingType === 'mensuel' ? 'rgba(150, 185, 220, 0.05)' : 'white'
+                borderColor: 'rgb(150, 185, 220)',
+                backgroundColor: 'rgba(150, 185, 220, 0.05)'
               }}>
                 <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    {pricingType === 'unique' ? 'Paiement unique' : 'Abonnement mensuel'}
+                    Abonnement mensuel
                   </h3>
                   <div className="mb-4">
                     <span className="text-5xl font-bold" style={{ color: 'rgb(150, 185, 220)' }}>
-                      {pricingType === 'unique' ? '2870€' : '299€'}
+                      49€
                     </span>
-                    {pricingType === 'mensuel' && (
-                      <span className="text-gray-600 text-lg ml-2">/mois</span>
-                    )}
-                    {pricingType === 'unique' && (
-                      <span className="text-gray-600 text-lg ml-2">/an</span>
-                    )}
+                    <span className="text-gray-600 text-lg ml-2">HT /mois</span>
                   </div>
                   <p className="text-gray-600 text-sm mb-2">
-                    {pricingType === 'unique' ? 'Économisez 718€ par rapport au paiement mensuel' : 'Résiliable à tout moment'}
+                    Résiliable à tout moment
                   </p>
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 border border-green-200">
                     <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
@@ -706,7 +656,7 @@ export default function HomePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
-                    <span className="text-gray-700 text-sm">Support technique inclus</span>
+                    <span className="text-gray-700 text-sm">Support technique</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'rgb(150, 185, 220)' }} />
@@ -1082,11 +1032,11 @@ const benefits = [
 const faqData = [
   {
     question: 'Comment créer mon compte ?',
-    answer: 'Pour créer un compte, contactez-nous par email (houcine.farhane@outlook.fr) ou par téléphone (07 85 69 13 00) pour obtenir un code d\'invitation. Une fois le code obtenu, vous pourrez créer votre compte et choisir votre formule (paiement annuel 2870€ ou abonnement 299€/mois).',
+    answer: 'Pour créer un compte, contactez-nous par email (houcine.farhane@outlook.fr) ou par téléphone (07 85 69 13 00) pour obtenir un code d\'invitation. Une fois le code obtenu, vous pourrez créer votre compte et accéder à l\'abonnement mensuel de 49€ HT/mois.',
   },
   {
     question: 'Quels sont les tarifs ?',
-    answer: 'Nous proposons deux formules : un paiement annuel de 2870€ (économisez 718€ par rapport au mensuel, soit -20%), ou un abonnement mensuel de 299€/mois résiliable à tout moment. Les deux formules incluent toutes les fonctionnalités, les mises à jour et le support technique.',
+    answer: 'Nous proposons un abonnement mensuel de 49€ HT/mois, résiliable à tout moment. L\'abonnement inclut toutes les fonctionnalités, les mises à jour automatiques et le support technique.',
   },
   {
     question: 'Mes données sont-elles sécurisées ?',

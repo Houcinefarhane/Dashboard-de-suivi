@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getCurrentArtisan } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { invoiceSchema } from '@/lib/validations'
 
 export const dynamic = 'force-dynamic'
 
@@ -145,25 +146,22 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { clientId, date, dueDate, subtotal, taxRate, tax, total, notes, taxExemptionText, items } = body
+    
+    // Validation avec Zod
+    const validationResult = invoiceSchema.safeParse(body)
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { 
+          error: 'Données invalides',
+          details: validationResult.error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
+        },
+        { status: 400 }
+      )
+    }
+    
+    const { clientId, date, dueDate, subtotal, taxRate, tax, total, notes, taxExemptionText, items } = validationResult.data
 
     console.log('Creating invoice with data:', { clientId, date, itemsCount: items?.length })
-
-    if (!clientId || !date || !items || items.length === 0) {
-      return NextResponse.json(
-        { error: 'Client, date et articles sont requis' },
-        { status: 400 }
-      )
-    }
-
-    // Vérifier que tous les items ont une description
-    const itemsWithDescription = items.filter((item: any) => item.description && item.description.trim() !== '')
-    if (itemsWithDescription.length === 0) {
-      return NextResponse.json(
-        { error: 'Au moins un article avec une description est requis' },
-        { status: 400 }
-      )
-    }
 
     // Vérifier que le client appartient à l'artisan
     const client = await prisma.client.findFirst({

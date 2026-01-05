@@ -1,8 +1,8 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Utiliser www.billiev.com pour la cohérence avec Google Search Console
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.billiev.com'
+  // Utiliser billiev.com (sans www) pour la cohérence
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://billiev.com'
   
   const blogArticles = [
     'comment-facturer-plus-rapidement-artisan',
