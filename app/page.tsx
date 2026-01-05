@@ -223,15 +223,6 @@ export default function HomePage() {
                 <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium text-sm">Finances</span>
               </motion.div>
               
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.6 }}
-                className="text-lg md:text-xl text-gray-600 mb-4 leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium"
-              >
-                Le tout dans une seule interface moderne.
-              </motion.p>
-              
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
