@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Space_Grotesk } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/react'
 import { viewport } from './viewport'
 import './globals.css'
 import { Providers } from './providers'
