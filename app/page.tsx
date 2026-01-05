@@ -440,10 +440,10 @@ export default function HomePage() {
             className="text-center mb-8"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-              Comment gérer votre entreprise artisanale avec Billiev ?
+              Tout ce dont vous avez besoin pour gérer votre activité
             </h2>
             <p className="text-lg text-gray-600 max-w-xl mx-auto">
-              Billiev remplace 5 outils par une seule interface moderne. Voici comment utiliser chaque fonctionnalité :
+              Version orientée artisan : des solutions concrètes à vos problèmes quotidiens
             </p>
           </motion.div>
 
