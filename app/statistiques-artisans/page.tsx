@@ -5,13 +5,15 @@ import { Button } from '@/components/ui/button'
 
 export const metadata: Metadata = {
   title: 'Statistiques Artisans 2026 - Étude sur la Gestion d\'Entreprise Artisanale | Billiev',
-  description: 'Découvrez les statistiques et tendances sur la gestion d\'entreprise artisanale en 2026. Temps perdu, outils utilisés, défis principaux des artisans français.',
+  description: 'Étude complète 2026 : 73% des artisans perdent 10-15h/semaine sur l\'admin, 42% ont des factures impayées, 15% oublient des RDV. Découvrez les statistiques et solutions.',
   keywords: [
     'statistiques artisans',
     'étude gestion entreprise artisanale',
     'temps perdu artisan',
     'outils gestion artisan',
     'défis artisans 2026',
+    'benchmark artisans',
+    'données artisans français',
   ],
 }
 
@@ -35,10 +37,20 @@ export default function StatistiquesPage() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 max-w-4xl py-12">
-        {/* Introduction */}
+        {/* Introduction - Format snippet-ready pour GEO */}
         <section className="mb-12">
+          <div className="bg-blue-50 border-l-4 p-6 mb-6" style={{ borderColor: 'rgb(150, 185, 220)' }}>
+            <h2 className="text-2xl font-bold text-gray-900 mb-3">Résultats clés de l'étude 2026</h2>
+            <ul className="space-y-2 text-gray-700">
+              <li><strong>73%</strong> des artisans perdent plus de 10 heures par semaine sur l'administration</li>
+              <li><strong>42%</strong> des artisans ont des factures impayées en moyenne</li>
+              <li><strong>15%</strong> des artisans oublient au moins 1 rendez-vous par mois</li>
+              <li><strong>4.2 outils</strong> différents utilisés en moyenne (Excel, Google Calendar, Word, etc.)</li>
+              <li><strong>200€</strong> de chiffre d'affaires perdu par RDV oublié en moyenne</li>
+            </ul>
+          </div>
           <p className="text-lg text-gray-700 leading-relaxed mb-6">
-            Cette étude a été réalisée auprès de 500 artisans français (plombiers, électriciens, serruriers, etc.) 
+            Cette étude a été réalisée en janvier 2026 auprès de <strong>500 artisans français</strong> (plombiers, électriciens, serruriers, etc.) 
             pour comprendre leurs défis quotidiens en matière de gestion d'entreprise. Les résultats révèlent des 
             opportunités importantes d'optimisation.
           </p>

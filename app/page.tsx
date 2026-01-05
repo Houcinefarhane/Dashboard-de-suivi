@@ -41,7 +41,7 @@ export default function HomePage() {
     }
   }
 
-  // Données structurées JSON-LD pour le SEO (définies après faqData)
+  // Données structurées JSON-LD optimisées pour SEO + GEO (définies après faqData)
   const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -50,37 +50,75 @@ export default function HomePage() {
         name: 'Billiev',
         applicationCategory: 'BusinessApplication',
         operatingSystem: 'Web',
-        offers: {
-          '@type': 'Offer',
-          price: '299',
-          priceCurrency: 'EUR',
-          priceSpecification: {
-            '@type': 'UnitPriceSpecification',
+        description: 'ERP complet pour artisans : gestion clients, planning, factures, stock et finances dans une seule interface moderne. Économisez 10-15 heures par semaine.',
+        url: baseUrl,
+        screenshot: `${baseUrl}/Attached_image.png`,
+        offers: [
+          {
+            '@type': 'Offer',
             price: '299',
             priceCurrency: 'EUR',
-            billingDuration: 'P1M',
+            priceSpecification: {
+              '@type': 'UnitPriceSpecification',
+              price: '299',
+              priceCurrency: 'EUR',
+              billingDuration: 'P1M',
+            },
+            availability: 'https://schema.org/InStock',
+            url: `${baseUrl}/auth/register`,
           },
-        },
+          {
+            '@type': 'Offer',
+            price: '2870',
+            priceCurrency: 'EUR',
+            priceSpecification: {
+              '@type': 'UnitPriceSpecification',
+              price: '2870',
+              priceCurrency: 'EUR',
+              billingDuration: 'P1Y',
+            },
+            availability: 'https://schema.org/InStock',
+            url: `${baseUrl}/auth/register`,
+          },
+        ],
         aggregateRating: {
           '@type': 'AggregateRating',
           ratingValue: '5',
           ratingCount: '2',
+          bestRating: '5',
+          worstRating: '1',
         },
-        description: 'ERP complet pour artisans : gestion clients, planning, factures, stock et finances dans une seule interface moderne.',
-        url: baseUrl,
-        screenshot: `${baseUrl}/Attached_image.png`,
+        featureList: [
+          'Gestion clients',
+          'Planning interventions',
+          'Facturation',
+          'Devis',
+          'Gestion stock',
+          'Suivi financier',
+          'Géolocalisation',
+          'Photos avant/après',
+        ],
+        applicationSubCategory: 'ERP Artisan',
+        softwareVersion: '1.0',
+        releaseNotes: 'Solution complète pour artisans avec toutes les fonctionnalités nécessaires.',
       },
       {
         '@type': 'Organization',
         name: 'Billiev',
         url: baseUrl,
         logo: `${baseUrl}/logo-billieve.png`,
+        sameAs: [
+          baseUrl,
+          `${baseUrl}/blog`,
+          `${baseUrl}/statistiques-artisans`,
+        ],
         contactPoint: {
           '@type': 'ContactPoint',
           telephone: '+33-7-85-69-13-00',
           contactType: 'customer service',
           email: 'houcine.farhane@outlook.fr',
-          availableLanguage: 'French',
+          availableLanguage: ['French'],
+          areaServed: 'FR',
         },
       },
       {
@@ -93,6 +131,30 @@ export default function HomePage() {
             text: faq.answer,
           },
         })),
+      },
+      {
+        '@type': 'WebPage',
+        '@id': `${baseUrl}#webpage`,
+        url: baseUrl,
+        name: 'Billiev - ERP Complet pour Artisans',
+        description: 'L\'ERP complet qui remplace 5 outils pour gérer votre entreprise artisanale. Clients, Planning, Factures, Stock, Finances. Essai gratuit 14 jours.',
+        inLanguage: 'fr-FR',
+        isPartOf: {
+          '@id': `${baseUrl}#website`,
+        },
+        about: {
+          '@id': `${baseUrl}#software`,
+        },
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${baseUrl}#website`,
+        url: baseUrl,
+        name: 'Billiev',
+        description: 'ERP complet pour artisans',
+        publisher: {
+          '@id': `${baseUrl}#organization`,
+        },
       },
     ],
   }
@@ -155,6 +217,9 @@ export default function HomePage() {
               </Link>
               <Link href="/statistiques-artisans" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
                 Statistiques
+              </Link>
+              <Link href="/alternatives" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
+                Comparatif
               </Link>
               <Link href="/auth/login">
                 <Button variant="ghost" className="text-gray-700 hover:text-gray-900">
@@ -399,10 +464,10 @@ export default function HomePage() {
             className="text-center mb-8"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-              Tout ce dont vous avez besoin
+              Comment gérer votre entreprise artisanale avec Billiev ?
             </h2>
             <p className="text-lg text-gray-600 max-w-xl mx-auto">
-              Des outils puissants et intuitifs pour gérer votre activité au quotidien
+              Billiev remplace 5 outils par une seule interface moderne. Voici comment utiliser chaque fonctionnalité :
             </p>
           </motion.div>
 
