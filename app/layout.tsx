@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Space_Grotesk } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { viewport } from './viewport'
 import './globals.css'
 import { Providers } from './providers'
@@ -88,6 +89,7 @@ export default function RootLayout({
       <body className={`${spaceGrotesk.variable} ${spaceGrotesk.className} font-sans`}>
         <Providers>{children}</Providers>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
