@@ -3,7 +3,11 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [],
+    formats: ['image/avif', 'image/webp'],
   },
+  // Optimisations SEO et performance
+  compress: true,
+  poweredByHeader: false,
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.externals = config.externals || []

@@ -150,6 +150,12 @@ export default function HomePage() {
               >
                 FAQ
               </button>
+              <Link href="/blog" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
+                Blog
+              </Link>
+              <Link href="/statistiques-artisans" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
+                Statistiques
+              </Link>
               <Link href="/auth/login">
                 <Button variant="ghost" className="text-gray-700 hover:text-gray-900">
                   Se connecter
@@ -252,14 +258,15 @@ export default function HomePage() {
                 <Logo size="lg" showText={false} className="mx-auto lg:mx-0" />
               </motion.div>
               
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight text-gray-900"
-              >
-                Gérez votre activité en 2x moins de temps
-              </motion.h1>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight text-gray-900">
+                <motion.span
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.6 }}
+                >
+                  Gérez votre activité en 2x moins de temps
+                </motion.span>
+              </h1>
               
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
@@ -712,7 +719,7 @@ export default function HomePage() {
                 ))}
               </div>
               <p className="text-gray-700 mb-4 leading-relaxed">
-                "Billiev a complètement transformé ma façon de travailler. Avant, je perdais des heures chaque semaine à jongler entre plusieurs outils. Maintenant, tout est centralisé dans une seule interface moderne et intuitive. La gestion des factures et du planning est devenue un jeu d'enfant !"
+                "Billiev a complètement transformé ma façon de travailler. Avant, je perdais des heures chaque semaine à jongler entre plusieurs outils. Maintenant, tout est centralisé dans une seule interface moderne et intuitive. La gestion des factures et du planning est devenue un jeu d'enfant ! J'ai économisé 12 heures par semaine."
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-lg">
@@ -720,7 +727,14 @@ export default function HomePage() {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900">Jordan Lopes</p>
-                  <p className="text-sm text-gray-600">Plombier, Paris</p>
+                  <p className="text-sm text-gray-600">Plombier, Paris • 3 ans d'expérience</p>
+                  <div className="flex items-center gap-1 mt-1">
+                    {[...Array(5)].map((_, i) => (
+                      <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -741,7 +755,7 @@ export default function HomePage() {
                 ))}
               </div>
               <p className="text-gray-700 mb-4 leading-relaxed">
-                "En tant qu'artisan indépendant, j'avais besoin d'un outil simple mais complet. Billiev répond parfaitement à mes besoins : gestion des clients, planning des interventions, facturation et suivi financier. L'interface est moderne et je n'ai eu besoin d'aucune formation pour m'y retrouver. Un vrai gain de temps !"
+                "En tant qu'artisan indépendant, j'avais besoin d'un outil simple mais complet. Billiev répond parfaitement à mes besoins : gestion des clients, planning des interventions, facturation et suivi financier. L'interface est moderne et je n'ai eu besoin d'aucune formation pour m'y retrouver. Un vrai gain de temps ! J'ai réduit mes factures en retard de 40%."
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-lg">
@@ -749,7 +763,14 @@ export default function HomePage() {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900">Marie Dubois</p>
-                  <p className="text-sm text-gray-600">Électricienne, Lyon</p>
+                  <p className="text-sm text-gray-600">Électricienne, Lyon • 5 ans d'expérience</p>
+                  <div className="flex items-center gap-1 mt-1">
+                    {[...Array(5)].map((_, i) => (
+                      <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
                 </div>
               </div>
             </motion.div>
