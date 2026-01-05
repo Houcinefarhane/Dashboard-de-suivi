@@ -55,6 +55,16 @@ export default function HomePage() {
     }
   }
 
+  const handleClosePopup = () => {
+    setShowDemoPopup(false)
+    localStorage.setItem('billiev-demo-popup-closed', 'true')
+  }
+
+  const handleContactDemo = () => {
+    scrollToSection('contact')
+    setShowDemoPopup(false)
+  }
+
   // Données structurées JSON-LD optimisées pour SEO + GEO (définies après faqData)
   const structuredData = {
     '@context': 'https://schema.org',
