@@ -28,7 +28,7 @@ export async function sendVerificationEmail(
     return { success: false, error: 'Service d\'email non configuré' }
   }
 
-  const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3010'
+  const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://billiev.com'
   const verificationUrl = `${baseUrl}/auth/verify-email?token=${token}`
 
   const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'
