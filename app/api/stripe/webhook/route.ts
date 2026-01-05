@@ -5,6 +5,10 @@ import Stripe from 'stripe'
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
+// Désactiver le body parsing par défaut pour les webhooks Stripe
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: Request) {
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')!
