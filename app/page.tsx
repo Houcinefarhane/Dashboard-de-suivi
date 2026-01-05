@@ -207,8 +207,7 @@ export default function HomePage() {
                 transition={{ delay: 0.4, duration: 0.6 }}
                 className="text-lg md:text-xl text-gray-600 mb-2 leading-relaxed max-w-xl mx-auto lg:mx-0"
               >
-                Billiev remplace 5 outils par une seule interface moderne<br />
-                <span className="text-gray-500">Clients • Planning • Facturation • Gestion • Finances</span>
+                Billiev remplace 5 outils par une seule interface moderne
               </motion.p>
               
               <motion.div
