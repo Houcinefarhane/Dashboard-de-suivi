@@ -198,13 +198,7 @@ export default function HomePage() {
                 transition={{ delay: 0.3, duration: 0.6 }}
                 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight text-gray-900"
               >
-                L'ERP complet qui remplace
-                <span className="block mt-1" style={{ color: 'rgb(150, 185, 220)' }}>
-                  5 outils
-                </span>
-                <span className="block mt-2 text-2xl md:text-3xl lg:text-4xl font-normal" style={{ color: 'rgb(150, 185, 220)' }}>
-                  Billiev
-                </span>
+                Gérez votre activité en 2x moins de temps
               </motion.h1>
               
               <motion.p
