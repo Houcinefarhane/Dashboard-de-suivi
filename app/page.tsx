@@ -23,6 +23,9 @@ import {
 import { Logo } from '@/components/Logo'
 import { useState } from 'react'
 import Image from 'next/image'
+import { StructuredData } from '@/components/StructuredData'
+
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://dashboard-de-suivi.vercel.app'
 
 export default function HomePage() {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null)
@@ -38,8 +41,65 @@ export default function HomePage() {
     }
   }
 
+  // Données structurées JSON-LD pour le SEO
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'SoftwareApplication',
+        name: 'Billiev',
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web',
+        offers: {
+          '@type': 'Offer',
+          price: '299',
+          priceCurrency: 'EUR',
+          priceSpecification: {
+            '@type': 'UnitPriceSpecification',
+            price: '299',
+            priceCurrency: 'EUR',
+            billingDuration: 'P1M',
+          },
+        },
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: '5',
+          ratingCount: '2',
+        },
+        description: 'ERP complet pour artisans : gestion clients, planning, factures, stock et finances dans une seule interface moderne.',
+        url: baseUrl,
+        screenshot: `${baseUrl}/Attached_image.png`,
+      },
+      {
+        '@type': 'Organization',
+        name: 'Billiev',
+        url: baseUrl,
+        logo: `${baseUrl}/logo-billieve.png`,
+        contactPoint: {
+          '@type': 'ContactPoint',
+          telephone: '+33-7-85-69-13-00',
+          contactType: 'customer service',
+          email: 'houcine.farhane@outlook.fr',
+          availableLanguage: 'French',
+        },
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: faqData.map((faq) => ({
+          '@type': 'Question',
+          name: faq.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: faq.answer,
+          },
+        })),
+      },
+    ],
+  }
+
   return (
     <div className="min-h-screen bg-white">
+      <StructuredData data={structuredData} />
       {/* Navigation Bar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div className="container mx-auto px-4 max-w-7xl">
@@ -281,7 +341,7 @@ export default function HomePage() {
                 >
                   <Image
                     src="/Attached_image.png"
-                    alt="Aperçu du tableau de bord"
+                    alt="Aperçu du tableau de bord Billiev - ERP complet pour artisans avec gestion clients, planning, factures, stock et finances"
                     fill
                     className="object-contain"
                     priority
