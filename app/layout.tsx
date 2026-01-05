@@ -86,6 +86,7 @@ export default function RootLayout({
       </head>
       <body className={`${spaceGrotesk.variable} ${spaceGrotesk.className} font-sans`}>
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   )
