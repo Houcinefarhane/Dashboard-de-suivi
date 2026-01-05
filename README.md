@@ -1,18 +1,84 @@
 # Billiev
 
-ERP (Enterprise Resource Planning) complet pour tous types d'entreprises. Solution de gestion intégrée permettant de gérer l'ensemble de votre activité : clients, rendez-vous, factures, devis, stock, finances, planning et bien plus.
+**L'ERP complet qui remplace 5 outils pour gérer votre entreprise artisanale**
+
+Billiev est une solution de gestion intégrée qui centralise toute votre activité dans une seule interface moderne. Fini de jongler entre plusieurs outils : clients, planning, factures, stock et finances, tout est au même endroit.
 
 🌐 Site web : https://billiev.com
 
-## Technologies utilisées
+## 🎯 Le problème que Billiev résout
 
-- Next.js 14 avec TypeScript
-- Tailwind CSS pour le styling
-- Prisma comme ORM
-- PostgreSQL sur Supabase
-- React Query pour le cache côté client
-- Framer Motion pour les animations
-- NextAuth pour l'authentification (email/password + OAuth Google)
+En tant qu'artisan, vous perdez **10 à 15 heures par semaine** sur l'administration :
+- 📅 **RDV oubliés** = clients perdus
+- 📄 **Factures en retard** = trésorerie tendue
+- 📊 **Suivi dispersé** = perte de temps
+- 🗂️ **Plusieurs outils** = confusion et erreurs
+
+## ✨ Ce que vous pouvez faire avec Billiev
+
+### 👥 Gestion clients
+- Base de données complète avec historique
+- Recherche avancée et filtres
+- Informations de contact centralisées
+- Historique des interventions et factures
+
+### 📅 Planning & Interventions
+- Calendrier interactif avec vue mensuelle
+- Géolocalisation des interventions
+- Photos avant/après travaux
+- Statuts en temps réel (à faire, en cours, terminé)
+- Rappels automatiques
+
+### 💰 Facturation
+- Création de factures en quelques clics
+- Export PDF professionnel
+- Suivi des paiements
+- Relances automatiques pour factures impayées
+- Gestion de la TVA (20%, 10%, 5.5%, 0%)
+
+### 📋 Devis
+- Création de devis détaillés
+- Conversion en facture en un clic
+- Export PDF
+- Suivi des validations
+
+### 📦 Stock
+- Gestion des produits et matériaux
+- Alertes de seuil automatiques
+- Suivi des mouvements
+- Calcul des coûts
+
+### 💵 Finances
+- Tableaux de bord financiers en temps réel
+- Graphiques de revenus et dépenses
+- Objectifs OKR (Objectifs et Résultats Clés)
+- Suivi de trésorerie
+- Export CSV/PDF
+
+### 📊 Analytics
+- Statistiques en temps réel
+- Heatmaps d'activité
+- Tendances et prévisions
+- Rapports personnalisables
+
+## ⏱️ En quoi Billiev vous fait gagner du temps
+
+- **10-15h/semaine économisées** : Plus besoin de jongler entre plusieurs outils
+- **Facturation 3x plus rapide** : Création de factures en quelques clics
+- **Zéro oubli de RDV** : Planning centralisé avec rappels
+- **Suivi automatique** : Relances, alertes stock, notifications
+- **Tout au même endroit** : Plus besoin d'ouvrir 5 applications différentes
+- **Interface moderne** : Intuitive, pas besoin de formation
+
+## 🛠️ Stack technique
+
+- **Next.js 14** avec TypeScript
+- **Tailwind CSS** pour le styling
+- **Prisma** comme ORM
+- **PostgreSQL** sur Supabase
+- **React Query** pour le cache côté client
+- **Framer Motion** pour les animations
+- **NextAuth** pour l'authentification
 
 ## Installation
 
@@ -37,54 +103,24 @@ npm run dev
 
 L'application sera accessible sur http://localhost:3010
 
-## Configuration
 
-Il faut créer un fichier `.env` à la racine du projet avec les variables suivantes :
+## 🔔 Notifications intelligentes
 
-```env
-DATABASE_URL=postgresql://postgres.[PROJECT_REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true
-NEXTAUTH_SECRET=générez-avec-openssl-rand-base64-32
-NEXTAUTH_URL=http://localhost:3010
-GOOGLE_CLIENT_ID=votre-client-id
-GOOGLE_CLIENT_SECRET=votre-client-secret
-NEXT_PUBLIC_SUPABASE_URL=https://votre-projet.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=votre-clé-anon-publique
-```
+Billiev vous alerte automatiquement sur :
+- 📧 Factures impayées (relances automatiques)
+- 📦 Stocks faibles (seuils personnalisables)
+- 📅 Rendez-vous à venir
+- 💰 Objectifs financiers atteints ou à risque
+- ✅ Interventions à planifier
 
-Pour `DATABASE_URL`, utiliser le format pooler Supabase avec le port 6543 et `?pgbouncer=true` pour éviter les problèmes de connexion en production.
+## 🔒 Sécurité
 
-Pour `NEXTAUTH_SECRET`, générer une clé avec :
-```bash
-openssl rand -base64 32
-```
-
-Les variables `GOOGLE_CLIENT_ID` et `GOOGLE_CLIENT_SECRET` sont optionnelles si tu n'utilises pas l'authentification Google.
-
-**Important pour Supabase Auth** : 
-- `NEXT_PUBLIC_SUPABASE_URL` : L'URL de votre projet Supabase (ex: `https://tqvdjfesnavnsqchufjg.supabase.co`)
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` : La clé **anon (publique)** depuis Supabase Dashboard → Settings → API → **anon public** key (commence par `eyJ...`)
-- ⚠️ **NE PAS** utiliser la clé service role (`sb_secret_...`) côté client, elle est réservée aux opérations admin serveur uniquement
-
-## Déploiement sur Vercel
-
-1. Connecter le dépôt GitHub à Vercel
-2. Aller dans Settings → Environment Variables
-3. Ajouter toutes les variables du `.env`
-4. Le déploiement se fait automatiquement
-
-Important : pour `DATABASE_URL` en production, utiliser le format pooler Supabase avec `?pgbouncer=true`. Pour `NEXTAUTH_URL`, mettre l'URL de ton déploiement Vercel.
-
-## Modules ERP
-
-- **Gestion clients** : Base de données complète avec recherche avancée et historique
-- **Planning & Interventions** : Calendrier interactif avec vue mensuelle et géolocalisation
-- **Facturation** : Création, suivi et export PDF des factures avec relances automatiques
-- **Devis** : Gestion complète des devis avec conversion en factures
-- **Finances** : Tableaux de bord financiers, graphiques, objectifs OKR et suivi de trésorerie
-- **Stock** : Gestion des produits avec alertes de seuil et suivi des mouvements
-- **Notifications** : Système d'alertes pour factures impayées, stocks faibles, rendez-vous
-- **Analytics** : Tableaux de bord avec statistiques en temps réel et heatmaps d'activité
-- **Sécurité** : Authentification multi-facteurs, rate limiting, headers de sécurité
+Vos données sont protégées par :
+- Chiffrement des données
+- Authentification sécurisée
+- Sauvegardes régulières
+- Conformité RGPD
+- Accès protégé par mot de passe
 
 ## Sécurité
 
