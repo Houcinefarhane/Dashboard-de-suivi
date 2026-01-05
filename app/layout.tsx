@@ -62,8 +62,11 @@ export const metadata: Metadata = {
     title: 'Billiev',
   },
   icons: {
-    icon: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
+    icon: [
+      { url: '/favicon.ico?v=3', sizes: '32x32', type: 'image/x-icon' },
+      { url: '/icon.svg?v=3', type: 'image/svg+xml' },
+    ],
+    apple: '/apple-touch-icon.png?v=3',
   },
 }
 
